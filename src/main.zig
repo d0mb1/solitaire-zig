@@ -43,7 +43,7 @@ pub const Visibility = enum(u1) { covered, uncovered };
 // sets how many cards are shown per row
 pub const cards_per_row = 13;
 // defines the number of cards in a standard card deck
-const number_of_cards = 52;
+const num_of_cards = 52;
 // there can only be 13 cards in a stack in the bottom field. The last card
 // always has to be the joker so there's 14 rows
 const bottom_field_rows = 14;
@@ -57,8 +57,9 @@ const top_field_rows = 25;
 const top_field_columns = 6;
 
 // creating an array that will represent a card deck
-pub var deck: [number_of_cards]Card = undefined;
+pub var deck: [num_of_cards]Card = undefined;
 pub var bottom_field: [bottom_field_rows][bottom_field_columns]Card = undefined;
+pub var top_field: [top_field_rows][top_field_columns]Card = undefined;
 
 // --- MAIN FUNCTION --- //
 pub fn main() !void {
@@ -67,7 +68,7 @@ pub fn main() !void {
     try shuffle();
     // std.debug.print("\n", .{});
     // cp.printDeck();
-    fillField();
+    fillBottomField();
     // std.debug.print("\n", .{});
     printField();
     std.debug.print("\n", .{});
@@ -93,7 +94,7 @@ fn fillDeck() void {
 
 // shuffle magic done by the Fisher–Yates algorithm
 fn shuffle() !void {
-    var index: usize = number_of_cards - 1;
+    var index: usize = num_of_cards - 1;
     var prng = std.rand.DefaultPrng.init(blk: {
         var seed: u64 = undefined;
         try std.posix.getrandom(std.mem.asBytes(&seed));
@@ -108,18 +109,26 @@ fn shuffle() !void {
 }
 
 // this fills the bottom playing field with cards placed in the deck
-fn fillField() void {
+fn fillBottomField() void {
     var index: usize = 0;
-    var row: usize = 0;
     var column: usize = 0;
+    var row: usize = 0;
     var row_start: usize = 0;
-    while (column < 7) : (column += 1) {
-        while (row < bottom_field_columns) : (row += 1) {
-            bottom_field[column][row] = deck[index];
+    while (row < 7) : (row += 1) {
+        while (column < bottom_field_columns) : (column += 1) {
+            bottom_field[row][column] = deck[index];
             index += 1;
         }
         row_start += 1;
-        row = row_start;
+        column = row_start;
+    }
+    fillTopField(index);
+}
+
+fn fillTopField(index: usize) void {
+    const num_of_rem_cards: usize = num_of_cards - index;
+    for (0..num_of_rem_cards) |row| {
+        top_field[row][5] = deck[index];
     }
 }
 
@@ -129,11 +138,11 @@ fn printField() void {
     // iterates over rows in a field
     for (0..bottom_field.len) |row| {
         var empty_cards: usize = 0;
-        for (0..bottom_field[row].len) |card| {
-            if (bottom_field[row][card].val != @intFromEnum(Value.joker)) {
+        for (0..bottom_field[row].len) |column| {
+            if (bottom_field[row][column].val != @intFromEnum(Value.joker)) {
                 cp.topCardPrint();
             } else {
-                cp.restOfCardPrint(row, card, false);
+                cp.restOfCardPrint(row, column, false);
                 empty_cards += 1;
             }
         }
@@ -148,11 +157,11 @@ fn printField() void {
             }
         }
         std.debug.print("\n", .{});
-        for (0..bottom_field[row].len) |card| {
-            if (bottom_field[row][card].val != @intFromEnum(Value.joker)) {
-                cp.topCardPrintSymbols(bottom_field[row][card]);
+        for (0..bottom_field[row].len) |column| {
+            if (bottom_field[row][column].val != @intFromEnum(Value.joker)) {
+                cp.topCardPrintSymbols(bottom_field[row][column]);
             } else {
-                cp.restOfCardPrint(row, card, true);
+                cp.restOfCardPrint(row, column, true);
             }
         }
         std.debug.print("\n", .{});

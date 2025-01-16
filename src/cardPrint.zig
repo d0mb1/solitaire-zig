@@ -79,10 +79,10 @@ fn bottomCardPrintSymbols(card: main.Card) void {
 }
 
 // prints the bottom part of cards
-pub fn restOfCardPrint(row: usize, card: usize, symbols: bool) void {
+pub fn restOfCardPrint(row: usize, column: usize, symbols: bool) void {
     var i: usize = 0;
     // finding the top card in the stack and counting how many rows above it is
-    while (main.bottom_field[row - i][card].val == @intFromEnum(main.Value.joker)) : (i += 1) {
+    while (main.bottom_field[row - i][column].val == @intFromEnum(main.Value.joker)) : (i += 1) {
         if (row - i == 0) {
             break;
         }
@@ -91,13 +91,13 @@ pub fn restOfCardPrint(row: usize, card: usize, symbols: bool) void {
     // and prints apropriately
     switch (symbols) {
         true => switch (i) {
-            0 => middleCardPrint(main.bottom_field[row - i][card]),
-            1 => middleCardPrintSymbols(main.bottom_field[row - i][card]),
-            2 => bottomCardPrintSymbols(main.bottom_field[row - i][card]),
+            0 => middleCardPrint(main.bottom_field[row - i][column]),
+            1 => middleCardPrintSymbols(main.bottom_field[row - i][column]),
+            2 => bottomCardPrintSymbols(main.bottom_field[row - i][column]),
             else => emptyPrint(),
         },
         false => switch (i) {
-            0...2 => middleCardPrint(main.bottom_field[row - i][card]),
+            0...2 => middleCardPrint(main.bottom_field[row - i][column]),
             3 => bottomCardPrint(),
             else => emptyPrint(),
         },
