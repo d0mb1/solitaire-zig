@@ -1,3 +1,4 @@
+// ---SOLITAIRE--- //
 // For running this program you'll need to have a nerd font installed
 // and set up for your terminal. If you're using windows you'll also need to
 // run "chcp 65001" command to enable unicode in your terminal.
