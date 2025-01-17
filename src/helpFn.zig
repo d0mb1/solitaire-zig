@@ -39,7 +39,7 @@ pub fn isVisible(visibility: usize) bool {
     if (0 == visibility % 2) return false else return true;
 }
 
-// std.debug.print("│    \x1b[31m{s}\x1b[0m    │ ", .{hf.usizeToShape(card.shp)});
+// prints the game logo
 pub fn printLogo(part_of_card: usize) void {
     switch (part_of_card) {
         0 => std.debug.print("\x1b[31m╭─────────╮\x1b[0m ", .{}),

@@ -72,9 +72,13 @@ pub fn main() !void {
     printBottomField();
 }
 
+// when the field is filled with cards they all are covered. This function
+// uncoveres all the top cards in the bottom field.
 fn uncoverCards() void {
     var index: usize = 0;
+    // steps thrue all the columns
     for (0..bottom_field[0].len) |column| {
+        // finds the top card in a stack and sets it to uncovered
         while (bottom_field[index][column].val != @intFromEnum(Val.joker)) {
             index += 1;
         }
@@ -101,7 +105,7 @@ fn fillDeck() void {
     }
 }
 
-// shuffle magic done by the Fisher–Yates algorithm
+// shuffle magic! done by the Fisher–Yates algorithm
 fn shuffle() !void {
     var index: usize = num_of_cards - 1;
     var prng = std.rand.DefaultPrng.init(blk: {
@@ -148,6 +152,7 @@ fn fillTopField(i: usize) void {
 // prints the bottom field
 fn printBottomField() void {
     var count_down: usize = 0;
+    // part of card keeps track of what part of card should be printed
     var part_of_card: usize = 0;
     // iterates over rows in a field
     for (0..bottom_field.len) |row| {
@@ -158,7 +163,9 @@ fn printBottomField() void {
             if (bottom_field[row][column].val != @intFromEnum(Val.joker)) {
                 cp.topCardPrint();
             } else {
+                // checks if the stack is empty
                 if (bottom_field[0][column].val == @intFromEnum(Val.joker)) {
+                    // is it's empty call a function that prints card outline
                     cp.emptySpacePrint(part_of_card);
                 } else {
                     cp.restOfCardPrint(row, column, false);
@@ -184,7 +191,9 @@ fn printBottomField() void {
             if (bottom_field[row][column].val != @intFromEnum(Val.joker)) {
                 cp.topCardPrintSymbols(bottom_field[row][column]);
             } else {
+                // checks if the stack is empty
                 if (bottom_field[0][column].val == @intFromEnum(Val.joker)) {
+                    // is it's empty call a function that prints card outline
                     cp.emptySpacePrint(part_of_card);
                 } else {
                     cp.restOfCardPrint(row, column, true);
@@ -213,7 +222,6 @@ fn printTopField() void {
             while (top_field[index][column].val != @intFromEnum(Val.joker)) {
                 index += 1;
             }
-            // std.debug.print("{}: ", .{index});
             if (index == 0) {
                 cp.emptySpacePrint(part_of_card);
             } else {

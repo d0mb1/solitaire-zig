@@ -20,6 +20,7 @@ pub fn bottomCardPrint() void {
     std.debug.print("╰─────────╯ ", .{});
 }
 
+// prints the outline of a card if the spot is empty
 pub fn emptySpacePrint(part_of_card: usize) void {
     switch (part_of_card) {
         0 => std.debug.print("╭─  ───  ─╮ ", .{}),
@@ -30,6 +31,7 @@ pub fn emptySpacePrint(part_of_card: usize) void {
     }
 }
 
+// prints empty space of card width size
 pub fn emptyPrint() void {
     std.debug.print("            ", .{});
 }
