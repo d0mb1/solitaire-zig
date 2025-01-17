@@ -28,13 +28,6 @@ pub fn usizeToShape(shape: usize) []const u8 {
         else => unreachable,
     };
 }
-// pub fn usizeToVisibility(visibility: usize) []const u8 {
-//     return switch (visibility) {
-//         0 => "covered",
-//         1 => "uncovered",
-//         else => unreachable,
-//     };
-// }
 
 // checks if the card is red
 pub fn isRed(shape: usize) bool {
