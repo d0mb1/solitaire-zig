@@ -1,10 +1,11 @@
 // ---SOLITAIRE--- //
 
-// For running this program you'll need to have a nerd font installed
-// and set up for your terminal. If you're using windows you'll also need to
+// For running this game you'll need to have a nerd font installed
+// and set up in your terminal. If you're using windows you'll also need to
 // run "chcp 65001" command to enable unicode in your terminal.
 // Also for some reason it only works when using the Command Prompt
-// and not Windows PowerShell. Haven't tried any other Windows shell.
+// and not Windows PowerShell. Why? IDK. Maybe cuz Windows is shit.
+// Haven't tried any other Windows shell.
 
 // importing standard library
 const std = @import("std");
@@ -69,9 +70,21 @@ pub fn main() !void {
     // std.debug.print("\n", .{});
     // cp.printDeck();
     fillFields();
+    uncoverCards();
     // std.debug.print("\n", .{});
     printTopField();
     printBottomField();
+}
+
+fn uncoverCards() void {
+    var index: usize = 0;
+    for (0..bottom_field[0].len) |column| {
+        while (bottom_field[index][column].val != @intFromEnum(Val.joker)) {
+            index += 1;
+        }
+        bottom_field[index - 1][column].vis = @intFromEnum(Vis.uncovered);
+        index = 0;
+    }
 }
 
 // generates all possible cards and places them in a deck
@@ -182,20 +195,13 @@ fn printBottomField() void {
 // TODO: Fix this
 fn printTopField() void {
     var index: usize = 0;
+    // there's 7 rows to a card. part_of_card keeps track of which part
+    // should be printed
     var part_of_card: usize = 0;
-    while (part_of_card <= 6) : (part_of_card += 1) {
+    while (part_of_card < 7) : (part_of_card += 1) {
         for (0..top_field[0].len) |column| {
             if (column == 4) {
-                switch (part_of_card) {
-                    0 => std.debug.print("╭─────────╮ ", .{}),
-                    1 => std.debug.print("│ 󰣐     󰣑 │ ", .{}),
-                    2 => std.debug.print("│  S O L  │ ", .{}),
-                    3 => std.debug.print("│  I T A  │ ", .{}),
-                    4 => std.debug.print("│  I R E  │ ", .{}),
-                    5 => std.debug.print("│ 󰣎     󰣏 │ ", .{}),
-                    6 => std.debug.print("╰─────────╯ ", .{}),
-                    else => unreachable,
-                }
+                hf.printLogo(part_of_card);
             }
             while (top_field[index][column].val != @intFromEnum(Val.joker)) {
                 index += 1;
