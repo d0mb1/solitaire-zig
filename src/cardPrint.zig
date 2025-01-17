@@ -20,6 +20,16 @@ pub fn bottomCardPrint() void {
     std.debug.print("╰─────────╯ ", .{});
 }
 
+pub fn emptySpacePrint(part_of_card: usize) void {
+    switch (part_of_card) {
+        0 => std.debug.print("╭─  ───  ─╮ ", .{}),
+        1, 3, 5 => std.debug.print("            ", .{}),
+        2, 4 => std.debug.print("│         │ ", .{}),
+        6 => std.debug.print("╰─  ───  ─╯ ", .{}),
+        else => emptyPrint(),
+    }
+}
+
 pub fn emptyPrint() void {
     std.debug.print("            ", .{});
 }

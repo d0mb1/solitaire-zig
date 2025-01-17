@@ -65,13 +65,9 @@ pub var top_field: [top_field_rows][top_field_columns]Card = undefined;
 // --- MAIN FUNCTION --- //
 pub fn main() !void {
     fillDeck();
-    // cp.printDeck();
-    // try shuffle();
-    // std.debug.print("\n", .{});
-    // cp.printDeck();
+    try shuffle();
     fillFields();
     uncoverCards();
-    // std.debug.print("\n", .{});
     printTopField();
     printBottomField();
 }
@@ -152,6 +148,7 @@ fn fillTopField(i: usize) void {
 // prints the bottom field
 fn printBottomField() void {
     var count_down: usize = 0;
+    var part_of_card: usize = 0;
     // iterates over rows in a field
     for (0..bottom_field.len) |row| {
         var empty_cards: usize = 0;
@@ -161,15 +158,20 @@ fn printBottomField() void {
             if (bottom_field[row][column].val != @intFromEnum(Val.joker)) {
                 cp.topCardPrint();
             } else {
-                cp.restOfCardPrint(row, column, false);
+                if (bottom_field[0][column].val == @intFromEnum(Val.joker)) {
+                    cp.emptySpacePrint(part_of_card);
+                } else {
+                    cp.restOfCardPrint(row, column, false);
+                }
                 empty_cards += 1;
             }
         }
+        part_of_card += 1;
         // checks if the row is empty / there's only empty cards
         if (empty_cards == bottom_field_columns) {
             // if the whole row is empty adds 1 to a count down
             count_down += 1;
-            if (count_down == 3) {
+            if (count_down == 4) {
                 // when count-down gets to 3 it breaks the loop preventing
                 // the function from printing unnecessary rows
                 break;
@@ -182,9 +184,14 @@ fn printBottomField() void {
             if (bottom_field[row][column].val != @intFromEnum(Val.joker)) {
                 cp.topCardPrintSymbols(bottom_field[row][column]);
             } else {
-                cp.restOfCardPrint(row, column, true);
+                if (bottom_field[0][column].val == @intFromEnum(Val.joker)) {
+                    cp.emptySpacePrint(part_of_card);
+                } else {
+                    cp.restOfCardPrint(row, column, true);
+                }
             }
         }
+        part_of_card += 1;
         std.debug.print("\n", .{});
     }
 }
@@ -208,7 +215,7 @@ fn printTopField() void {
             }
             // std.debug.print("{}: ", .{index});
             if (index == 0) {
-                cp.emptyPrint();
+                cp.emptySpacePrint(part_of_card);
             } else {
                 switch (part_of_card) {
                     0 => cp.topCardPrint(),
