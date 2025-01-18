@@ -1,4 +1,5 @@
 const std = @import("std");
+const stdin = std.io.getStdIn().reader();
 
 // ╭─────────╮
 // │ 󰣑 󰣏 󰣐 󰣎 │
@@ -80,9 +81,19 @@ pub fn printLogo(part_of_card: usize) void {
 }
 
 pub fn topLabels() void {
-    std.debug.print("╭───────────────────── 8 ─────────────────────╮\n╭─── 1 ───╮ ╭─── 2 ───╮ ╭─── 3 ───╮ ╭─── 4 ───╮             ╭─── 9 ───╮ ╭─── 0 ───╮\n", .{});
+    std.debug.print("                                    ╭───────────────────── 0 ─────────────────────╮\n╭─── 8 ───╮ ╭─── 9 ───╮             ╭─── 1 ───╮ ╭─── 2 ───╮ ╭─── 3 ───╮ ╭─── 4 ───╮\n", .{});
 }
 
 pub fn bottomLabels() void {
     std.debug.print("╭─── 1 ───╮ ╭─── 2 ───╮ ╭─── 3 ───╮ ╭─── 4 ───╮ ╭─── 5 ───╮ ╭─── 6 ───╮ ╭─── 7 ───╮ \n", .{});
+}
+
+pub fn getNum() !i64 {
+    var buf: [10]u8 = undefined;
+
+    if (try stdin.readUntilDelimiterOrEof(buf[0..], '\n')) |user_input| {
+        return std.fmt.parseInt(i64, user_input, 10);
+    } else {
+        return @as(i64, 0);
+    }
 }

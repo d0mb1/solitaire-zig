@@ -13,6 +13,10 @@ const std = @import("std");
 const cp = @import("cardPrint.zig");
 const hf = @import("helpFn.zig");
 const gs = @import("gameSetup.zig");
+const cm = @import("cardMove.zig");
+
+const stdin = std.io.getStdIn().reader();
+const stdout = std.io.getStdOut().writer();
 
 // creating a card struct
 // I'd like to give the different properties the type of enums
@@ -71,9 +75,57 @@ pub fn main() !void {
     gs.fillFields();
     gs.uncoverCards();
 
-    hf.topLabels();
-    cp.printTopField();
-    hf.bottomLabels();
-    cp.printBottomField();
-    std.debug.print("\n", .{});
+    while (true) {
+        hf.topLabels();
+        cp.printTopField();
+        hf.bottomLabels();
+        cp.printBottomField();
+
+        std.debug.print("FROM: ", .{});
+        const from = try hf.getNum();
+        switch (from) {
+            0 => {
+                std.debug.print("FROM: ", .{});
+                const from2 = try hf.getNum();
+                switch (from2) {
+                    1...4 => {
+                        std.debug.print("TO: ", .{});
+                        const to = try hf.getNum();
+                        switch (to) {
+                            1...7 => cm.moveCard(),
+                            else => std.debug.print("Invalid Stack\n", .{}),
+                        }
+                    },
+                    else => std.debug.print("Invalid Stack\n", .{}),
+                }
+            },
+            1...7 => {
+                std.debug.print("WHAT: ", .{});
+                const what = try hf.getNum();
+                switch (what) {
+                    1...13 => {
+                        std.debug.print("TO: ", .{});
+                        const to = try hf.getNum();
+                        switch (to) {
+                            1...7 => cm.moveCard(),
+                            0 => cm.moveCard(),
+                            else => std.debug.print("Invalid Stack\n", .{}),
+                        }
+                    },
+                    else => std.debug.print("Invalid Card Value\n", .{}),
+                }
+            },
+            8 => cm.moveCard(),
+            9 => {
+                std.debug.print("TO: ", .{});
+                const to = try hf.getNum();
+                switch (to) {
+                    1...7 => cm.moveCard(),
+                    0 => cm.moveCard(),
+                    else => std.debug.print("Invalid Stack\n", .{}),
+                }
+            },
+            else => std.debug.print("Invalid Stack\n", .{}),
+        }
+    }
 }

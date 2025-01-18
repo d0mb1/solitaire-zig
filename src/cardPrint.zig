@@ -146,6 +146,7 @@ pub fn printBottomField() void {
             if (count_down == 4) {
                 // when count-down gets to 3 it breaks the loop preventing
                 // the function from printing unnecessary rows
+                std.debug.print("\n", .{});
                 break;
             }
         }
@@ -181,8 +182,9 @@ pub fn printTopField() void {
     var part_of_card: usize = 0;
     while (part_of_card < 7) : (part_of_card += 1) {
         for (0..main.top_field[0].len) |column| {
-            if (column == 4) {
-                hf.printLogo(part_of_card);
+            if (column == 2) {
+                // hf.printLogo(part_of_card);
+                emptyPrint();
             }
             while (main.top_field[index][column].val != @intFromEnum(main.Val.joker)) {
                 index += 1;

@@ -58,7 +58,7 @@ fn fillTopField(i: usize) void {
     const num_of_rem_cards: usize = main.num_of_cards - index;
     for (0..num_of_rem_cards) |row| {
         // remaining cards are placed in to the fifth stack in the top field
-        main.top_field[row][4] = main.deck[index];
+        main.top_field[row][0] = main.deck[index];
         index += 1;
     }
 }
