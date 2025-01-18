@@ -70,6 +70,7 @@ pub fn main() !void {
     uncoverCards();
     printTopField();
     printBottomField();
+    std.debug.print("\n", .{});
 }
 
 // when the field is filled with cards they all are covered. This function
