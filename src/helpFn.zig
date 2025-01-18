@@ -1,4 +1,30 @@
 const std = @import("std");
+
+// ╭─────────╮
+// │ 󰣑 󰣏 󰣐 󰣎 │
+// ╰─────────╯
+// ╭─  ───  ─╮
+//   ∷∷∷∷∷∷∷
+// │ ∷∷∷∷∷∷∷ │
+//   ∷∷∷∷∷∷∷
+// │ ∷∷∷∷∷∷∷ │
+//   ∷∷∷∷∷∷∷
+// ╰─  ───  ─╯
+// ╭─────────╮ ╭─────────╮
+// │         │ │         │
+// │         │ │         │
+// │         │ │         │
+// │         │ │         │
+// │         │ │         │
+// ╰─────────╯ ╰─────────╯
+// ╭──╭──╭──╭──╭─────────╮
+// │ 8│10│ 3│ Q│ A     󰣎 │
+// │  │  │  │  │         │
+// │  │  │  │  │    󰣎    │
+// │  │  │  │  │         │
+// │ 󰣏│ 󰣐│ 󰣎│ 󰣏│ 󰣎     A │
+// ╰──╰──╰──╰──╰─────────╯
+
 // function return a string based on the card value/shape ID input
 // helps with printing cards
 pub fn usizeToValue(value: usize) []const u8 {
@@ -51,4 +77,12 @@ pub fn printLogo(part_of_card: usize) void {
         6 => std.debug.print("\x1b[31m╰─────────╯\x1b[0m ", .{}),
         else => unreachable,
     }
+}
+
+pub fn topLabels() void {
+    std.debug.print("╭───────────────────── 8 ─────────────────────╮\n╭─── 1 ───╮ ╭─── 2 ───╮ ╭─── 3 ───╮ ╭─── 4 ───╮             ╭─── 9 ───╮ ╭─── 0 ───╮\n", .{});
+}
+
+pub fn bottomLabels() void {
+    std.debug.print("╭─── 1 ───╮ ╭─── 2 ───╮ ╭─── 3 ───╮ ╭─── 4 ───╮ ╭─── 5 ───╮ ╭─── 6 ───╮ ╭─── 7 ───╮ \n", .{});
 }

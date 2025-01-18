@@ -1,6 +1,5 @@
 const std = @import("std");
 const main = @import("main.zig");
-// importing file with functions that help with printing card symbols
 const hf = @import("helpFn.zig");
 
 pub fn topCardPrint() void {
@@ -24,7 +23,6 @@ pub fn bottomCardPrint() void {
 pub fn emptySpacePrint(part_of_card: usize) void {
     switch (part_of_card) {
         0 => std.debug.print("╭─  ───  ─╮ ", .{}),
-        1, 3, 5 => std.debug.print("            ", .{}),
         2, 4 => std.debug.print("│         │ ", .{}),
         6 => std.debug.print("╰─  ───  ─╯ ", .{}),
         else => emptyPrint(),
@@ -113,5 +111,98 @@ pub fn restOfCardPrint(row: usize, column: usize, symbols: bool) void {
             3 => bottomCardPrint(),
             else => emptyPrint(),
         },
+    }
+}
+
+// prints the bottom field
+pub fn printBottomField() void {
+    var count_down: usize = 0;
+    // part of card keeps track of what part of card should be printed
+    var part_of_card: usize = 0;
+    // iterates over rows in a field
+    for (0..main.bottom_field.len) |row| {
+        var empty_cards: usize = 0;
+        // iterates over columns / cards in a row
+        for (0..main.bottom_field[row].len) |column| {
+            // checks if the card isn't joker (empty space)
+            if (main.bottom_field[row][column].val != @intFromEnum(main.Val.joker)) {
+                topCardPrint();
+            } else {
+                // checks if the stack is empty
+                if (main.bottom_field[0][column].val == @intFromEnum(main.Val.joker)) {
+                    // is it's empty call a function that prints card outline
+                    emptySpacePrint(part_of_card);
+                } else {
+                    restOfCardPrint(row, column, false);
+                }
+                empty_cards += 1;
+            }
+        }
+        part_of_card += 1;
+        // checks if the row is empty / there's only empty cards
+        if (empty_cards == main.bottom_field_columns) {
+            // if the whole row is empty adds 1 to a count down
+            count_down += 1;
+            if (count_down == 4) {
+                // when count-down gets to 3 it breaks the loop preventing
+                // the function from printing unnecessary rows
+                break;
+            }
+        }
+        std.debug.print("\n", .{});
+        // iterates over columns / cards in a row
+        for (0..main.bottom_field[row].len) |column| {
+            // checks if the card isn't joker (empty space)
+            if (main.bottom_field[row][column].val != @intFromEnum(main.Val.joker)) {
+                topCardPrintSymbols(main.bottom_field[row][column]);
+            } else {
+                // checks if the stack is empty
+                if (main.bottom_field[0][column].val == @intFromEnum(main.Val.joker)) {
+                    // is it's empty call a function that prints card outline
+                    emptySpacePrint(part_of_card);
+                } else {
+                    restOfCardPrint(row, column, true);
+                }
+            }
+        }
+        part_of_card += 1;
+        std.debug.print("\n", .{});
+    }
+}
+
+// I know I can probably save the indexes in to an array and then print the
+// cards which would be more effective since it wouldn't have to pass each
+// column multiple times but this was easier
+// TODO: Fix this later
+pub fn printTopField() void {
+    var index: usize = 0;
+    // there's 7 rows to a card. part_of_card keeps track of which part
+    // should be printed
+    var part_of_card: usize = 0;
+    while (part_of_card < 7) : (part_of_card += 1) {
+        for (0..main.top_field[0].len) |column| {
+            if (column == 4) {
+                hf.printLogo(part_of_card);
+            }
+            while (main.top_field[index][column].val != @intFromEnum(main.Val.joker)) {
+                index += 1;
+            }
+            if (index == 0) {
+                emptySpacePrint(part_of_card);
+            } else {
+                switch (part_of_card) {
+                    0 => topCardPrint(),
+                    1 => topCardPrintSymbols(main.top_field[index - 1][column]),
+                    2 => middleCardPrint(main.top_field[index - 1][column]),
+                    3 => middleCardPrintSymbols(main.top_field[index - 1][column]),
+                    4 => middleCardPrint(main.top_field[index - 1][column]),
+                    5 => bottomCardPrintSymbols(main.top_field[index - 1][column]),
+                    6 => bottomCardPrint(),
+                    else => unreachable,
+                }
+            }
+            index = 0;
+        }
+        std.debug.print("\n", .{});
     }
 }
