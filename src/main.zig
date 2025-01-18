@@ -209,7 +209,7 @@ fn printBottomField() void {
 // I know I can probably save the indexes in to an array and then print the
 // cards which would be more effective since it wouldn't have to pass each
 // column multiple times but this was easier
-// TODO: Fix this
+// TODO: Fix this later
 fn printTopField() void {
     var index: usize = 0;
     // there's 7 rows to a card. part_of_card keeps track of which part
