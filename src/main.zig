@@ -115,7 +115,10 @@ pub fn main() !void {
                     else => std.debug.print("Invalid Card Value\n", .{}),
                 }
             },
-            8 => cm.moveCard(),
+            8 => {
+                cm.cardFlip();
+                cm.moveCard();
+            },
             9 => {
                 std.debug.print("TO: ", .{});
                 const to = try hf.getNum();
