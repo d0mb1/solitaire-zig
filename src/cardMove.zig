@@ -6,6 +6,9 @@ pub fn moveCard() void {
     std.debug.print("Success!\n", .{});
 }
 
+// moves cards between stack 8 and 9
+// moves card from stack 8 to 9. If there's no cards in stack 8 all cards in
+// stack 9 go back to stack 8
 pub fn cardFlip() void {
     var index1: usize = 0;
     while (main.top_field[index1][1].val != @intFromEnum(main.Val.joker)) : (index1 += 1) {}

@@ -39,7 +39,7 @@ pub fn topCardPrintSymbols(card: main.Card) void {
     if (hf.isVisible(card.vis)) {
         // check what color should the output be
         std.debug.print("│{s: >2}     {s} │ ", .{
-            hf.usizeToValue(card),
+            hf.usizeToValue(card, true),
             hf.usizeToShape(card),
         });
     } else {
@@ -61,9 +61,9 @@ pub fn bottomCardPrintSymbols(card: main.Card) void {
     // checks if the card is visible
     if (hf.isVisible(card.vis)) {
         // check what color should the output be
-        std.debug.print("│ {s}    {s: >2} │ ", .{
+        std.debug.print("│ {s}     {s: <2}│ ", .{
             hf.usizeToShape(card),
-            hf.usizeToValue(card),
+            hf.usizeToValue(card, false),
         });
     } else {
         middleCardPrint(card);
@@ -153,7 +153,12 @@ pub fn printBottomField() void {
     }
 }
 
+// function that is very long but also very simple. When there's more cards in
+// the 9th stack it will show 5 top most cards
 pub fn spreadCards(part_of_card: usize, index: usize) void {
+    // index represents how many cards are on the stack and determines what
+    // should be printed
+    // part_of_card represesnts which part of a card should be printed
     switch (index) {
         0 => {
             emptySpacePrint(part_of_card);
@@ -199,9 +204,9 @@ pub fn spreadCards(part_of_card: usize, index: usize) void {
                 },
                 1 => {
                     if (hf.isRed(main.top_field[index - 2][1].shp)) {
-                        std.debug.print("│\x1b[31m{s: >2}\x1b[0m", .{hf.usizeToValue(main.top_field[index - 2][1])});
+                        std.debug.print("│\x1b[31m{s: >2}\x1b[0m", .{hf.usizeToValue(main.top_field[index - 2][1], true)});
                     } else {
-                        std.debug.print("│{s: >2}", .{hf.usizeToValue(main.top_field[index - 2][1])});
+                        std.debug.print("│{s: >2}", .{hf.usizeToValue(main.top_field[index - 2][1], true)});
                     }
                     topCardPrintSymbols(main.top_field[index - 1][1]);
                     std.debug.print("         ", .{});
@@ -242,8 +247,8 @@ pub fn spreadCards(part_of_card: usize, index: usize) void {
                     std.debug.print("      ", .{});
                 },
                 1 => {
-                    std.debug.print("│{s: >2}", .{hf.usizeToValue(main.top_field[index - 3][1])});
-                    std.debug.print("│{s: >2}", .{hf.usizeToValue(main.top_field[index - 2][1])});
+                    std.debug.print("│{s: >2}", .{hf.usizeToValue(main.top_field[index - 3][1], true)});
+                    std.debug.print("│{s: >2}", .{hf.usizeToValue(main.top_field[index - 2][1], true)});
                     topCardPrintSymbols(main.top_field[index - 1][1]);
                     std.debug.print("      ", .{});
                 },
@@ -280,9 +285,9 @@ pub fn spreadCards(part_of_card: usize, index: usize) void {
                     std.debug.print("   ", .{});
                 },
                 1 => {
-                    std.debug.print("│{s: >2}", .{hf.usizeToValue(main.top_field[index - 4][1])});
-                    std.debug.print("│{s: >2}", .{hf.usizeToValue(main.top_field[index - 3][1])});
-                    std.debug.print("│{s: >2}", .{hf.usizeToValue(main.top_field[index - 2][1])});
+                    std.debug.print("│{s: >2}", .{hf.usizeToValue(main.top_field[index - 4][1], true)});
+                    std.debug.print("│{s: >2}", .{hf.usizeToValue(main.top_field[index - 3][1], true)});
+                    std.debug.print("│{s: >2}", .{hf.usizeToValue(main.top_field[index - 2][1], true)});
                     topCardPrintSymbols(main.top_field[index - 1][1]);
                     std.debug.print("   ", .{});
                 },
@@ -319,10 +324,10 @@ pub fn spreadCards(part_of_card: usize, index: usize) void {
                     topCardPrint();
                 },
                 1 => {
-                    std.debug.print("│{s: >2}", .{hf.usizeToValue(main.top_field[index - 5][1])});
-                    std.debug.print("│{s: >2}", .{hf.usizeToValue(main.top_field[index - 4][1])});
-                    std.debug.print("│{s: >2}", .{hf.usizeToValue(main.top_field[index - 3][1])});
-                    std.debug.print("│{s: >2}", .{hf.usizeToValue(main.top_field[index - 2][1])});
+                    std.debug.print("│{s: >2}", .{hf.usizeToValue(main.top_field[index - 5][1], true)});
+                    std.debug.print("│{s: >2}", .{hf.usizeToValue(main.top_field[index - 4][1], true)});
+                    std.debug.print("│{s: >2}", .{hf.usizeToValue(main.top_field[index - 3][1], true)});
+                    std.debug.print("│{s: >2}", .{hf.usizeToValue(main.top_field[index - 2][1], true)});
                     topCardPrintSymbols(main.top_field[index - 1][1]);
                 },
                 2, 4 => {
