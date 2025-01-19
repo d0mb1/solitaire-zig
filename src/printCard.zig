@@ -1,6 +1,6 @@
 const std = @import("std");
 const main = @import("main.zig");
-const hf = @import("helpFn.zig");
+const helpFn = @import("helpFn.zig");
 
 pub fn topCardPrint() void {
     std.debug.print("╭─────────╮ ", .{});
@@ -8,7 +8,7 @@ pub fn topCardPrint() void {
 
 pub fn middleCardPrint(card: main.Card) void {
     // checks if the card is visible
-    if (hf.isVisible(card.vis)) {
+    if (helpFn.isVisible(card.vis)) {
         std.debug.print("│         │ ", .{});
     } else {
         std.debug.print("│ ∷∷∷∷∷∷∷ │ ", .{});
@@ -36,11 +36,11 @@ pub fn emptyPrint() void {
 
 pub fn topCardPrintSymbols(card: main.Card) void {
     // checks if the card is visible
-    if (hf.isVisible(card.vis)) {
+    if (helpFn.isVisible(card.vis)) {
         // check what color should the output be
         std.debug.print("│{s: >2}     {s} │ ", .{
-            hf.usizeToValue(card, true),
-            hf.usizeToShape(card),
+            helpFn.usizeToValue(card, true),
+            helpFn.usizeToShape(card),
         });
     } else {
         middleCardPrint(card);
@@ -49,9 +49,9 @@ pub fn topCardPrintSymbols(card: main.Card) void {
 
 pub fn middleCardPrintSymbols(card: main.Card) void {
     // checks if the card is visible
-    if (hf.isVisible(card.vis)) {
+    if (helpFn.isVisible(card.vis)) {
         // check what color should the output be
-        std.debug.print("│    {s}    │ ", .{hf.usizeToShape(card)});
+        std.debug.print("│    {s}    │ ", .{helpFn.usizeToShape(card)});
     } else {
         middleCardPrint(card);
     }
@@ -59,11 +59,11 @@ pub fn middleCardPrintSymbols(card: main.Card) void {
 
 pub fn bottomCardPrintSymbols(card: main.Card) void {
     // checks if the card is visible
-    if (hf.isVisible(card.vis)) {
+    if (helpFn.isVisible(card.vis)) {
         // check what color should the output be
         std.debug.print("│ {s}     {s: <2}│ ", .{
-            hf.usizeToShape(card),
-            hf.usizeToValue(card, false),
+            helpFn.usizeToShape(card),
+            helpFn.usizeToValue(card, false),
         });
     } else {
         middleCardPrint(card);
@@ -205,10 +205,10 @@ pub fn spreadCards(part_of_card: usize, index: usize) void {
                     std.debug.print("         ", .{});
                 },
                 1 => {
-                    if (hf.isRed(main.top_field[index - 2][1].shp)) {
-                        std.debug.print("│\x1b[31m{s: >2}\x1b[0m", .{hf.usizeToValue(main.top_field[index - 2][1], true)});
+                    if (helpFn.isRed(main.top_field[index - 2][1].shp)) {
+                        std.debug.print("│\x1b[31m{s: >2}\x1b[0m", .{helpFn.usizeToValue(main.top_field[index - 2][1], true)});
                     } else {
-                        std.debug.print("│{s: >2}", .{hf.usizeToValue(main.top_field[index - 2][1], true)});
+                        std.debug.print("│{s: >2}", .{helpFn.usizeToValue(main.top_field[index - 2][1], true)});
                     }
                     topCardPrintSymbols(main.top_field[index - 1][1]);
                     std.debug.print("         ", .{});
@@ -224,10 +224,10 @@ pub fn spreadCards(part_of_card: usize, index: usize) void {
                     std.debug.print("         ", .{});
                 },
                 5 => {
-                    if (hf.isRed(main.top_field[index - 2][1].shp)) {
-                        std.debug.print("│ \x1b[31m{s}\x1b[0m", .{hf.usizeToShape(main.top_field[index - 2][1])});
+                    if (helpFn.isRed(main.top_field[index - 2][1].shp)) {
+                        std.debug.print("│ \x1b[31m{s}\x1b[0m", .{helpFn.usizeToShape(main.top_field[index - 2][1])});
                     } else {
-                        std.debug.print("│ {s}", .{hf.usizeToShape(main.top_field[index - 2][1])});
+                        std.debug.print("│ {s}", .{helpFn.usizeToShape(main.top_field[index - 2][1])});
                     }
                     bottomCardPrintSymbols(main.top_field[index - 1][1]);
                     std.debug.print("          ", .{});
@@ -249,8 +249,8 @@ pub fn spreadCards(part_of_card: usize, index: usize) void {
                     std.debug.print("      ", .{});
                 },
                 1 => {
-                    std.debug.print("│{s: >2}", .{hf.usizeToValue(main.top_field[index - 3][1], true)});
-                    std.debug.print("│{s: >2}", .{hf.usizeToValue(main.top_field[index - 2][1], true)});
+                    std.debug.print("│{s: >2}", .{helpFn.usizeToValue(main.top_field[index - 3][1], true)});
+                    std.debug.print("│{s: >2}", .{helpFn.usizeToValue(main.top_field[index - 2][1], true)});
                     topCardPrintSymbols(main.top_field[index - 1][1]);
                     std.debug.print("      ", .{});
                 },
@@ -265,8 +265,8 @@ pub fn spreadCards(part_of_card: usize, index: usize) void {
                     std.debug.print("      ", .{});
                 },
                 5 => {
-                    std.debug.print("│ {s}", .{hf.usizeToShape(main.top_field[index - 3][1])});
-                    std.debug.print("│ {s}", .{hf.usizeToShape(main.top_field[index - 2][1])});
+                    std.debug.print("│ {s}", .{helpFn.usizeToShape(main.top_field[index - 3][1])});
+                    std.debug.print("│ {s}", .{helpFn.usizeToShape(main.top_field[index - 2][1])});
                     bottomCardPrintSymbols(main.top_field[index - 1][1]);
                     std.debug.print("      ", .{});
                 },

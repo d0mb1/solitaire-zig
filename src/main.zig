@@ -10,10 +10,10 @@
 // importing standard library
 const std = @import("std");
 // importing file with card print functions
-const cp = @import("cardPrint.zig");
-const hf = @import("helpFn.zig");
-const gs = @import("gameSetup.zig");
-const cm = @import("cardMove.zig");
+const printCard = @import("printCard.zig");
+const helpFn = @import("helpFn.zig");
+const gameSetup = @import("gameSetup.zig");
+const moveCard = @import("moveCard.zig");
 
 const stdin = std.io.getStdIn().reader();
 const stdout = std.io.getStdOut().writer();
@@ -72,34 +72,34 @@ pub var top_field: [top_field_rows][top_field_columns]Card = undefined;
 // --- MAIN FUNCTION --- //
 pub fn main() !void {
     // setting up the game
-    gs.fillDeck();
-    try gs.shuffle();
-    gs.fillFields();
-    gs.uncoverCards();
+    gameSetup.fillDeck();
+    try gameSetup.shuffle();
+    gameSetup.fillFields();
+    gameSetup.uncoverCards();
 
     while (true) {
-        hf.topLabels();
-        cp.printTopField();
-        hf.bottomLabels();
-        cp.printBottomField();
+        helpFn.topLabels();
+        printCard.printTopField();
+        helpFn.bottomLabels();
+        printCard.printBottomField();
 
         std.debug.print("FROM: ", .{});
-        const from = try hf.getNum();
+        const from = try helpFn.getNum();
         // switch cases that hadel game logic. All posibilities should be
         // handeled here
         switch (from) {
             // from one of the finishing stacks
             0 => {
                 std.debug.print("FROM: ", .{});
-                const from2 = try hf.getNum();
+                const from2 = try helpFn.getNum();
                 switch (from2) {
                     // which finishing stack
                     1...4 => {
                         std.debug.print("TO: ", .{});
-                        const to = try hf.getNum();
+                        const to = try helpFn.getNum();
                         // where to move the card
                         switch (to) {
-                            1...7 => cm.moveCard(),
+                            1...7 => moveCard.moveCard(),
                             else => std.debug.print("Invalid Stack\n", .{}),
                         }
                     },
@@ -109,16 +109,16 @@ pub fn main() !void {
             // from one of the game board stacks
             1...7 => {
                 std.debug.print("WHAT: ", .{});
-                const what = try hf.getNum();
+                const what = try helpFn.getNum();
                 // what card is being picked
                 switch (what) {
                     1...13 => {
                         std.debug.print("TO: ", .{});
-                        const to = try hf.getNum();
+                        const to = try helpFn.getNum();
                         // where to move the card
                         switch (to) {
-                            1...7 => cm.moveCard(),
-                            0 => cm.moveCard(),
+                            1...7 => moveCard.moveCard(),
+                            0 => moveCard.moveCard(),
                             else => std.debug.print("Invalid Stack\n", .{}),
                         }
                     },
@@ -127,17 +127,17 @@ pub fn main() !void {
             },
             // flips cards between stack 8 and 9
             8 => {
-                cm.cardFlip();
-                cm.moveCard();
+                moveCard.cardFlip();
+                moveCard.moveCard();
             },
             // from the "discard" stack
             9 => {
                 std.debug.print("TO: ", .{});
-                const to = try hf.getNum();
+                const to = try helpFn.getNum();
                 // where to move card
                 switch (to) {
-                    1...7 => cm.moveCard(),
-                    0 => cm.moveCard(),
+                    1...7 => moveCard.moveCard(),
+                    0 => moveCard.moveCard(),
                     else => std.debug.print("Invalid Stack\n", .{}),
                 }
             },
