@@ -75,7 +75,7 @@ pub fn main() !void {
     gs.fillDeck();
     try gs.shuffle();
     gs.fillFields();
-    // gs.uncoverCards();
+    gs.uncoverCards();
 
     while (true) {
         hf.topLabels();
@@ -85,14 +85,19 @@ pub fn main() !void {
 
         std.debug.print("FROM: ", .{});
         const from = try hf.getNum();
+        // switch cases that hadel game logic. All posibilities should be
+        // handeled here
         switch (from) {
+            // from one of the finishing stacks
             0 => {
                 std.debug.print("FROM: ", .{});
                 const from2 = try hf.getNum();
                 switch (from2) {
+                    // which finishing stack
                     1...4 => {
                         std.debug.print("TO: ", .{});
                         const to = try hf.getNum();
+                        // where to move the card
                         switch (to) {
                             1...7 => cm.moveCard(),
                             else => std.debug.print("Invalid Stack\n", .{}),
@@ -101,13 +106,16 @@ pub fn main() !void {
                     else => std.debug.print("Invalid Stack\n", .{}),
                 }
             },
+            // from one of the game board stacks
             1...7 => {
                 std.debug.print("WHAT: ", .{});
                 const what = try hf.getNum();
+                // what card is being picked
                 switch (what) {
                     1...13 => {
                         std.debug.print("TO: ", .{});
                         const to = try hf.getNum();
+                        // where to move the card
                         switch (to) {
                             1...7 => cm.moveCard(),
                             0 => cm.moveCard(),
@@ -117,13 +125,16 @@ pub fn main() !void {
                     else => std.debug.print("Invalid Card Value\n", .{}),
                 }
             },
+            // flips cards between stack 8 and 9
             8 => {
                 cm.cardFlip();
                 cm.moveCard();
             },
+            // from the "discard" stack
             9 => {
                 std.debug.print("TO: ", .{});
                 const to = try hf.getNum();
+                // where to move card
                 switch (to) {
                     1...7 => cm.moveCard(),
                     0 => cm.moveCard(),

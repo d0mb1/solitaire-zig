@@ -12,14 +12,14 @@ pub fn fillDeck() void {
             main.deck[index] = main.Card{
                 .val = @intCast(value),
                 .shp = @intCast(shape),
-                .vis = @intFromEnum(main.Vis.uncovered),
+                .vis = @intFromEnum(main.Vis.covered),
             };
             index += 1;
         }
     }
 }
 
-// shuffle magic! done by the Fisher–Yates algorithm
+// shuffle magic! done by the Fisher–Yates shuffeling algorithm
 pub fn shuffle() !void {
     var index: usize = main.num_of_cards - 1;
     var prng = std.rand.DefaultPrng.init(blk: {

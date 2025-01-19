@@ -12,13 +12,13 @@ const stdin = std.io.getStdIn().reader();
 // │ ∷∷∷∷∷∷∷ │
 //   ∷∷∷∷∷∷∷
 // ╰─  ───  ─╯
-// ╭─────────╮ ╭─────────╮
-// │         │ │         │
-// │         │ │         │
-// │         │ │         │
-// │         │ │         │
-// │         │ │         │
-// ╰─────────╯ ╰─────────╯
+// ╭─────────╮       ╭─────────╮
+// │         │╭─────╮│         │
+// │         ││ SOL ││         │
+// │         ││ ITA ││         │
+// │         ││ IRE ││         │
+// │         │╰─────╯│         │
+// ╰─────────╯       ╰─────────╯
 // ╭──╭──╭──╭──╭─────────╮
 // │ 8│10│ 3│ Q│ A     󰣎 │
 // │  │  │  │  │         │
@@ -26,6 +26,9 @@ const stdin = std.io.getStdIn().reader();
 // │  │  │  │  │         │
 // │ 󰣏│ 󰣐│ 󰣎│ 󰣏│ 󰣎     A │
 // ╰──╰──╰──╰──╰─────────╯
+// SOL
+// ITA
+// IRE
 
 // function return a string based on the card value/shape ID input
 // helps with printing cards
@@ -91,6 +94,7 @@ pub fn usizeToValue(card: main.Card, pos: bool) []const u8 {
         };
     }
 }
+// transers usize to string
 pub fn usizeToShape(card: main.Card) []const u8 {
     if (isRed(card.shp)) {
         return switch (card.shp) {
@@ -136,7 +140,7 @@ pub fn printLogo(part_of_card: usize) void {
 pub fn topLabels() void {
     std.debug.print("                                    ╭───────────────────── 0 ─────────────────────╮\n╭─── 8 ───╮ ", .{});
 
-    // since the 9th stack moves to the right we have to move the label too
+    // since the 9th stack can move to the right we have to move the label too
     var index: usize = 0;
     while (index < main.labelGap) : (index += 1) {
         std.debug.print("   ", .{});
@@ -153,13 +157,27 @@ pub fn bottomLabels() void {
     std.debug.print("╭─── 1 ───╮ ╭─── 2 ───╮ ╭─── 3 ───╮ ╭─── 4 ───╮ ╭─── 5 ───╮ ╭─── 6 ───╮ ╭─── 7 ───╮ \n", .{});
 }
 
-// function that gets the user input and sends it to a variable
-pub fn getNum() !i64 {
-    var buf: [10]u8 = undefined;
+// function that get user input and stores it
+pub fn getNum() !u8 {
+    var buf: [100]u8 = undefined;
 
-    if (try stdin.readUntilDelimiterOrEof(buf[0..], '\n')) |user_input| {
-        return std.fmt.parseInt(i64, user_input, 10);
-    } else {
-        return @as(i64, 0);
+    // loop that will keep asking for input if the previous one was invalid
+    while (true) {
+        if (try std.io.getStdIn().reader().readUntilDelimiterOrEof(buf[0..], '\n')) |user_input| {
+            const parse_result = std.fmt.parseInt(u8, user_input, 10);
+            // if inser input is valid return it
+            if (parse_result) |num| {
+                return num;
+                // else print an error message and prompt user to try again
+            } else |err| {
+                const error_message: []const u8 = switch (err) {
+                    error.InvalidCharacter => "INVALID INPUT, TRY AGAIN: ",
+                    error.Overflow => "INVALID INPUT, TRY AGAIN: ",
+                };
+                std.debug.print("{s}", .{error_message});
+            }
+        } else {
+            return @as(u8, 0);
+        }
     }
 }
