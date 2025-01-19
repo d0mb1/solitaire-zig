@@ -61,6 +61,8 @@ pub const bottom_field_columns = 7;
 const top_field_rows = 25;
 // there are 6 stacks in the top filed in solitaire
 const top_field_columns = 6;
+// will determine the spacing between labels 8 and 9 when spreading cards
+pub var labelGap: usize = 0;
 
 // creating an array that will represent a card deck
 pub var deck: [num_of_cards]Card = undefined;
@@ -73,7 +75,7 @@ pub fn main() !void {
     gs.fillDeck();
     try gs.shuffle();
     gs.fillFields();
-    gs.uncoverCards();
+    // gs.uncoverCards();
 
     while (true) {
         hf.topLabels();

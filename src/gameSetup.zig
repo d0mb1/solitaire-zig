@@ -12,7 +12,7 @@ pub fn fillDeck() void {
             main.deck[index] = main.Card{
                 .val = @intCast(value),
                 .shp = @intCast(shape),
-                .vis = @intFromEnum(main.Vis.covered),
+                .vis = @intFromEnum(main.Vis.uncovered),
             };
             index += 1;
         }

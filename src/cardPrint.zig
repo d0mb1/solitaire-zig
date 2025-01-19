@@ -38,17 +38,10 @@ pub fn topCardPrintSymbols(card: main.Card) void {
     // checks if the card is visible
     if (hf.isVisible(card.vis)) {
         // check what color should the output be
-        if (hf.isRed(card.shp)) {
-            std.debug.print("│\x1b[31m{s: >2}     {s}\x1b[0m │ ", .{
-                hf.usizeToValue(card.val),
-                hf.usizeToShape(card.shp),
-            });
-        } else {
-            std.debug.print("│{s: >2}     {s} │ ", .{
-                hf.usizeToValue(card.val),
-                hf.usizeToShape(card.shp),
-            });
-        }
+        std.debug.print("│{s: >2}     {s} │ ", .{
+            hf.usizeToValue(card),
+            hf.usizeToShape(card),
+        });
     } else {
         middleCardPrint(card);
     }
@@ -58,11 +51,7 @@ pub fn middleCardPrintSymbols(card: main.Card) void {
     // checks if the card is visible
     if (hf.isVisible(card.vis)) {
         // check what color should the output be
-        if (hf.isRed(card.shp)) {
-            std.debug.print("│    \x1b[31m{s}\x1b[0m    │ ", .{hf.usizeToShape(card.shp)});
-        } else {
-            std.debug.print("│    {s}    │ ", .{hf.usizeToShape(card.shp)});
-        }
+        std.debug.print("│    {s}    │ ", .{hf.usizeToShape(card)});
     } else {
         middleCardPrint(card);
     }
@@ -72,17 +61,10 @@ pub fn bottomCardPrintSymbols(card: main.Card) void {
     // checks if the card is visible
     if (hf.isVisible(card.vis)) {
         // check what color should the output be
-        if (hf.isRed(card.shp)) {
-            std.debug.print("│ \x1b[31m{s}     {s: <2}\x1b[0m│ ", .{
-                hf.usizeToShape(card.shp),
-                hf.usizeToValue(card.val),
-            });
-        } else {
-            std.debug.print("│ {s}     {s: <2}│ ", .{
-                hf.usizeToShape(card.shp),
-                hf.usizeToValue(card.val),
-            });
-        }
+        std.debug.print("│ {s}    {s: >2} │ ", .{
+            hf.usizeToShape(card),
+            hf.usizeToValue(card),
+        });
     } else {
         middleCardPrint(card);
     }
@@ -171,6 +153,204 @@ pub fn printBottomField() void {
     }
 }
 
+pub fn spreadCards(part_of_card: usize, index: usize) void {
+    switch (index) {
+        0 => {
+            emptySpacePrint(part_of_card);
+            emptyPrint();
+            main.labelGap = 0;
+        },
+        1 => {
+            switch (part_of_card) {
+                0 => {
+                    topCardPrint();
+                    emptyPrint();
+                },
+                1 => {
+                    topCardPrintSymbols(main.top_field[index - 1][1]);
+                    emptyPrint();
+                },
+                2, 4 => {
+                    middleCardPrint(main.top_field[index - 1][1]);
+                    emptyPrint();
+                },
+                3 => {
+                    middleCardPrintSymbols(main.top_field[index - 1][1]);
+                    emptyPrint();
+                },
+                5 => {
+                    bottomCardPrintSymbols(main.top_field[index - 1][1]);
+                    emptyPrint();
+                },
+                6 => {
+                    bottomCardPrint();
+                    emptyPrint();
+                },
+                else => unreachable,
+            }
+            main.labelGap = 1;
+        },
+        2 => {
+            switch (part_of_card) {
+                0 => {
+                    std.debug.print("╭──", .{});
+                    topCardPrint();
+                    std.debug.print("         ", .{});
+                },
+                1 => {
+                    if (hf.isRed(main.top_field[index - 2][1].shp)) {
+                        std.debug.print("│\x1b[31m{s: >2}\x1b[0m", .{hf.usizeToValue(main.top_field[index - 2][1])});
+                    } else {
+                        std.debug.print("│{s: >2}", .{hf.usizeToValue(main.top_field[index - 2][1])});
+                    }
+                    topCardPrintSymbols(main.top_field[index - 1][1]);
+                    std.debug.print("         ", .{});
+                },
+                2, 4 => {
+                    std.debug.print("│  ", .{});
+                    middleCardPrint(main.top_field[index - 1][1]);
+                    std.debug.print("         ", .{});
+                },
+                3 => {
+                    std.debug.print("│  ", .{});
+                    middleCardPrintSymbols(main.top_field[index - 1][1]);
+                    std.debug.print("         ", .{});
+                },
+                5 => {
+                    if (hf.isRed(main.top_field[index - 2][1].shp)) {
+                        std.debug.print("│ \x1b[31m{s}\x1b[0m", .{hf.usizeToShape(main.top_field[index - 2][1])});
+                    } else {
+                        std.debug.print("│ {s}", .{hf.usizeToShape(main.top_field[index - 2][1])});
+                    }
+                    bottomCardPrintSymbols(main.top_field[index - 1][1]);
+                    std.debug.print("          ", .{});
+                },
+                6 => {
+                    std.debug.print("╰──", .{});
+                    bottomCardPrint();
+                    std.debug.print("         ", .{});
+                },
+                else => unreachable,
+            }
+            main.labelGap = 2;
+        },
+        3 => {
+            switch (part_of_card) {
+                0 => {
+                    std.debug.print("╭──╭──", .{});
+                    topCardPrint();
+                    std.debug.print("      ", .{});
+                },
+                1 => {
+                    std.debug.print("│{s: >2}", .{hf.usizeToValue(main.top_field[index - 3][1])});
+                    std.debug.print("│{s: >2}", .{hf.usizeToValue(main.top_field[index - 2][1])});
+                    topCardPrintSymbols(main.top_field[index - 1][1]);
+                    std.debug.print("      ", .{});
+                },
+                2, 4 => {
+                    std.debug.print("│  │  ", .{});
+                    middleCardPrint(main.top_field[index - 1][1]);
+                    std.debug.print("      ", .{});
+                },
+                3 => {
+                    std.debug.print("│  │  ", .{});
+                    middleCardPrintSymbols(main.top_field[index - 1][1]);
+                    std.debug.print("      ", .{});
+                },
+                5 => {
+                    std.debug.print("│ {s}", .{hf.usizeToShape(main.top_field[index - 3][1])});
+                    std.debug.print("│ {s}", .{hf.usizeToShape(main.top_field[index - 2][1])});
+                    bottomCardPrintSymbols(main.top_field[index - 1][1]);
+                    std.debug.print("      ", .{});
+                },
+                6 => {
+                    std.debug.print("╰──╰──", .{});
+                    bottomCardPrint();
+                    std.debug.print("      ", .{});
+                },
+                else => unreachable,
+            }
+            main.labelGap = 3;
+        },
+        4 => {
+            switch (part_of_card) {
+                0 => {
+                    std.debug.print("╭──╭──╭──", .{});
+                    topCardPrint();
+                    std.debug.print("   ", .{});
+                },
+                1 => {
+                    std.debug.print("│{s: >2}", .{hf.usizeToValue(main.top_field[index - 4][1])});
+                    std.debug.print("│{s: >2}", .{hf.usizeToValue(main.top_field[index - 3][1])});
+                    std.debug.print("│{s: >2}", .{hf.usizeToValue(main.top_field[index - 2][1])});
+                    topCardPrintSymbols(main.top_field[index - 1][1]);
+                    std.debug.print("   ", .{});
+                },
+                2, 4 => {
+                    std.debug.print("│  │  │  ", .{});
+                    middleCardPrint(main.top_field[index - 1][1]);
+                    std.debug.print("   ", .{});
+                },
+                3 => {
+                    std.debug.print("│  │  │  ", .{});
+                    middleCardPrintSymbols(main.top_field[index - 1][1]);
+                    std.debug.print("   ", .{});
+                },
+                5 => {
+                    std.debug.print("│ {s}", .{hf.usizeToShape(main.top_field[index - 4][1])});
+                    std.debug.print("│ {s}", .{hf.usizeToShape(main.top_field[index - 3][1])});
+                    std.debug.print("│ {s}", .{hf.usizeToShape(main.top_field[index - 2][1])});
+                    bottomCardPrintSymbols(main.top_field[index - 1][1]);
+                    std.debug.print("   ", .{});
+                },
+                6 => {
+                    std.debug.print("╰──╰──╰──", .{});
+                    bottomCardPrint();
+                    std.debug.print("   ", .{});
+                },
+                else => unreachable,
+            }
+            main.labelGap = 4;
+        },
+        else => {
+            switch (part_of_card) {
+                0 => {
+                    std.debug.print("╭──╭──╭──╭──", .{});
+                    topCardPrint();
+                },
+                1 => {
+                    std.debug.print("│{s: >2}", .{hf.usizeToValue(main.top_field[index - 5][1])});
+                    std.debug.print("│{s: >2}", .{hf.usizeToValue(main.top_field[index - 4][1])});
+                    std.debug.print("│{s: >2}", .{hf.usizeToValue(main.top_field[index - 3][1])});
+                    std.debug.print("│{s: >2}", .{hf.usizeToValue(main.top_field[index - 2][1])});
+                    topCardPrintSymbols(main.top_field[index - 1][1]);
+                },
+                2, 4 => {
+                    std.debug.print("│  │  │  │  ", .{});
+                    middleCardPrint(main.top_field[index - 1][1]);
+                },
+                3 => {
+                    std.debug.print("│  │  │  │  ", .{});
+                    middleCardPrintSymbols(main.top_field[index - 1][1]);
+                },
+                5 => {
+                    std.debug.print("│ {s}", .{hf.usizeToShape(main.top_field[index - 5][1])});
+                    std.debug.print("│ {s}", .{hf.usizeToShape(main.top_field[index - 4][1])});
+                    std.debug.print("│ {s}", .{hf.usizeToShape(main.top_field[index - 3][1])});
+                    std.debug.print("│ {s}", .{hf.usizeToShape(main.top_field[index - 2][1])});
+                    bottomCardPrintSymbols(main.top_field[index - 1][1]);
+                },
+                6 => {
+                    std.debug.print("╰──╰──╰──╰──", .{});
+                    bottomCardPrint();
+                },
+                else => unreachable,
+            }
+            main.labelGap = 4;
+        },
+    }
+}
+
 // I know I can probably save the indexes in to an array and then print the
 // cards which would be more effective since it wouldn't have to pass each
 // column multiple times but this was easier
@@ -182,22 +362,22 @@ pub fn printTopField() void {
     var part_of_card: usize = 0;
     while (part_of_card < 7) : (part_of_card += 1) {
         for (0..main.top_field[0].len) |column| {
-            if (column == 2) {
-                // hf.printLogo(part_of_card);
-                emptyPrint();
-            }
+            // if (column == 2) {
+            //     emptyPrint();
+            // }
             while (main.top_field[index][column].val != @intFromEnum(main.Val.joker)) {
                 index += 1;
             }
-            if (index == 0) {
+            if (column == 1) {
+                spreadCards(part_of_card, index);
+            } else if (index == 0) {
                 emptySpacePrint(part_of_card);
             } else {
                 switch (part_of_card) {
                     0 => topCardPrint(),
                     1 => topCardPrintSymbols(main.top_field[index - 1][column]),
-                    2 => middleCardPrint(main.top_field[index - 1][column]),
+                    2, 4 => middleCardPrint(main.top_field[index - 1][column]),
                     3 => middleCardPrintSymbols(main.top_field[index - 1][column]),
-                    4 => middleCardPrint(main.top_field[index - 1][column]),
                     5 => bottomCardPrintSymbols(main.top_field[index - 1][column]),
                     6 => bottomCardPrint(),
                     else => unreachable,

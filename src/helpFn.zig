@@ -1,4 +1,5 @@
 const std = @import("std");
+const main = @import("main.zig");
 const stdin = std.io.getStdIn().reader();
 
 // ╭─────────╮
@@ -28,33 +29,61 @@ const stdin = std.io.getStdIn().reader();
 
 // function return a string based on the card value/shape ID input
 // helps with printing cards
-pub fn usizeToValue(value: usize) []const u8 {
-    return switch (value) {
-        0 => "X", // empty card that'll represent and empty space
-        1 => "A",
-        2 => "2",
-        3 => "3",
-        4 => "4",
-        5 => "5",
-        6 => "6",
-        7 => "7",
-        8 => "8",
-        9 => "9",
-        10 => "10",
-        11 => "J",
-        12 => "Q",
-        13 => "K",
-        else => unreachable,
-    };
+pub fn usizeToValue(card: main.Card) []const u8 {
+    if (isRed(card.shp)) {
+        return switch (card.val) {
+            0 => " \x1b[31mX\x1b[0m", // empty card that'll represent and empty space
+            1 => " \x1b[31mA\x1b[0m",
+            2 => " \x1b[31m2\x1b[0m",
+            3 => " \x1b[31m3\x1b[0m",
+            4 => " \x1b[31m4\x1b[0m",
+            5 => " \x1b[31m5\x1b[0m",
+            6 => " \x1b[31m6\x1b[0m",
+            7 => " \x1b[31m7\x1b[0m",
+            8 => " \x1b[31m8\x1b[0m",
+            9 => " \x1b[31m9\x1b[0m",
+            10 => "\x1b[31m10\x1b[0m",
+            11 => " \x1b[31mJ\x1b[0m",
+            12 => " \x1b[31mQ\x1b[0m",
+            13 => " \x1b[31mK\x1b[0m",
+            else => unreachable,
+        };
+    } else {
+        return switch (card.val) {
+            0 => "X", // empty card that'll represent and empty space
+            1 => "A",
+            2 => "2",
+            3 => "3",
+            4 => "4",
+            5 => "5",
+            6 => "6",
+            7 => "7",
+            8 => "8",
+            9 => "9",
+            10 => "10",
+            11 => "J",
+            12 => "Q",
+            13 => "K",
+            else => unreachable,
+        };
+    }
 }
-pub fn usizeToShape(shape: usize) []const u8 {
-    return switch (shape) {
-        0 => "󰣐", // hearts
-        1 => "󰣑", // spades
-        2 => "󰣏", // diamonds
-        3 => "󰣎", // clubs
-        else => unreachable,
-    };
+pub fn usizeToShape(card: main.Card) []const u8 {
+    if (isRed(card.shp)) {
+        return switch (card.shp) {
+            0 => "\x1b[31m󰣐\x1b[0m", // hearts
+            1 => "\x1b[31m󰣑\x1b[0m", // spades
+            2 => "\x1b[31m󰣏\x1b[0m", // diamonds
+            3 => "\x1b[31m󰣎\x1b[0m", // clubs
+        };
+    } else {
+        return switch (card.shp) {
+            0 => "󰣐", // hearts
+            1 => "󰣑", // spades
+            2 => "󰣏", // diamonds
+            3 => "󰣎", // clubs
+        };
+    }
 }
 
 // checks if the card is red
@@ -81,7 +110,16 @@ pub fn printLogo(part_of_card: usize) void {
 }
 
 pub fn topLabels() void {
-    std.debug.print("                                    ╭───────────────────── 0 ─────────────────────╮\n╭─── 8 ───╮ ╭─── 9 ───╮             ╭─── 1 ───╮ ╭─── 2 ───╮ ╭─── 3 ───╮ ╭─── 4 ───╮\n", .{});
+    std.debug.print("                                    ╭───────────────────── 0 ─────────────────────╮\n╭─── 8 ───╮ ", .{});
+    var index: usize = 0;
+    while (index < main.labelGap) : (index += 1) {
+        std.debug.print("   ", .{});
+    }
+    std.debug.print("╭─── 9 ───╮ ", .{});
+    while (index < 4) : (index += 1) {
+        std.debug.print("   ", .{});
+    }
+    std.debug.print("╭─── 1 ───╮ ╭─── 2 ───╮ ╭─── 3 ───╮ ╭─── 4 ───╮\n", .{});
 }
 
 pub fn bottomLabels() void {
