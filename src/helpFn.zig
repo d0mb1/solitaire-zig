@@ -1,6 +1,7 @@
 const std = @import("std");
-const main = @import("main.zig");
 const builtin = @import("builtin");
+const main = @import("main.zig");
+const printCard = @import("printCard.zig");
 const stdin = std.io.getStdIn().reader();
 
 // ╭─────────╮
@@ -139,18 +140,19 @@ pub fn printLogo(part_of_card: usize) void {
 
 // prints the labels above cards
 pub fn topLabels() void {
-    std.debug.print("gap: {}\n", .{main.label_gap});
     std.debug.print("                                    ╭───────────────────── 0 ─────────────────────╮\n╭─── 8 ───╮ ", .{});
 
     // since the 9th stack can move to the right we have to move the label too
-    var index: usize = 0;
-    while (index < main.label_gap) : (index += 1) {
-        std.debug.print("   ", .{});
-    }
+    // var index: usize = 0;
+    // while (index < main.label_gap) : (index += 1) {
+    //     std.debug.print("   ", .{});
+    // }
+
     std.debug.print("╭─── 9 ───╮ ", .{});
-    while (index < 4) : (index += 1) {
-        std.debug.print("   ", .{});
-    }
+    printCard.emptyPrint();
+    // while (index < 4) : (index += 1) {
+    //     std.debug.print("   ", .{});
+    // }
 
     std.debug.print("╭─── 1 ───╮ ╭─── 2 ───╮ ╭─── 3 ───╮ ╭─── 4 ───╮\n", .{});
 }

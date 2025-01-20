@@ -30,7 +30,6 @@ pub fn flipCard() void {
             main.top_field[value][0].visivility = @intFromEnum(main.Visibility.covered);
             main.top_field[row_in_stack_9][1].value = @intFromEnum(main.Value.joker);
         }
-        main.label_gap = 0;
         // moves card from stack 8 to 9 and uncoveres it.
     } else {
         var row_in_stack_8: usize = 0;

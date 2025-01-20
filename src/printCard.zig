@@ -165,7 +165,6 @@ pub fn spreadCards(part_of_card: usize, index: usize) void {
         0 => {
             emptySpacePrint(part_of_card);
             emptyPrint();
-            main.label_gap = 0;
         },
         1 => {
             switch (part_of_card) {
@@ -195,7 +194,6 @@ pub fn spreadCards(part_of_card: usize, index: usize) void {
                 },
                 else => unreachable,
             }
-            main.label_gap = 1;
         },
         2 => {
             switch (part_of_card) {
@@ -239,7 +237,6 @@ pub fn spreadCards(part_of_card: usize, index: usize) void {
                 },
                 else => unreachable,
             }
-            main.label_gap = 2;
         },
         else => {
             switch (part_of_card) {
@@ -277,7 +274,6 @@ pub fn spreadCards(part_of_card: usize, index: usize) void {
                 },
                 else => unreachable,
             }
-            main.label_gap = 2;
         },
         // previously this function showed 5 cards on stack 9. Now Only 3
         // 4 => {
@@ -318,7 +314,6 @@ pub fn spreadCards(part_of_card: usize, index: usize) void {
         //         },
         //         else => unreachable,
         //     }
-        //     main.labelGap = 4;
         // },
         // else => {
         //     switch (part_of_card) {
@@ -354,7 +349,6 @@ pub fn spreadCards(part_of_card: usize, index: usize) void {
         //         },
         //         else => unreachable,
         //     }
-        //     main.labelGap = 4;
         // },
     }
 }

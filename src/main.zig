@@ -59,8 +59,6 @@ pub const num_of_bot_field_columns = 7;
 const num_of_top_field_rows = 25;
 // there are 6 stacks in the top filed in solitaire
 const num_of_top_field_columns = 6;
-// will determine the spacing between labels 8 and 9 when spreading cards
-pub var label_gap: usize = 0;
 
 // creating an array that will represent a card deck
 pub var deck: [num_of_cards]Card = undefined;
@@ -76,7 +74,6 @@ pub fn main() !void {
     gameSetup.uncoverCards();
 
     while (true) {
-        std.debug.print("Gap before: {}\n", .{label_gap});
         helpFn.topLabels();
         printCard.printTopField();
         helpFn.bottomLabels();
@@ -149,6 +146,5 @@ pub fn main() !void {
             },
             else => std.debug.print("Invalid Stack\n", .{}),
         }
-        std.debug.print("Gap after: {}\n", .{label_gap});
     }
 }
