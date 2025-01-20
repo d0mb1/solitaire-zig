@@ -113,6 +113,10 @@ pub fn main() !void {
                 // what card is being picked
                 switch (what) {
                     1...13 => {
+                        const row = moveCard.findCard(from - 1, what);
+                        // if the card isn't found the loop starts from the begining
+                        if (row == 13) continue;
+
                         std.debug.print("TO: ", .{});
                         const to = try helpFn.getNum();
                         // where to move the card
@@ -127,7 +131,7 @@ pub fn main() !void {
             },
             // flips cards between stack 8 and 9
             8 => {
-                moveCard.cardFlip();
+                moveCard.flipCard();
                 moveCard.moveCard();
             },
             // from the "discard" stack

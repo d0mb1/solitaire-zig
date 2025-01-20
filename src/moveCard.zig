@@ -6,7 +6,7 @@ pub fn moveCard() void {
     std.debug.print("Success!\n", .{});
 }
 
-pub fn cardFlip() void {
+pub fn flipCard() void {
     var index1: usize = 0;
     while (main.top_field[index1][1].val != @intFromEnum(main.Val.joker)) : (index1 += 1) {}
     // If there's no cards in stack 8 all cards in stack 9 go back to stack 8 and get covered again
@@ -27,4 +27,15 @@ pub fn cardFlip() void {
         main.top_field[index1][1].vis = @intFromEnum(main.Vis.uncovered);
         main.top_field[index0 - 1][0].val = @intFromEnum(main.Val.joker);
     }
+}
+
+// find a card in a stack and returns the row index
+pub fn findCard(column: u8, val: u8) usize {
+    var row: usize = 0;
+    while (main.bottom_field[row][column].val != val or main.bottom_field[row][column].vis != @intFromEnum(main.Vis.uncovered)) : (row += 1) {
+        if (row == main.bottom_field_rows - 1) {
+            break;
+        }
+    }
+    return row;
 }
