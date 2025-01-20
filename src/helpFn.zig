@@ -1,5 +1,6 @@
 const std = @import("std");
 const main = @import("main.zig");
+const builtin = @import("builtin");
 const stdin = std.io.getStdIn().reader();
 
 // ╭─────────╮
@@ -32,13 +33,13 @@ const stdin = std.io.getStdIn().reader();
 
 // function return a string based on the card value/shape ID input
 // helps with printing cards
-pub fn usizeToValue(card: main.Card, pos: bool) []const u8 {
-    if (isRed(card.shp)) {
+pub fn usizeToValue(card: main.Card, possition: bool) []const u8 {
+    if (isRed(card.shape)) {
         // for some reason I have to check which part of the card is being
         // printed because the ANSI escape codes change the position of the
         // value
-        if (pos) {
-            return switch (card.val) {
+        if (possition) {
+            return switch (card.value) {
                 0 => "X", // empty card that'll represent and empty space
                 1 => "\x1b[31m A\x1b[0m",
                 2 => "\x1b[31m 2\x1b[0m",
@@ -56,7 +57,7 @@ pub fn usizeToValue(card: main.Card, pos: bool) []const u8 {
                 else => unreachable,
             };
         } else {
-            return switch (card.val) {
+            return switch (card.value) {
                 0 => "X", // empty card that'll represent and empty space
                 1 => "\x1b[31mA \x1b[0m",
                 2 => "\x1b[31m2 \x1b[0m",
@@ -75,7 +76,7 @@ pub fn usizeToValue(card: main.Card, pos: bool) []const u8 {
             };
         }
     } else {
-        return switch (card.val) {
+        return switch (card.value) {
             0 => "X", // empty card that'll represent and empty space
             1 => "A",
             2 => "2",
@@ -96,15 +97,15 @@ pub fn usizeToValue(card: main.Card, pos: bool) []const u8 {
 }
 // transers usize to string
 pub fn usizeToShape(card: main.Card) []const u8 {
-    if (isRed(card.shp)) {
-        return switch (card.shp) {
+    if (isRed(card.shape)) {
+        return switch (card.shape) {
             0 => "\x1b[31m󰣐\x1b[0m", // hearts
             1 => "\x1b[31m󰣑\x1b[0m", // spades
             2 => "\x1b[31m󰣏\x1b[0m", // diamonds
             3 => "\x1b[31m󰣎\x1b[0m", // clubs
         };
     } else {
-        return switch (card.shp) {
+        return switch (card.shape) {
             0 => "󰣐", // hearts
             1 => "󰣑", // spades
             2 => "󰣏", // diamonds
@@ -142,7 +143,7 @@ pub fn topLabels() void {
 
     // since the 9th stack can move to the right we have to move the label too
     var index: usize = 0;
-    while (index < main.labelGap) : (index += 1) {
+    while (index < main.label_gap) : (index += 1) {
         std.debug.print("   ", .{});
     }
     std.debug.print("╭─── 9 ───╮ ", .{});
@@ -159,24 +160,50 @@ pub fn bottomLabels() void {
 
 // function that get user input and stores it
 pub fn getNum() !u8 {
-    var buf: [100]u8 = undefined;
+    var buffer: [100]u8 = undefined;
 
     // loop that will keep asking for input if the previous one was invalid
     while (true) {
-        if (try std.io.getStdIn().reader().readUntilDelimiterOrEof(buf[0..], '\n')) |user_input| {
-            const line = std.mem.trimRight(u8, user_input[0 .. user_input.len - 1], "\r");
-            const parse_result = std.fmt.parseInt(u8, line, 10);
-            // if inser input is valid return it
-            if (parse_result) |num| {
-                return num;
-                // else print an error message and prompt user to try again
-            } else |err| {
-                const error_message: []const u8 = switch (err) {
-                    error.InvalidCharacter => "INVALID INPUT, TRY AGAIN: ",
-                    error.Overflow => "INVALID INPUT, TRY AGAIN: ",
-                };
-                std.debug.print("{s}", .{error_message});
+        if (try std.io.getStdIn().reader().readUntilDelimiterOrEof(buffer[0..], '\n')) |user_input| {
+            if (builtin.target.os.tag == .windows) {
+                const line = std.mem.trimRight(u8, user_input[0 .. user_input.len - 1], "\r");
+                const parse_result = std.fmt.parseInt(u8, line, 10);
+                // if inser input is valid return it
+                if (parse_result) |num| {
+                    return num;
+                    // else print an error message and prompt user to try again
+                } else |err| {
+                    const error_message: []const u8 = switch (err) {
+                        error.InvalidCharacter => "INVALID INPUT, TRY AGAIN: ",
+                        error.Overflow => "INVALID INPUT, TRY AGAIN: ",
+                    };
+                    std.debug.print("{s}", .{error_message});
+                }
+            } else {
+                const parse_result = std.fmt.parseInt(u8, user_input, 10);
+                // if inser input is valid return it
+                if (parse_result) |num| {
+                    return num;
+                    // else print an error message and prompt user to try again
+                } else |err| {
+                    const error_message: []const u8 = switch (err) {
+                        error.InvalidCharacter => "INVALID INPUT, TRY AGAIN: ",
+                        error.Overflow => "INVALID INPUT, TRY AGAIN: ",
+                    };
+                    std.debug.print("{s}", .{error_message});
+                }
             }
+            // if inser input is valid return it
+            // if (parse_result) |num| {
+            //     return num;
+            //     // else print an error message and prompt user to try again
+            // } else |err| {
+            //     const error_message: []const u8 = switch (err) {
+            //         error.InvalidCharacter => "INVALID INPUT, TRY AGAIN: ",
+            //         error.Overflow => "INVALID INPUT, TRY AGAIN: ",
+            //     };
+            //     std.debug.print("{s}", .{error_message});
+            // }
         } else {
             return @as(u8, 0);
         }

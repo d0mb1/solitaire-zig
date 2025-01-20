@@ -8,7 +8,7 @@ pub fn topCardPrint() void {
 
 pub fn middleCardPrint(card: main.Card) void {
     // checks if the card is visible
-    if (helpFn.isVisible(card.vis)) {
+    if (helpFn.isVisible(card.visivility)) {
         std.debug.print("│         │ ", .{});
     } else {
         std.debug.print("│ ∷∷∷∷∷∷∷ │ ", .{});
@@ -36,7 +36,7 @@ pub fn emptyPrint() void {
 
 pub fn topCardPrintSymbols(card: main.Card) void {
     // checks if the card is visible
-    if (helpFn.isVisible(card.vis)) {
+    if (helpFn.isVisible(card.visivility)) {
         // check what color should the output be
         std.debug.print("│{s: >2}     {s} │ ", .{
             helpFn.usizeToValue(card, true),
@@ -49,7 +49,7 @@ pub fn topCardPrintSymbols(card: main.Card) void {
 
 pub fn middleCardPrintSymbols(card: main.Card) void {
     // checks if the card is visible
-    if (helpFn.isVisible(card.vis)) {
+    if (helpFn.isVisible(card.visivility)) {
         // check what color should the output be
         std.debug.print("│    {s}    │ ", .{helpFn.usizeToShape(card)});
     } else {
@@ -59,7 +59,7 @@ pub fn middleCardPrintSymbols(card: main.Card) void {
 
 pub fn bottomCardPrintSymbols(card: main.Card) void {
     // checks if the card is visible
-    if (helpFn.isVisible(card.vis)) {
+    if (helpFn.isVisible(card.visivility)) {
         // check what color should the output be
         std.debug.print("│ {s}     {s: <2}│ ", .{
             helpFn.usizeToShape(card),
@@ -74,7 +74,7 @@ pub fn bottomCardPrintSymbols(card: main.Card) void {
 pub fn restOfCardPrint(row: usize, column: usize, symbols: bool) void {
     var index: usize = 0;
     // finding the top card in the stack and counting how many rows above it is
-    while (main.bottom_field[row - index][column].val == @intFromEnum(main.Val.joker)) : (index += 1) {
+    while (main.bottom_field[row - index][column].value == @intFromEnum(main.Value.joker)) : (index += 1) {
         if (row - index == 0) {
             break;
         }
@@ -107,11 +107,11 @@ pub fn printBottomField() void {
         // iterates over columns / cards in a row
         for (0..main.bottom_field[row].len) |column| {
             // checks if the card isn't joker (empty space)
-            if (main.bottom_field[row][column].val != @intFromEnum(main.Val.joker)) {
+            if (main.bottom_field[row][column].value != @intFromEnum(main.Value.joker)) {
                 topCardPrint();
             } else {
                 // checks if the stack is empty
-                if (main.bottom_field[0][column].val == @intFromEnum(main.Val.joker)) {
+                if (main.bottom_field[0][column].value == @intFromEnum(main.Value.joker)) {
                     // is it's empty call a function that prints card outline
                     emptySpacePrint(part_of_card);
                 } else {
@@ -122,7 +122,7 @@ pub fn printBottomField() void {
         }
         part_of_card += 1;
         // checks if the row is empty / there's only empty cards
-        if (empty_cards == main.bottom_field_columns) {
+        if (empty_cards == main.num_of_bot_field_columns) {
             // if the whole row is empty adds 1 to a count down
             count_down += 1;
             if (count_down == 4) {
@@ -136,11 +136,11 @@ pub fn printBottomField() void {
         // iterates over columns / cards in a row
         for (0..main.bottom_field[row].len) |column| {
             // checks if the card isn't joker (empty space)
-            if (main.bottom_field[row][column].val != @intFromEnum(main.Val.joker)) {
+            if (main.bottom_field[row][column].value != @intFromEnum(main.Value.joker)) {
                 topCardPrintSymbols(main.bottom_field[row][column]);
             } else {
                 // checks if the stack is empty
-                if (main.bottom_field[0][column].val == @intFromEnum(main.Val.joker)) {
+                if (main.bottom_field[0][column].value == @intFromEnum(main.Value.joker)) {
                     // is it's empty call a function that prints card outline
                     emptySpacePrint(part_of_card);
                 } else {
@@ -165,7 +165,7 @@ pub fn spreadCards(part_of_card: usize, index: usize) void {
         0 => {
             emptySpacePrint(part_of_card);
             emptyPrint();
-            main.labelGap = 0;
+            main.label_gap = 0;
         },
         1 => {
             switch (part_of_card) {
@@ -195,7 +195,7 @@ pub fn spreadCards(part_of_card: usize, index: usize) void {
                 },
                 else => unreachable,
             }
-            main.labelGap = 1;
+            main.label_gap = 1;
         },
         2 => {
             switch (part_of_card) {
@@ -205,7 +205,7 @@ pub fn spreadCards(part_of_card: usize, index: usize) void {
                     std.debug.print("         ", .{});
                 },
                 1 => {
-                    if (helpFn.isRed(main.top_field[index - 2][1].shp)) {
+                    if (helpFn.isRed(main.top_field[index - 2][1].shape)) {
                         std.debug.print("│\x1b[31m{s: >2}\x1b[0m", .{helpFn.usizeToValue(main.top_field[index - 2][1], true)});
                     } else {
                         std.debug.print("│{s: >2}", .{helpFn.usizeToValue(main.top_field[index - 2][1], true)});
@@ -224,7 +224,7 @@ pub fn spreadCards(part_of_card: usize, index: usize) void {
                     std.debug.print("         ", .{});
                 },
                 5 => {
-                    if (helpFn.isRed(main.top_field[index - 2][1].shp)) {
+                    if (helpFn.isRed(main.top_field[index - 2][1].shape)) {
                         std.debug.print("│ \x1b[31m{s}\x1b[0m", .{helpFn.usizeToShape(main.top_field[index - 2][1])});
                     } else {
                         std.debug.print("│ {s}", .{helpFn.usizeToShape(main.top_field[index - 2][1])});
@@ -239,7 +239,7 @@ pub fn spreadCards(part_of_card: usize, index: usize) void {
                 },
                 else => unreachable,
             }
-            main.labelGap = 2;
+            main.label_gap = 2;
         },
         else => {
             switch (part_of_card) {
@@ -277,7 +277,7 @@ pub fn spreadCards(part_of_card: usize, index: usize) void {
                 },
                 else => unreachable,
             }
-            main.labelGap = 2;
+            main.label_gap = 2;
         },
         // previously this function showed 5 cards on stack 9. Now Only 3
         // 4 => {
@@ -373,7 +373,7 @@ pub fn printTopField() void {
             // if (column == 2) {
             //     emptyPrint();
             // }
-            while (main.top_field[index][column].val != @intFromEnum(main.Val.joker)) {
+            while (main.top_field[index][column].value != @intFromEnum(main.Value.joker)) {
                 index += 1;
             }
             if (column == 1) {
