@@ -2,8 +2,19 @@ const std = @import("std");
 const main = @import("main.zig");
 
 // prototyping a funciton that will move cards between decks
-pub fn moveCard() void {
+pub fn moveCardTestPrint() void {
     std.debug.print("Success!\n", .{});
+}
+
+// find a card in a stack and returns the row index
+pub fn findCard(column: u8, val: u8) u8 {
+    var row: usize = 0;
+    while (main.bottom_field[row][column].value != val or main.bottom_field[row][column].visivility != @intFromEnum(main.Visibility.uncovered)) : (row += 1) {
+        if (row == main.num_of_bot_field_rows - 1) {
+            break;
+        }
+    }
+    return @intCast(row);
 }
 
 pub fn flipCard() void {
@@ -29,13 +40,17 @@ pub fn flipCard() void {
     }
 }
 
-// find a card in a stack and returns the row index
-pub fn findCard(column: u8, val: u8) usize {
-    var row: usize = 0;
-    while (main.bottom_field[row][column].value != val or main.bottom_field[row][column].visivility != @intFromEnum(main.Visibility.uncovered)) : (row += 1) {
-        if (row == main.num_of_bot_field_rows - 1) {
-            break;
-        }
+// moves cards between stack in to bottom field
+pub fn bottom2bottomMove(row_from: u8, column_from: u8, column_to: u8) void {
+    var amout_of_cards: usize = 0;
+    var index_to: usize = 0;
+    // finds the first spot where isn't a card in the column where we want to put our chosen card
+    while (main.bottom_field[index_to][column_to].value != @intFromEnum(main.Value.joker)) : (index_to += 1) {}
+    // finds out how mave cards should move
+    while (main.bottom_field[row_from + amout_of_cards][column_from].value != @intFromEnum(main.Value.joker)) : (amout_of_cards += 1) {}
+    var index: usize = 0;
+    while (index < amout_of_cards) : (index += 1) {
+        main.bottom_field[index_to + index][column_to] = main.bottom_field[row_from + index][column_from];
+        main.bottom_field[row_from + index][column_from].value = @intFromEnum(main.Value.joker);
     }
-    return row;
 }

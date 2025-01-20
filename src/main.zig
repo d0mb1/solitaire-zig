@@ -76,6 +76,7 @@ pub fn main() !void {
     gameSetup.uncoverCards();
 
     while (true) {
+        std.debug.print("Gap before: {}\n", .{label_gap});
         helpFn.topLabels();
         printCard.printTopField();
         helpFn.bottomLabels();
@@ -97,7 +98,7 @@ pub fn main() !void {
                         const to = try helpFn.getNum();
                         // where to move the card
                         switch (to) {
-                            1...7 => moveCard.moveCard(),
+                            1...7 => moveCard.moveCardTestPrint(),
                             else => std.debug.print("Invalid Stack\n", .{}),
                         }
                     },
@@ -119,8 +120,11 @@ pub fn main() !void {
                         const to = try helpFn.getNum();
                         // where to move the card
                         switch (to) {
-                            1...7 => moveCard.moveCard(),
-                            0 => moveCard.moveCard(),
+                            1...7 => {
+                                moveCard.moveCardTestPrint();
+                                moveCard.bottom2bottomMove(row, from - 1, to - 1);
+                            },
+                            0 => moveCard.moveCardTestPrint(),
                             else => std.debug.print("Invalid Stack\n", .{}),
                         }
                     },
@@ -130,7 +134,7 @@ pub fn main() !void {
             // flips cards between stack 8 and 9
             8 => {
                 moveCard.flipCard();
-                moveCard.moveCard();
+                moveCard.moveCardTestPrint();
             },
             // from the "discard" stack
             9 => {
@@ -138,12 +142,13 @@ pub fn main() !void {
                 const to = try helpFn.getNum();
                 // where to move card
                 switch (to) {
-                    1...7 => moveCard.moveCard(),
-                    0 => moveCard.moveCard(),
+                    1...7 => moveCard.moveCardTestPrint(),
+                    0 => moveCard.moveCardTestPrint(),
                     else => std.debug.print("Invalid Stack\n", .{}),
                 }
             },
             else => std.debug.print("Invalid Stack\n", .{}),
         }
+        std.debug.print("Gap after: {}\n", .{label_gap});
     }
 }

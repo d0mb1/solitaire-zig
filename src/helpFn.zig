@@ -139,6 +139,7 @@ pub fn printLogo(part_of_card: usize) void {
 
 // prints the labels above cards
 pub fn topLabels() void {
+    std.debug.print("gap: {}\n", .{main.label_gap});
     std.debug.print("                                    ╭───────────────────── 0 ─────────────────────╮\n╭─── 8 ───╮ ", .{});
 
     // since the 9th stack can move to the right we have to move the label too
