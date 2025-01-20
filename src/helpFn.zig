@@ -164,7 +164,8 @@ pub fn getNum() !u8 {
     // loop that will keep asking for input if the previous one was invalid
     while (true) {
         if (try std.io.getStdIn().reader().readUntilDelimiterOrEof(buf[0..], '\n')) |user_input| {
-            const parse_result = std.fmt.parseInt(u8, user_input, 10);
+            const line = std.mem.trimRight(u8, user_input[0 .. user_input.len - 1], "\r");
+            const parse_result = std.fmt.parseInt(u8, line, 10);
             // if inser input is valid return it
             if (parse_result) |num| {
                 return num;
