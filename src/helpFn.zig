@@ -145,17 +145,22 @@ pub fn printLogo(part_of_card: usize) void {
 pub fn topLabels() void {
     std.debug.print("                                    ╭───────────────────── 0 ─────────────────────╮\n╭─── 8 ───╮ ", .{});
 
-    // since the 9th stack can move to the right we have to move the label too
-    // var index: usize = 0;
-    // while (index < main.label_gap) : (index += 1) {
-    //     std.debug.print("   ", .{});
-    // }
+    var gap: usize = 0;
+    for (0..3) |row| {
+        if (main.top_field[row][1].value != @intFromEnum(main.Value.joker)) gap += 1;
+    }
 
+    switch (gap) {
+        0, 1 => {},
+        2 => std.debug.print("   ", .{}),
+        else => std.debug.print("      ", .{}),
+    }
     std.debug.print("╭─── 9 ───╮ ", .{});
-    printCard.emptyPrint();
-    // while (index < 4) : (index += 1) {
-    //     std.debug.print("   ", .{});
-    // }
+    switch (gap) {
+        0, 1 => std.debug.print("            ", .{}),
+        2 => std.debug.print("         ", .{}),
+        else => std.debug.print("      ", .{}),
+    }
 
     std.debug.print("╭─── 1 ───╮ ╭─── 2 ───╮ ╭─── 3 ───╮ ╭─── 4 ───╮\n", .{});
 }
