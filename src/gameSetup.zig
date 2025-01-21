@@ -1,5 +1,6 @@
 const std = @import("std");
 const main = @import("main.zig");
+const moveCard = @import("moveCard.zig");
 
 // generates all possible cards and places them in a deck
 pub fn fillDeck() void {
@@ -44,12 +45,12 @@ pub fn shuffleDeck() !void {
 
 // fills both playing fields with cards placed in the deck
 pub fn fillFields() void {
-
-    // this part fills the bottom field
     var card_index: usize = 0;
     var column: usize = 0;
     var row: usize = 0;
     var row_start: usize = 0;
+
+    // stagger where the cards are placed
     while (row < 7) : (row += 1) {
         while (column < main.num_of_bot_field_columns) : (column += 1) {
             main.bottom_field[row][column] = main.deck[card_index];
@@ -73,18 +74,15 @@ fn fillTopField(i: usize) void {
     }
 }
 
-// when the field is filled with cards they all are covered. This function uncoveres all the top cards in the bottom field.
+// when the field is filled with cards they all are covered. This function
+// uncoveres all the top cards in the bottom field.
 pub fn uncoverCards() void {
 
     // steps thrue all the columns
-    var row: usize = 0;
     for (0..main.bottom_field[0].len) |column| {
 
-        // finds the top card in a stack and sets it to uncovered
-        while (main.bottom_field[row][column].value != @intFromEnum(main.Value.joker)) {
-            row += 1;
-        }
+        // uncover top most card
+        const row = moveCard.findFirstCardBottom(@intCast(column));
         main.bottom_field[row - 1][column].visivility = @intFromEnum(main.Visibility.uncovered);
-        row = 0;
     }
 }

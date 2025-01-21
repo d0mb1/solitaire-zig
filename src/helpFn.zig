@@ -32,7 +32,8 @@ const stdin = std.io.getStdIn().reader();
 // ITA
 // IRE
 
-// function return a string based on the card value/shape ID input helps with printing cards
+// function return a string based on the card value/shape ID input helps with
+// printing cards
 pub fn usizeToValue(card: main.Card, possition: bool) []const u8 {
     if (isRed(card.shape)) {
 
@@ -208,17 +209,6 @@ pub fn getNum() !u8 {
                     std.debug.print("{s}", .{error_message});
                 }
             }
-            // if inser input is valid return it
-            // if (parse_result) |num| {
-            //     return num;
-            //     // else print an error message and prompt user to try again
-            // } else |err| {
-            //     const error_message: []const u8 = switch (err) {
-            //         error.InvalidCharacter => "INVALID INPUT, TRY AGAIN: ",
-            //         error.Overflow => "INVALID INPUT, TRY AGAIN: ",
-            //     };
-            //     std.debug.print("{s}", .{error_message});
-            // }
         } else {
             return @as(u8, 0);
         }

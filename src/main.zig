@@ -120,9 +120,10 @@ pub fn main() !void {
                 // what card is being picked
                 switch (what) {
                     1...13 => {
-                        const row = moveCard.findBottomCard(from - 1, what);
+                        const row = moveCard.findExactCardBottom(from - 1, what);
 
-                        // if the card isn't found the loop starts from the begining
+                        // if the card isn't found the loop starts from the
+                        // begining
                         if (row == 13) continue;
 
                         std.debug.print("TO: ", .{});
@@ -132,7 +133,7 @@ pub fn main() !void {
                         switch (to) {
                             1...7 => {
                                 moveCard.moveCardTestPrint();
-                                moveCard.checkBottomToBottomMove(row, from - 1, to - 1);
+                                moveCard.b2bMove(row, from - 1, to - 1);
                             },
                             0 => moveCard.moveCardTestPrint(),
                             else => std.debug.print("Invalid Stack\n", .{}),
@@ -158,7 +159,7 @@ pub fn main() !void {
                     1...7 => {
                         moveCard.moveCardTestPrint();
                         // column labels aren't the same as array indexes
-                        moveCard.topToBottomMove(from - 8, to - 1);
+                        moveCard.t2bMove(from - 8, to - 1);
                     },
                     0 => moveCard.moveCardTestPrint(),
                     else => std.debug.print("Invalid Stack\n", .{}),

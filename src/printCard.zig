@@ -7,6 +7,7 @@ pub fn topCardPrint() void {
 }
 
 pub fn middleCardPrint(card: main.Card) void {
+
     // checks if the card is visible
     if (helpFn.isVisible(card.visivility)) {
         std.debug.print("│         │ ", .{});
@@ -35,8 +36,10 @@ pub fn emptyPrint() void {
 }
 
 pub fn topCardPrintSymbols(card: main.Card) void {
+
     // checks if the card is visible
     if (helpFn.isVisible(card.visivility)) {
+
         // check what color should the output be
         std.debug.print("│{s: >2}     {s} │ ", .{
             helpFn.usizeToValue(card, true),
@@ -48,8 +51,10 @@ pub fn topCardPrintSymbols(card: main.Card) void {
 }
 
 pub fn middleCardPrintSymbols(card: main.Card) void {
+
     // checks if the card is visible
     if (helpFn.isVisible(card.visivility)) {
+
         // check what color should the output be
         std.debug.print("│    {s}    │ ", .{helpFn.usizeToShape(card)});
     } else {
@@ -58,8 +63,10 @@ pub fn middleCardPrintSymbols(card: main.Card) void {
 }
 
 pub fn bottomCardPrintSymbols(card: main.Card) void {
+
     // checks if the card is visible
     if (helpFn.isVisible(card.visivility)) {
+
         // check what color should the output be
         std.debug.print("│ {s}     {s: <2}│ ", .{
             helpFn.usizeToShape(card),
@@ -73,14 +80,16 @@ pub fn bottomCardPrintSymbols(card: main.Card) void {
 // prints the bottom part of cards
 pub fn restOfCardPrint(row: usize, column: usize, symbols: bool) void {
     var index: usize = 0;
+
     // finding the top card in the stack and counting how many rows above it is
     while (main.bottom_field[row - index][column].value == @intFromEnum(main.Value.joker)) : (index += 1) {
         if (row - index == 0) {
             break;
         }
     }
-    // findout if the funtion should print a symbol part of a card or not
-    // and prints apropriately
+
+    // findout if the funtion should print a symbol part of a card or not and
+    // prints apropriately
     switch (symbols) {
         true => switch (index) {
             0 => middleCardPrint(main.bottom_field[row - index][column]),
@@ -98,21 +107,31 @@ pub fn restOfCardPrint(row: usize, column: usize, symbols: bool) void {
 
 // prints the bottom field
 pub fn printBottomField() void {
+
+    // count downs to three and then stops print
     var count_down: usize = 0;
+
     // part of card keeps track of what part of card should be printed
     var part_of_card: usize = 0;
-    // iterates over rows in a field
+
+    // iterates over rows in the bottom field
     for (0..main.bottom_field.len) |row| {
+
+        // counts how many spaces are empty on a row
         var empty_cards: usize = 0;
+
         // iterates over columns / cards in a row
         for (0..main.bottom_field[row].len) |column| {
+
             // checks if the card isn't joker (empty space)
             if (main.bottom_field[row][column].value != @intFromEnum(main.Value.joker)) {
                 topCardPrint();
             } else {
+
                 // checks if the stack is empty
                 if (main.bottom_field[0][column].value == @intFromEnum(main.Value.joker)) {
-                    // is it's empty call a function that prints card outline
+
+                    // if it's empty call a function that prints card outline
                     emptySpacePrint(part_of_card);
                 } else {
                     restOfCardPrint(row, column, false);
@@ -121,26 +140,36 @@ pub fn printBottomField() void {
             }
         }
         part_of_card += 1;
+
         // checks if the row is empty / there's only empty cards
+        // (empty_cards = 7)
         if (empty_cards == main.num_of_bot_field_columns) {
+
             // if the whole row is empty adds 1 to a count down
             count_down += 1;
             if (count_down == 4) {
-                // when count-down gets to 3 it breaks the loop preventing
-                // the function from printing unnecessary rows
+
+                // When count-down gets to 4 it breaks the loop preventing
+                // the function from printing unnecessary rows.
+                // It counts down to 4 because we need the print to finish
+                // printing the bottom cards that are shown whole
                 std.debug.print("\n", .{});
                 break;
             }
         }
         std.debug.print("\n", .{});
+
         // iterates over columns / cards in a row
         for (0..main.bottom_field[row].len) |column| {
+
             // checks if the card isn't joker (empty space)
             if (main.bottom_field[row][column].value != @intFromEnum(main.Value.joker)) {
                 topCardPrintSymbols(main.bottom_field[row][column]);
             } else {
+
                 // checks if the stack is empty
                 if (main.bottom_field[0][column].value == @intFromEnum(main.Value.joker)) {
+
                     // is it's empty call a function that prints card outline
                     emptySpacePrint(part_of_card);
                 } else {
@@ -159,7 +188,7 @@ pub fn printBottomField() void {
 // part_of_card represesnts which part of a card should be printed
 
 // index represents how many cards are on the stack and determines what
-// should be printed
+// should be printed (0 to 3 depending on the index)
 pub fn spreadCards(part_of_card: usize, index: usize) void {
     switch (index) {
         0 => {
@@ -275,81 +304,6 @@ pub fn spreadCards(part_of_card: usize, index: usize) void {
                 else => unreachable,
             }
         },
-        // previously this function showed 5 cards on stack 9. Now Only 3
-        // 4 => {
-        //     switch (part_of_card) {
-        //         0 => {
-        //             std.debug.print("╭──╭──╭──", .{});
-        //             topCardPrint();
-        //             std.debug.print("   ", .{});
-        //         },
-        //         1 => {
-        //             std.debug.print("│{s: >2}", .{hf.usizeToValue(main.top_field[index - 4][1], true)});
-        //             std.debug.print("│{s: >2}", .{hf.usizeToValue(main.top_field[index - 3][1], true)});
-        //             std.debug.print("│{s: >2}", .{hf.usizeToValue(main.top_field[index - 2][1], true)});
-        //             topCardPrintSymbols(main.top_field[index - 1][1]);
-        //             std.debug.print("   ", .{});
-        //         },
-        //         2, 4 => {
-        //             std.debug.print("│  │  │  ", .{});
-        //             middleCardPrint(main.top_field[index - 1][1]);
-        //             std.debug.print("   ", .{});
-        //         },
-        //         3 => {
-        //             std.debug.print("│  │  │  ", .{});
-        //             middleCardPrintSymbols(main.top_field[index - 1][1]);
-        //             std.debug.print("   ", .{});
-        //         },
-        //         5 => {
-        //             std.debug.print("│ {s}", .{hf.usizeToShape(main.top_field[index - 4][1])});
-        //             std.debug.print("│ {s}", .{hf.usizeToShape(main.top_field[index - 3][1])});
-        //             std.debug.print("│ {s}", .{hf.usizeToShape(main.top_field[index - 2][1])});
-        //             bottomCardPrintSymbols(main.top_field[index - 1][1]);
-        //             std.debug.print("   ", .{});
-        //         },
-        //         6 => {
-        //             std.debug.print("╰──╰──╰──", .{});
-        //             bottomCardPrint();
-        //             std.debug.print("   ", .{});
-        //         },
-        //         else => unreachable,
-        //     }
-        // },
-        // else => {
-        //     switch (part_of_card) {
-        //         0 => {
-        //             std.debug.print("╭──╭──╭──╭──", .{});
-        //             topCardPrint();
-        //         },
-        //         1 => {
-        //             std.debug.print("│{s: >2}", .{hf.usizeToValue(main.top_field[index - 5][1], true)});
-        //             std.debug.print("│{s: >2}", .{hf.usizeToValue(main.top_field[index - 4][1], true)});
-        //             std.debug.print("│{s: >2}", .{hf.usizeToValue(main.top_field[index - 3][1], true)});
-        //             std.debug.print("│{s: >2}", .{hf.usizeToValue(main.top_field[index - 2][1], true)});
-        //             topCardPrintSymbols(main.top_field[index - 1][1]);
-        //         },
-        //         2, 4 => {
-        //             std.debug.print("│  │  │  │  ", .{});
-        //             middleCardPrint(main.top_field[index - 1][1]);
-        //         },
-        //         3 => {
-        //             std.debug.print("│  │  │  │  ", .{});
-        //             middleCardPrintSymbols(main.top_field[index - 1][1]);
-        //         },
-        //         5 => {
-        //             std.debug.print("│ {s}", .{hf.usizeToShape(main.top_field[index - 5][1])});
-        //             std.debug.print("│ {s}", .{hf.usizeToShape(main.top_field[index - 4][1])});
-        //             std.debug.print("│ {s}", .{hf.usizeToShape(main.top_field[index - 3][1])});
-        //             std.debug.print("│ {s}", .{hf.usizeToShape(main.top_field[index - 2][1])});
-        //             bottomCardPrintSymbols(main.top_field[index - 1][1]);
-        //         },
-        //         6 => {
-        //             std.debug.print("╰──╰──╰──╰──", .{});
-        //             bottomCardPrint();
-        //         },
-        //         else => unreachable,
-        //     }
-        // },
     }
 }
 
@@ -359,14 +313,13 @@ pub fn spreadCards(part_of_card: usize, index: usize) void {
 // TODO: Fix this later
 pub fn printTopField() void {
     var index: usize = 0;
-    // there's 7 rows to a card. part_of_card keeps track of which part
-    // should be printed
+
+    // there's 7 parts/rows to a card (top outline, top part with symbols,
+    // top blank part, middle part with symbols, etc.). part_of_card keeps
+    // track of which part should be printed
     var part_of_card: usize = 0;
     while (part_of_card < 7) : (part_of_card += 1) {
         for (0..main.top_field[0].len) |column| {
-            // if (column == 2) {
-            //     emptyPrint();
-            // }
             while (main.top_field[index][column].value != @intFromEnum(main.Value.joker)) {
                 index += 1;
             }
