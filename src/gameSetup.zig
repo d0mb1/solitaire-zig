@@ -61,6 +61,7 @@ pub fn fillFields() void {
     fillTopField(card_index);
 }
 
+// fills top fields
 fn fillTopField(i: usize) void {
     var card_index: usize = i;
     const num_of_rem_cards: usize = main.num_of_cards - card_index;
@@ -72,8 +73,7 @@ fn fillTopField(i: usize) void {
     }
 }
 
-// when the field is filled with cards they all are covered. This function
-// uncoveres all the top cards in the bottom field.
+// when the field is filled with cards they all are covered. This function uncoveres all the top cards in the bottom field.
 pub fn uncoverCards() void {
 
     // steps thrue all the columns

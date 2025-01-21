@@ -32,8 +32,7 @@ const stdin = std.io.getStdIn().reader();
 // ITA
 // IRE
 
-// function return a string based on the card value/shape ID input
-// helps with printing cards
+// function return a string based on the card value/shape ID input helps with printing cards
 pub fn usizeToValue(card: main.Card, possition: bool) []const u8 {
     if (isRed(card.shape)) {
 
@@ -141,7 +140,7 @@ pub fn printLogo(part_of_card: usize) void {
     }
 }
 
-// prints the labels above cards
+// prints the labels above top field
 pub fn topLabels() void {
     std.debug.print("                                    ╭───────────────────── 0 ─────────────────────╮\n╭─── 8 ───╮ ", .{});
 
@@ -165,11 +164,12 @@ pub fn topLabels() void {
     std.debug.print("╭─── 1 ───╮ ╭─── 2 ───╮ ╭─── 3 ───╮ ╭─── 4 ───╮\n", .{});
 }
 
+// prints the labels above bottom field
 pub fn bottomLabels() void {
     std.debug.print("╭─── 1 ───╮ ╭─── 2 ───╮ ╭─── 3 ───╮ ╭─── 4 ───╮ ╭─── 5 ───╮ ╭─── 6 ───╮ ╭─── 7 ───╮ \n", .{});
 }
 
-// function that get user input and stores it
+// function that get user intiger input and returns it
 pub fn getNum() !u8 {
     var buffer: [100]u8 = undefined;
 

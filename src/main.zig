@@ -51,7 +51,7 @@ pub const num_of_cards = 52;
 
 // there can only be 13 cards in a stack in the bottom field. The last card
 // always has to be the joker so there's 14 rows
-pub const num_of_bot_field_rows = 14;
+pub const num_of_bot_field_rows = 20;
 
 // there are 7 stacks in the bottom filed in solitaire
 pub const num_of_bot_field_columns = 7;
@@ -120,7 +120,7 @@ pub fn main() !void {
                 // what card is being picked
                 switch (what) {
                     1...13 => {
-                        const row = moveCard.findCard(from - 1, what);
+                        const row = moveCard.findBottomCard(from - 1, what);
 
                         // if the card isn't found the loop starts from the begining
                         if (row == 13) continue;
@@ -155,7 +155,11 @@ pub fn main() !void {
 
                 // where to move card
                 switch (to) {
-                    1...7 => moveCard.moveCardTestPrint(),
+                    1...7 => {
+                        moveCard.moveCardTestPrint();
+                        // column labels aren't the same as array indexes
+                        moveCard.topToBottomMove(from - 8, to - 1);
+                    },
                     0 => moveCard.moveCardTestPrint(),
                     else => std.debug.print("Invalid Stack\n", .{}),
                 }
