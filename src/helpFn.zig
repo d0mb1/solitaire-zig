@@ -36,6 +36,7 @@ const stdin = std.io.getStdIn().reader();
 // helps with printing cards
 pub fn usizeToValue(card: main.Card, possition: bool) []const u8 {
     if (isRed(card.shape)) {
+
         // for some reason I have to check which part of the card is being
         // printed because the ANSI escape codes change the position of the
         // value
@@ -96,6 +97,7 @@ pub fn usizeToValue(card: main.Card, possition: bool) []const u8 {
         };
     }
 }
+
 // transers usize to string
 pub fn usizeToShape(card: main.Card) []const u8 {
     if (isRed(card.shape)) {
@@ -119,6 +121,7 @@ pub fn usizeToShape(card: main.Card) []const u8 {
 pub fn isRed(shape: usize) bool {
     if (0 == shape % 2) return true else return false;
 }
+
 // checks if the card is visible
 pub fn isVisible(visibility: usize) bool {
     if (0 == visibility % 2) return false else return true;
@@ -171,9 +174,11 @@ pub fn getNum() !u8 {
             if (builtin.target.os.tag == .windows) {
                 const line = std.mem.trimRight(u8, user_input[0 .. user_input.len - 1], "\r");
                 const parse_result = std.fmt.parseInt(u8, line, 10);
+
                 // if inser input is valid return it
                 if (parse_result) |num| {
                     return num;
+
                     // else print an error message and prompt user to try again
                 } else |err| {
                     const error_message: []const u8 = switch (err) {
@@ -184,9 +189,11 @@ pub fn getNum() !u8 {
                 }
             } else {
                 const parse_result = std.fmt.parseInt(u8, user_input, 10);
+
                 // if inser input is valid return it
                 if (parse_result) |num| {
                     return num;
+
                     // else print an error message and prompt user to try again
                 } else |err| {
                     const error_message: []const u8 = switch (err) {

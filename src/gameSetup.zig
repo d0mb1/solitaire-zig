@@ -3,9 +3,11 @@ const main = @import("main.zig");
 
 // generates all possible cards and places them in a deck
 pub fn fillDeck() void {
-    var card_index: usize = 0;
+
     // there's 4  possible shapes
+    var card_index: usize = 0;
     for (0..4) |shape| {
+
         // 0 reserved for an empty card that represents empty space
         // it also moves the index up so it matches card numbering
         for (1..14) |value| {
@@ -21,6 +23,9 @@ pub fn fillDeck() void {
 
 // shuffle magic! done by the Fisher–Yates shuffeling algorithm
 pub fn shuffleDeck() !void {
+
+    // generating a random seed that ensures that the deck will be shuffled
+    // differently each time
     var card_index: usize = main.num_of_cards - 1;
     var prng = std.rand.DefaultPrng.init(blk: {
         var seed: u64 = undefined;
@@ -28,6 +33,8 @@ pub fn shuffleDeck() !void {
         break :blk seed;
     });
     while (card_index > 0) : (card_index -= 1) {
+
+        // randomly choosing a card that will be swapped
         const j = prng.random().intRangeAtMost(usize, 0, card_index);
         const temp = main.deck[card_index];
         main.deck[card_index] = main.deck[j];
@@ -37,6 +44,7 @@ pub fn shuffleDeck() !void {
 
 // fills both playing fields with cards placed in the deck
 pub fn fillFields() void {
+
     // this part fills the bottom field
     var card_index: usize = 0;
     var column: usize = 0;
@@ -57,7 +65,8 @@ fn fillTopField(i: usize) void {
     var card_index: usize = i;
     const num_of_rem_cards: usize = main.num_of_cards - card_index;
     for (0..num_of_rem_cards) |row| {
-        // remaining cards are placed in to the fifth stack in the top field
+
+        // remaining cards are placed in to the eighth stack in the top field
         main.top_field[row][0] = main.deck[card_index];
         card_index += 1;
     }
@@ -66,9 +75,11 @@ fn fillTopField(i: usize) void {
 // when the field is filled with cards they all are covered. This function
 // uncoveres all the top cards in the bottom field.
 pub fn uncoverCards() void {
-    var row: usize = 0;
+
     // steps thrue all the columns
+    var row: usize = 0;
     for (0..main.bottom_field[0].len) |column| {
+
         // finds the top card in a stack and sets it to uncovered
         while (main.bottom_field[row][column].value != @intFromEnum(main.Value.joker)) {
             row += 1;

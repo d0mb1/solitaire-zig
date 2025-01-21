@@ -48,15 +48,19 @@ pub const Visibility = enum(u1) { covered, uncovered };
 
 // defines the number of cards in a standard card deck
 pub const num_of_cards = 52;
+
 // there can only be 13 cards in a stack in the bottom field. The last card
 // always has to be the joker so there's 14 rows
 pub const num_of_bot_field_rows = 14;
+
 // there are 7 stacks in the bottom filed in solitaire
 pub const num_of_bot_field_columns = 7;
+
 // after dealing cards to the bottom field there will be 24 cards left
 // that will placed in to one stack. The last card
 // always has to be the joker so there's 14 rows
 const num_of_top_field_rows = 25;
+
 // there are 6 stacks in the top filed in solitaire
 const num_of_top_field_columns = 6;
 
@@ -67,6 +71,7 @@ pub var top_field: [num_of_top_field_rows][num_of_top_field_columns]Card = undef
 
 // --- MAIN FUNCTION --- //
 pub fn main() !void {
+
     // setting up the game
     gameSetup.fillDeck();
     try gameSetup.shuffleDeck();
@@ -81,18 +86,22 @@ pub fn main() !void {
 
         std.debug.print("FROM: ", .{});
         const from = try helpFn.getNum();
+
         // switch cases that hadel game logic. All posibilities should be
         // handeled here
         switch (from) {
+
             // from one of the finishing stacks
             0 => {
                 std.debug.print("FROM: ", .{});
                 const from_final = try helpFn.getNum();
                 switch (from_final) {
+
                     // which finishing stack
                     1...4 => {
                         std.debug.print("TO: ", .{});
                         const to = try helpFn.getNum();
+
                         // where to move the card
                         switch (to) {
                             1...7 => moveCard.moveCardTestPrint(),
@@ -102,24 +111,28 @@ pub fn main() !void {
                     else => std.debug.print("Invalid Stack\n", .{}),
                 }
             },
+
             // from one of the game board stacks
             1...7 => {
                 std.debug.print("WHAT: ", .{});
                 const what = try helpFn.getNum();
+
                 // what card is being picked
                 switch (what) {
                     1...13 => {
                         const row = moveCard.findCard(from - 1, what);
+
                         // if the card isn't found the loop starts from the begining
                         if (row == 13) continue;
 
                         std.debug.print("TO: ", .{});
                         const to = try helpFn.getNum();
+
                         // where to move the card
                         switch (to) {
                             1...7 => {
                                 moveCard.moveCardTestPrint();
-                                moveCard.bottom2bottomMove(row, from - 1, to - 1);
+                                moveCard.checkBottomToBottomMove(row, from - 1, to - 1);
                             },
                             0 => moveCard.moveCardTestPrint(),
                             else => std.debug.print("Invalid Stack\n", .{}),
@@ -128,15 +141,18 @@ pub fn main() !void {
                     else => std.debug.print("Invalid Card Value\n", .{}),
                 }
             },
+
             // flips cards between stack 8 and 9
             8 => {
                 moveCard.flipCard();
                 moveCard.moveCardTestPrint();
             },
+
             // from the "discard" stack
             9 => {
                 std.debug.print("TO: ", .{});
                 const to = try helpFn.getNum();
+
                 // where to move card
                 switch (to) {
                     1...7 => moveCard.moveCardTestPrint(),
