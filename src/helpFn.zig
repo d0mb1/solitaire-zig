@@ -148,13 +148,10 @@ pub fn isVisible(visibility: usize) bool {
 pub fn topLabels() void {
     var message: []const u8 = undefined;
     switch (isWinnable()) {
-        true => switch (isWon()) {
-            true => message = "",
-            false => message = "\x1b[31mWINNABLE!!!\x1b[0m",
-        },
+        true => message = "WINNABLE!!!",
         false => message = "",
     }
-    std.debug.print("\x1b[31mMOVES: {: >4}\x1b[0m       {s: >11}       ╭───────────────────── 0 ─────────────────────╮\n╭─── 8 ───╮ ", .{ main.moves, message });
+    std.debug.print("\x1b[31mMOVES: {: >4}             {s: >11} ╭─────────────────────\x1b[0m 0 \x1b[31m─────────────────────╮\n╭───\x1b[0m 8 \x1b[31m───╮ ", .{ main.moves, message });
 
     var gap: usize = 0;
     for (0..3) |row| {
@@ -166,19 +163,19 @@ pub fn topLabels() void {
         2 => std.debug.print("   ", .{}),
         else => std.debug.print("      ", .{}),
     }
-    std.debug.print("╭─── 9 ───╮ ", .{});
+    std.debug.print("╭───\x1b[0m 9 \x1b[31m───╮ ", .{});
     switch (gap) {
         0, 1 => std.debug.print("            ", .{}),
         2 => std.debug.print("         ", .{}),
         else => std.debug.print("      ", .{}),
     }
 
-    std.debug.print("├─── 1 ───╮ ╭─── 2 ───╮ ╭─── 3 ───╮ ╭─── 4 ───┤\n", .{});
+    std.debug.print("├───\x1b[0m 1 \x1b[31m───╮ ╭───\x1b[0m 2 \x1b[31m───╮ ╭───\x1b[0m 3 \x1b[31m───╮ ╭───\x1b[0m 4 \x1b[31m───┤\x1b[0m\n", .{});
 }
 
 // prints the labels above bottom field
 pub fn bottomLabels() void {
-    std.debug.print("╭─── 1 ───╮ ╭─── 2 ───╮ ╭─── 3 ───╮ ╭─── 4 ───╮ ╭─── 5 ───╮ ╭─── 6 ───╮ ╭─── 7 ───╮ \n", .{});
+    std.debug.print("\x1b[31m╭───\x1b[0m 1 \x1b[31m───╮ ╭───\x1b[0m 2 \x1b[31m───╮ ╭───\x1b[0m 3 \x1b[31m───╮ ╭───\x1b[0m 4 \x1b[31m───╮ ╭───\x1b[0m 5 \x1b[31m───╮ ╭───\x1b[0m 6 \x1b[31m───╮ ╭───\x1b[0m 7 \x1b[31m───╮\x1b[0m\n", .{});
 }
 
 // function that get user intiger input and returns it

@@ -77,6 +77,9 @@ pub fn main() !void {
 
     // setting up the game
     gameSetup.fillDeck();
+
+    // shuffle twice just in case
+    try gameSetup.shuffleDeck();
     try gameSetup.shuffleDeck();
     gameSetup.fillFields();
     gameSetup.uncoverCards();
