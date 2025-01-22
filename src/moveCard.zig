@@ -10,6 +10,11 @@ pub fn flipCard() void {
     // If there's no cards in stack 8 all cards in stack 9 go back to stack 8
     // and get covered again
     if (main.top_field[0][0].value == @intFromEnum(main.Value.joker)) {
+
+        // if there's also no cards in stack 9 do nothing
+        if (main.top_field[0][1].value == @intFromEnum(main.Value.joker)) {
+            return;
+        }
         const num_of_cards_in_stack_9: usize = row_in_stack_9;
         for (0..num_of_cards_in_stack_9) |value| {
             row_in_stack_9 -= 1;
@@ -134,6 +139,82 @@ fn findFirstCardTop(column: u8) u8 {
     var row: usize = 0;
     while (main.top_field[row][column].value != @intFromEnum(main.Value.joker)) : (row += 1) {}
     return @intCast(row);
+}
+
+// moves a card from the bottom field to one of the final fields
+pub fn b2finalMove(column_from: u8) void {
+
+    // finds the card we want to move
+    const row_from = findFirstCardBottom(column_from);
+
+    // if there's no cards return
+    if (row_from == 0) return;
+
+    // finds the stack that corresponds to the shape of the picked card or an empty space
+    var final_column: usize = 0;
+    for (2..main.top_field[0].len) |column_to| {
+        if (main.bottom_field[row_from - 1][column_from].shape == main.top_field[0][column_to].shape or main.top_field[0][column_to].value == @intFromEnum(main.Value.joker)) {
+            final_column = column_to;
+            break;
+        }
+    }
+
+    // finds the spot where we want to place the card
+    const row_to = findFirstCardTop(@intCast(final_column));
+
+    // if the card is an ace we don't have to check the value of the card underneath
+    if (main.bottom_field[row_from - 1][column_from].value == @intFromEnum(main.Value.ace)) {
+        main.top_field[row_to][final_column] = main.bottom_field[row_from - 1][column_from];
+        main.bottom_field[row_from - 1][column_from].value = @intFromEnum(main.Value.joker);
+
+        // if it's not the only card in the stack uncover the card underneath it
+        if (row_from != 1) {
+            main.bottom_field[row_from - 2][column_from].visivility = @intFromEnum(main.Visibility.uncovered);
+        }
+    }
+    if (row_to == 0) return;
+    // check if it's valid move
+    if (main.bottom_field[row_from - 1][column_from].value == main.top_field[row_to - 1][final_column].value + 1) {
+        main.top_field[row_to][final_column] = main.bottom_field[row_from - 1][column_from];
+        main.bottom_field[row_from - 1][column_from].value = @intFromEnum(main.Value.joker);
+
+        // if it's not the only card in the stack uncover the card underneath it
+        if (row_from != 1) {
+            main.bottom_field[row_from - 2][column_from].visivility = @intFromEnum(main.Visibility.uncovered);
+        }
+    }
+}
+
+pub fn t2finalMove() void {
+    const row_from = findFirstCardTop(1);
+
+    // if the stack is empty there is nothing to move
+    if (row_from == 0) return;
+
+    // finds the stack that corresponds to the shape of the picked card or an empty space
+    var final_column: usize = 0;
+    for (2..main.top_field[0].len) |column_to| {
+        if (main.top_field[row_from - 1][1].shape == main.top_field[0][column_to].shape or main.top_field[0][column_to].value == @intFromEnum(main.Value.joker)) {
+            final_column = column_to;
+            break;
+        }
+    }
+
+    // finds the spot where we want to place the card
+    const row_to = findFirstCardTop(@intCast(final_column));
+
+    // if the card is an ace we don't have to check the value of the card underneath
+    if (main.top_field[row_from - 1][1].value == @intFromEnum(main.Value.ace)) {
+        main.top_field[row_to][final_column] = main.top_field[row_from - 1][1];
+        main.top_field[row_from - 1][1].value = @intFromEnum(main.Value.joker);
+    }
+    if (row_to == 0) return;
+
+    // check if it's valid move
+    if (main.top_field[row_from - 1][1].value == main.top_field[row_to - 1][final_column].value + 1) {
+        main.top_field[row_to][final_column] = main.top_field[row_from - 1][1];
+        main.top_field[row_from - 1][1].value = @intFromEnum(main.Value.joker);
+    }
 }
 
 // prototyping a funciton that will move cards between decks

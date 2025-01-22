@@ -257,7 +257,7 @@ pub fn spreadCards(part_of_card: usize, index: usize) void {
                         std.debug.print("│ {s}", .{helpFn.usizeToShape(main.top_field[index - 2][1])});
                     }
                     bottomCardPrintSymbols(main.top_field[index - 1][1]);
-                    std.debug.print("          ", .{});
+                    std.debug.print("         ", .{});
                 },
                 6 => {
                     std.debug.print("╰──", .{});

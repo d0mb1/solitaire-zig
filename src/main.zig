@@ -79,6 +79,7 @@ pub fn main() !void {
     gameSetup.uncoverCards();
 
     while (true) {
+        std.debug.print("\x1B[2J\x1B[H", .{});
         helpFn.topLabels();
         printCard.printTopField();
         helpFn.bottomLabels();
@@ -135,7 +136,10 @@ pub fn main() !void {
                                 moveCard.moveCardTestPrint();
                                 moveCard.b2bMove(row, from - 1, to - 1);
                             },
-                            0 => moveCard.moveCardTestPrint(),
+                            0 => {
+                                moveCard.moveCardTestPrint();
+                                moveCard.b2finalMove(from - 1);
+                            },
                             else => std.debug.print("Invalid Stack\n", .{}),
                         }
                     },
@@ -161,7 +165,7 @@ pub fn main() !void {
                         // column labels aren't the same as array indexes
                         moveCard.t2bMove(from - 8, to - 1);
                     },
-                    0 => moveCard.moveCardTestPrint(),
+                    0 => moveCard.t2finalMove(),
                     else => std.debug.print("Invalid Stack\n", .{}),
                 }
             },
