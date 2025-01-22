@@ -127,23 +127,9 @@ pub fn isVisible(visibility: usize) bool {
     if (0 == visibility % 2) return false else return true;
 }
 
-// prints the game logo
-pub fn printLogo(part_of_card: usize) void {
-    switch (part_of_card) {
-        0 => std.debug.print("\x1b[31m╭─────────╮\x1b[0m ", .{}),
-        1 => std.debug.print("\x1b[31m│ 󰣐\x1b[0m     󰣑 \x1b[31m│\x1b[0m ", .{}),
-        2 => std.debug.print("\x1b[31m│\x1b[0m  S \x1b[31mO\x1b[0m L  \x1b[31m│\x1b[0m ", .{}),
-        3 => std.debug.print("\x1b[31m│  I\x1b[0m T \x1b[31mA  │\x1b[0m ", .{}),
-        4 => std.debug.print("\x1b[31m│\x1b[0m  I \x1b[31mR\x1b[0m E  \x1b[31m│\x1b[0m ", .{}),
-        5 => std.debug.print("\x1b[31m│\x1b[0m 󰣎     \x1b[31m󰣏 │\x1b[0m ", .{}),
-        6 => std.debug.print("\x1b[31m╰─────────╯\x1b[0m ", .{}),
-        else => unreachable,
-    }
-}
-
 // prints the labels above top field
 pub fn topLabels() void {
-    std.debug.print("                                    ╭───────────────────── 0 ─────────────────────╮\n╭─── 8 ───╮ ", .{});
+    std.debug.print("MOVES: {: >4}                         ╭───────────────────── 0 ─────────────────────╮\n╭─── 8 ───╮ ", .{main.moves});
 
     var gap: usize = 0;
     for (0..3) |row| {
@@ -162,7 +148,7 @@ pub fn topLabels() void {
         else => std.debug.print("      ", .{}),
     }
 
-    std.debug.print("╭─── 1 ───╮ ╭─── 2 ───╮ ╭─── 3 ───╮ ╭─── 4 ───╮\n", .{});
+    std.debug.print("├─── 1 ───╮ ╭─── 2 ───╮ ╭─── 3 ───╮ ╭─── 4 ───┤\n", .{});
 }
 
 // prints the labels above bottom field
@@ -213,4 +199,26 @@ pub fn getNum() !u8 {
             return @as(u8, 0);
         }
     }
+}
+
+// // determines if the game is winnable / there are no covered cards left
+pub fn isWinnable() bool {
+    var uncovered_cards: usize = 0;
+
+    // checks the top field
+    for (main.top_field) |row| {
+        for (row, 0..) |card, i| {
+            if (card.visivility == @intFromEnum(main.Visibility.uncovered) and card.value != @intFromEnum(main.Value.joker)) uncovered_cards += 1;
+            if (card.visivility == @intFromEnum(main.Visibility.covered) and card.value != @intFromEnum(main.Value.joker) and i == 0) uncovered_cards += 1;
+        }
+    }
+
+    // checks the bottom field
+    for (main.bottom_field) |row| {
+        for (row) |card| {
+            if (card.visivility == @intFromEnum(main.Visibility.uncovered) and card.value != @intFromEnum(main.Value.joker)) uncovered_cards += 1;
+        }
+    }
+
+    if (uncovered_cards == 52) return true else false;
 }

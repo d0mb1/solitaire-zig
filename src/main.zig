@@ -59,15 +59,18 @@ pub const num_of_bot_field_columns = 7;
 // after dealing cards to the bottom field there will be 24 cards left
 // that will placed in to one stack. The last card
 // always has to be the joker so there's 14 rows
-const num_of_top_field_rows = 25;
+pub const num_of_top_field_rows = 25;
 
 // there are 6 stacks in the top filed in solitaire
-const num_of_top_field_columns = 6;
+pub const num_of_top_field_columns = 6;
 
 // creating an array that will represent a card deck
 pub var deck: [num_of_cards]Card = undefined;
 pub var bottom_field: [num_of_bot_field_rows][num_of_bot_field_columns]Card = undefined;
 pub var top_field: [num_of_top_field_rows][num_of_top_field_columns]Card = undefined;
+
+// keeps tracks of how many moves has player made
+pub var moves: u16 = 0;
 
 // --- MAIN FUNCTION --- //
 pub fn main() !void {
@@ -79,13 +82,14 @@ pub fn main() !void {
     gameSetup.uncoverCards();
 
     while (true) {
-        std.debug.print("\x1B[2J\x1B[H", .{});
+        // std.debug.print("\x1B[2J\x1B[H", .{});
         helpFn.topLabels();
         printCard.printTopField();
+        std.debug.print("\n", .{});
         helpFn.bottomLabels();
         printCard.printBottomField();
 
-        std.debug.print("FROM: ", .{});
+        std.debug.print("(0 - 9)\nFROM: ", .{});
         const from = try helpFn.getNum();
 
         // switch cases that hadel game logic. All posibilities should be
@@ -94,15 +98,14 @@ pub fn main() !void {
 
             // from one of the finishing stacks
             0 => {
-                std.debug.print("FROM: ", .{});
+                std.debug.print("(1 - 4)\nFROM: ", .{});
                 const from_final = try helpFn.getNum();
                 switch (from_final) {
 
                     // which finishing stack
                     1...4 => {
-                        std.debug.print("TO: ", .{});
+                        std.debug.print("(1 - 7)\nTO: ", .{});
                         const to = try helpFn.getNum();
-                        // std.debug.print("from: {} to: {}\n", .{ from_final + 1, to - 1 });
 
                         // where to move the card
                         switch (to) {
@@ -116,7 +119,7 @@ pub fn main() !void {
 
             // from one of the game board stacks
             1...7 => {
-                std.debug.print("WHAT: ", .{});
+                std.debug.print("(1 - 13)\nWHAT: ", .{});
                 const what = try helpFn.getNum();
 
                 // what card is being picked
@@ -128,17 +131,15 @@ pub fn main() !void {
                         // begining
                         if (row == 13) continue;
 
-                        std.debug.print("TO: ", .{});
+                        std.debug.print("(0 - 7)\nTO: ", .{});
                         const to = try helpFn.getNum();
 
                         // where to move the card
                         switch (to) {
                             1...7 => {
-                                moveCard.moveCardTestPrint();
                                 moveCard.b2bMove(row, from - 1, to - 1);
                             },
                             0 => {
-                                moveCard.moveCardTestPrint();
                                 moveCard.b2finalMove(from - 1);
                             },
                             else => std.debug.print("Invalid Stack\n", .{}),
@@ -151,18 +152,16 @@ pub fn main() !void {
             // flips cards between stack 8 and 9
             8 => {
                 moveCard.flipCard();
-                moveCard.moveCardTestPrint();
             },
 
             // from the "discard" stack
             9 => {
-                std.debug.print("TO: ", .{});
+                std.debug.print("(0 - 7)\nTO: ", .{});
                 const to = try helpFn.getNum();
 
                 // where to move card
                 switch (to) {
                     1...7 => {
-                        moveCard.moveCardTestPrint();
                         // column labels aren't the same as array indexes
                         moveCard.t2bMove(from - 8, to - 1);
                     },
@@ -172,5 +171,6 @@ pub fn main() !void {
             },
             else => std.debug.print("Invalid Stack\n", .{}),
         }
+        helpFn.isWinnable();
     }
 }

@@ -23,6 +23,7 @@ pub fn flipCard() void {
             main.top_field[value][0].visivility = @intFromEnum(main.Visibility.covered);
             main.top_field[row_in_stack_9][stack9column].value = @intFromEnum(main.Value.joker);
         }
+        main.moves += 1;
 
         // moves card from stack 8 to 9 and uncoveres it.
     } else {
@@ -31,6 +32,7 @@ pub fn flipCard() void {
         main.top_field[row_in_stack_9][stack9column] = main.top_field[row_in_stack_8 - 1][0];
         main.top_field[row_in_stack_9][stack9column].visivility = @intFromEnum(main.Visibility.uncovered);
         main.top_field[row_in_stack_8 - 1][0].value = @intFromEnum(main.Value.joker);
+        main.moves += 1;
     }
 }
 
@@ -91,17 +93,12 @@ fn b2bMoveRun(row_from: u8, column_from: u8, amount_of_cards: usize, row_to: usi
         main.bottom_field[row_to + index][column_to] = main.bottom_field[row_from + index][column_from];
         main.bottom_field[row_from + index][column_from].value = @intFromEnum(main.Value.joker);
     }
+    main.moves += 1;
 }
 
 // checks if the move is legal. If the card is a different color and its value
 // is one less then the one we're placing it on return true
 fn validMoveCheck(card_from: main.Card, card_to: main.Card) bool {
-    std.debug.print("placing {s} of {s} on top of {s} of {s}\n", .{
-        helpFn.usizeToValue(card_from, true),
-        helpFn.usizeToShape(card_from),
-        helpFn.usizeToValue(card_to, true),
-        helpFn.usizeToShape(card_to),
-    });
     if (card_from.value == card_to.value - 1 and helpFn.isRed(card_from.shape) != helpFn.isRed(card_to.shape)) {
         return true;
     }
@@ -125,12 +122,14 @@ pub fn t2bMove(column_from: u8, column_to: u8) void {
     if (row_to == 0 and main.top_field[row_from - 1][column_from].value == @intFromEnum(main.Value.king)) {
         main.bottom_field[row_to][column_to] = main.top_field[row_from - 1][column_from];
         main.top_field[row_from - 1][column_from].value = @intFromEnum(main.Value.joker);
+        main.moves += 1;
         return;
     }
 
     if (validMoveCheck(main.top_field[row_from - 1][column_from], main.bottom_field[row_to - 1][column_to])) {
         main.bottom_field[row_to][column_to] = main.top_field[row_from - 1][column_from];
         main.top_field[row_from - 1][column_from].value = @intFromEnum(main.Value.joker);
+        main.moves += 1;
     }
 }
 
@@ -173,13 +172,16 @@ pub fn b2finalMove(column_from: u8) void {
     if (main.bottom_field[row_from - 1][column_from].value == @intFromEnum(main.Value.ace)) {
         main.top_field[row_to][final_column] = main.bottom_field[row_from - 1][column_from];
         main.bottom_field[row_from - 1][column_from].value = @intFromEnum(main.Value.joker);
+        main.moves += 1;
 
         // if it's not the only card in the stack uncover the card underneath it
         if (row_from != 1) {
             main.bottom_field[row_from - 2][column_from].visivility = @intFromEnum(main.Visibility.uncovered);
         }
+        return;
     }
     if (row_to == 0) return;
+
     // check if it's valid move
     if (main.bottom_field[row_from - 1][column_from].value == main.top_field[row_to - 1][final_column].value + 1) {
         main.top_field[row_to][final_column] = main.bottom_field[row_from - 1][column_from];
@@ -189,6 +191,7 @@ pub fn b2finalMove(column_from: u8) void {
         if (row_from != 1) {
             main.bottom_field[row_from - 2][column_from].visivility = @intFromEnum(main.Visibility.uncovered);
         }
+        main.moves += 1;
     }
 }
 
@@ -215,6 +218,8 @@ pub fn t2finalMove() void {
     if (main.top_field[row_from - 1][strack9column].value == @intFromEnum(main.Value.ace)) {
         main.top_field[row_to][final_column] = main.top_field[row_from - 1][strack9column];
         main.top_field[row_from - 1][strack9column].value = @intFromEnum(main.Value.joker);
+        main.moves += 1;
+        return;
     }
     if (row_to == 0) return;
 
@@ -222,6 +227,7 @@ pub fn t2finalMove() void {
     if (main.top_field[row_from - 1][strack9column].value == main.top_field[row_to - 1][final_column].value + 1) {
         main.top_field[row_to][final_column] = main.top_field[row_from - 1][strack9column];
         main.top_field[row_from - 1][strack9column].value = @intFromEnum(main.Value.joker);
+        main.moves += 1;
     }
 }
 
@@ -243,13 +249,6 @@ pub fn final2bMove(column_from: u8, column_to: u8) void {
     if (validMoveCheck(main.top_field[row_from - 1][column_from], main.bottom_field[row_to - 1][column_to])) {
         main.bottom_field[row_to][column_to] = main.top_field[row_from - 1][column_from];
         main.top_field[row_from - 1][column_from].value = @intFromEnum(main.Value.joker);
-        std.debug.print("Proslo\n", .{});
-    } else {
-        std.debug.print("Neproslo\n", .{});
+        main.moves += 1;
     }
-}
-
-// prototyping a funciton that will move cards between decks
-pub fn moveCardTestPrint() void {
-    std.debug.print("Success!\n", .{});
 }
