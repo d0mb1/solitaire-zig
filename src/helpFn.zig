@@ -150,11 +150,11 @@ pub fn topLabels() void {
     switch (isWinnable()) {
         true => switch (isWon()) {
             true => message = "",
-            false => message = "WINNABLE!!!",
+            false => message = "\x1b[31mWINNABLE!!!\x1b[0m",
         },
         false => message = "",
     }
-    std.debug.print("MOVES: {: >4}       {s: >11}       ╭───────────────────── 0 ─────────────────────╮\n╭─── 8 ───╮ ", .{ main.moves, message });
+    std.debug.print("\x1b[31mMOVES: {: >4}\x1b[0m       {s: >11}       ╭───────────────────── 0 ─────────────────────╮\n╭─── 8 ───╮ ", .{ main.moves, message });
 
     var gap: usize = 0;
     for (0..3) |row| {

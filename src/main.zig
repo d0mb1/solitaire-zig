@@ -183,5 +183,6 @@ pub fn main() !void {
     std.debug.print("\n", .{});
     helpFn.bottomLabels();
     printCard.printBottomField();
+    std.debug.print("\n", .{});
     helpFn.winningMessage();
 }
