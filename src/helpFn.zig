@@ -31,6 +31,23 @@ const stdin = std.io.getStdIn().reader();
 // SOL
 // ITA
 // IRE
+// ╭─────────╮╭─────────╮╭─────────╮      ╭─────────╮╭─────────╮╭─────────╮╭─────────╮
+// │ Y     󰣏 ││ O     󰣎 ││ U     󰣐 │      │ W     󰣑 ││ O     󰣏 ││ N     󰣎 ││ !     󰣐 │
+// │         ││         ││         │      │         ││         ││         ││         │
+// │    󰣏    ││    󰣎    ││    󰣐    │      │    󰣑    ││    󰣏    ││    󰣎    ││    󰣐    │
+// │         ││         ││         │      │         ││         ││         ││         │
+// │ 󰣏     Y ││ 󰣎     O ││ 󰣐     U │      │ 󰣑     W ││ 󰣏     O ││ 󰣎     N ││ 󰣐     ! │
+// ╰─────────╯╰─────────╯╰─────────╯      ╰─────────╯╰─────────╯╰─────────╯╰─────────╯
+
+pub fn winningMessage() void {
+    std.debug.print("╭─────────╮╭─────────╮╭─────────╮      ╭─────────╮╭─────────╮╭─────────╮╭─────────╮\n", .{});
+    std.debug.print("│ \x1b[31mY     󰣏\x1b[0m ││ O     󰣎 ││ \x1b[31mU     󰣐\x1b[0m │      │ W     󰣑 ││ \x1b[31mI     󰣏\x1b[0m ││ N     󰣎 ││ \x1b[31m!     󰣐\x1b[0m │\n", .{});
+    std.debug.print("│         ││         ││         │      │         ││         ││         ││         │\n", .{});
+    std.debug.print("│    \x1b[31m󰣏\x1b[0m    ││    󰣎    ││    \x1b[31m󰣐\x1b[0m    │      │    󰣑    ││    \x1b[31m󰣏\x1b[0m    ││    󰣎    ││    \x1b[31m󰣐\x1b[0m    │\n", .{});
+    std.debug.print("│         ││         ││         │      │         ││         ││         ││         │\n", .{});
+    std.debug.print("│ \x1b[31m󰣏     Y\x1b[0m ││ 󰣎     O ││ \x1b[31m󰣐     U\x1b[0m │      │ 󰣑     W ││ \x1b[31m󰣏     I\x1b[0m ││ 󰣎     N ││ \x1b[31m󰣐     !\x1b[0m │\n", .{});
+    std.debug.print("╰─────────╯╰─────────╯╰─────────╯      ╰─────────╯╰─────────╯╰─────────╯╰─────────╯\n", .{});
+}
 
 // function return a string based on the card value/shape ID input helps with
 // printing cards
@@ -132,7 +149,7 @@ pub fn topLabels() void {
     var message: []const u8 = undefined;
     switch (isWinnable()) {
         true => switch (isWon()) {
-            true => message = "! YOU WON !",
+            true => message = "",
             false => message = "WINNABLE!!!",
         },
         false => message = "",
@@ -182,8 +199,8 @@ pub fn getNum() !u8 {
                     // else print an error message and prompt user to try again
                 } else |err| {
                     const error_message: []const u8 = switch (err) {
-                        error.InvalidCharacter => "INVALID INPUT, TRY AGAIN: ",
-                        error.Overflow => "INVALID INPUT, TRY AGAIN: ",
+                        error.InvalidCharacter => "▶ INVALID INPUT, TRY AGAIN\t\t\t\t▶ ",
+                        error.Overflow => "▶ INVALID INPUT, TRY AGAIN\t\t\t\t▶ ",
                     };
                     std.debug.print("{s}", .{error_message});
                 }
@@ -197,8 +214,8 @@ pub fn getNum() !u8 {
                     // else print an error message and prompt user to try again
                 } else |err| {
                     const error_message: []const u8 = switch (err) {
-                        error.InvalidCharacter => "INVALID INPUT, TRY AGAIN: ",
-                        error.Overflow => "INVALID INPUT, TRY AGAIN: ",
+                        error.InvalidCharacter => "▶ INVALID INPUT, TRY AGAIN\t\t\t\t▶ ",
+                        error.Overflow => "▶ INVALID INPUT, TRY AGAIN\t\t\t\t▶ ",
                     };
                     std.debug.print("{s}", .{error_message});
                 }

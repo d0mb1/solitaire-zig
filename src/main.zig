@@ -89,7 +89,7 @@ pub fn main() !void {
         helpFn.bottomLabels();
         printCard.printBottomField();
 
-        std.debug.print("(0 - 9) FROM: ", .{});
+        std.debug.print("▶ PICK A STACK (0 - 9) FROM WHICH TO TAKE A CARD OUT OF\t▶ ", .{});
         const from = try helpFn.getNum();
 
         // switch cases that hadel game logic. All posibilities should be
@@ -98,13 +98,13 @@ pub fn main() !void {
 
             // from one of the finishing stacks
             0 => {
-                std.debug.print("(1 - 4) FROM: ", .{});
+                std.debug.print("▶ PICK AN EXACT STACK (1 - 4) TO TAKE A CARD OUT OF\t▶ ", .{});
                 const from_final = try helpFn.getNum();
                 switch (from_final) {
 
                     // which finishing stack
                     1...4 => {
-                        std.debug.print("(1 - 7) TO: ", .{});
+                        std.debug.print("▶ PICK A STACK (1 - 7) WHERE TO PLACE THE CARD\t\t▶ ", .{});
                         const to = try helpFn.getNum();
 
                         // where to move the card
@@ -119,7 +119,7 @@ pub fn main() !void {
 
             // from one of the game board stacks
             1...7 => {
-                std.debug.print("(1 - 13) WHAT: ", .{});
+                std.debug.print("▶ PICK AN EXACT VALUE (1 - 13) OF A CARD TO MOVE\n  OR PLACE THE LAST CARD TO A FINAL STACK (0)\t\t▶ ", .{});
                 const what = try helpFn.getNum();
 
                 // what card is being picked
@@ -135,7 +135,7 @@ pub fn main() !void {
                         // begining
                         if (row == 13) continue;
 
-                        std.debug.print("(0 - 7) TO: ", .{});
+                        std.debug.print("▶ PICK A STACK (0 - 7) WHERE TO PLACE THE CARD\t\t▶ ", .{});
                         const to = try helpFn.getNum();
 
                         // where to move the card
@@ -160,7 +160,7 @@ pub fn main() !void {
 
             // from the "discard" stack
             9 => {
-                std.debug.print("(0 - 7) TO: ", .{});
+                std.debug.print("▶ PICK A STACK (0 - 7) WHERE TO PLACE THE CARD\t\t▶ ", .{});
                 const to = try helpFn.getNum();
 
                 // where to move card
@@ -183,4 +183,5 @@ pub fn main() !void {
     std.debug.print("\n", .{});
     helpFn.bottomLabels();
     printCard.printBottomField();
+    helpFn.winningMessage();
 }
