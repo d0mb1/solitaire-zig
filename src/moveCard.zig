@@ -5,30 +5,31 @@ const helpFn = @import("helpFn.zig");
 // flips cards between stack 8 and 9
 pub fn flipCard() void {
     var row_in_stack_9: usize = 0;
-    while (main.top_field[row_in_stack_9][1].value != @intFromEnum(main.Value.joker)) : (row_in_stack_9 += 1) {}
+    const stack9column = 1;
+    while (main.top_field[row_in_stack_9][stack9column].value != @intFromEnum(main.Value.joker)) : (row_in_stack_9 += 1) {}
 
     // If there's no cards in stack 8 all cards in stack 9 go back to stack 8
     // and get covered again
     if (main.top_field[0][0].value == @intFromEnum(main.Value.joker)) {
 
         // if there's also no cards in stack 9 do nothing
-        if (main.top_field[0][1].value == @intFromEnum(main.Value.joker)) {
+        if (main.top_field[0][stack9column].value == @intFromEnum(main.Value.joker)) {
             return;
         }
         const num_of_cards_in_stack_9: usize = row_in_stack_9;
         for (0..num_of_cards_in_stack_9) |value| {
             row_in_stack_9 -= 1;
-            main.top_field[value][0] = main.top_field[row_in_stack_9][1];
+            main.top_field[value][0] = main.top_field[row_in_stack_9][stack9column];
             main.top_field[value][0].visivility = @intFromEnum(main.Visibility.covered);
-            main.top_field[row_in_stack_9][1].value = @intFromEnum(main.Value.joker);
+            main.top_field[row_in_stack_9][stack9column].value = @intFromEnum(main.Value.joker);
         }
 
         // moves card from stack 8 to 9 and uncoveres it.
     } else {
         var row_in_stack_8: usize = 0;
         while (main.top_field[row_in_stack_8][0].value != @intFromEnum(main.Value.joker)) : (row_in_stack_8 += 1) {}
-        main.top_field[row_in_stack_9][1] = main.top_field[row_in_stack_8 - 1][0];
-        main.top_field[row_in_stack_9][1].visivility = @intFromEnum(main.Visibility.uncovered);
+        main.top_field[row_in_stack_9][stack9column] = main.top_field[row_in_stack_8 - 1][0];
+        main.top_field[row_in_stack_9][stack9column].visivility = @intFromEnum(main.Visibility.uncovered);
         main.top_field[row_in_stack_8 - 1][0].value = @intFromEnum(main.Value.joker);
     }
 }
@@ -95,6 +96,12 @@ fn b2bMoveRun(row_from: u8, column_from: u8, amount_of_cards: usize, row_to: usi
 // checks if the move is legal. If the card is a different color and its value
 // is one less then the one we're placing it on return true
 fn validMoveCheck(card_from: main.Card, card_to: main.Card) bool {
+    std.debug.print("placing {s} of {s} on top of {s} of {s}\n", .{
+        helpFn.usizeToValue(card_from, true),
+        helpFn.usizeToShape(card_from),
+        helpFn.usizeToValue(card_to, true),
+        helpFn.usizeToShape(card_to),
+    });
     if (card_from.value == card_to.value - 1 and helpFn.isRed(card_from.shape) != helpFn.isRed(card_to.shape)) {
         return true;
     }
@@ -187,6 +194,7 @@ pub fn b2finalMove(column_from: u8) void {
 
 pub fn t2finalMove() void {
     const row_from = findFirstCardTop(1);
+    const strack9column = 1;
 
     // if the stack is empty there is nothing to move
     if (row_from == 0) return;
@@ -194,7 +202,7 @@ pub fn t2finalMove() void {
     // finds the stack that corresponds to the shape of the picked card or an empty space
     var final_column: usize = 0;
     for (2..main.top_field[0].len) |column_to| {
-        if (main.top_field[row_from - 1][1].shape == main.top_field[0][column_to].shape or main.top_field[0][column_to].value == @intFromEnum(main.Value.joker)) {
+        if (main.top_field[row_from - 1][strack9column].shape == main.top_field[0][column_to].shape or main.top_field[0][column_to].value == @intFromEnum(main.Value.joker)) {
             final_column = column_to;
             break;
         }
@@ -204,16 +212,40 @@ pub fn t2finalMove() void {
     const row_to = findFirstCardTop(@intCast(final_column));
 
     // if the card is an ace we don't have to check the value of the card underneath
-    if (main.top_field[row_from - 1][1].value == @intFromEnum(main.Value.ace)) {
-        main.top_field[row_to][final_column] = main.top_field[row_from - 1][1];
-        main.top_field[row_from - 1][1].value = @intFromEnum(main.Value.joker);
+    if (main.top_field[row_from - 1][strack9column].value == @intFromEnum(main.Value.ace)) {
+        main.top_field[row_to][final_column] = main.top_field[row_from - 1][strack9column];
+        main.top_field[row_from - 1][strack9column].value = @intFromEnum(main.Value.joker);
     }
     if (row_to == 0) return;
 
     // check if it's valid move
-    if (main.top_field[row_from - 1][1].value == main.top_field[row_to - 1][final_column].value + 1) {
-        main.top_field[row_to][final_column] = main.top_field[row_from - 1][1];
-        main.top_field[row_from - 1][1].value = @intFromEnum(main.Value.joker);
+    if (main.top_field[row_from - 1][strack9column].value == main.top_field[row_to - 1][final_column].value + 1) {
+        main.top_field[row_to][final_column] = main.top_field[row_from - 1][strack9column];
+        main.top_field[row_from - 1][strack9column].value = @intFromEnum(main.Value.joker);
+    }
+}
+
+pub fn final2bMove(column_from: u8, column_to: u8) void {
+
+    // find the card we want to move
+    const row_from = findFirstCardTop(column_from);
+
+    // if there's no card return
+    if (row_from == 0) return;
+
+    // find the place where we want to place the card
+    const row_to = findFirstCardBottom(column_to);
+
+    // if there's no cards there's no reason to put the card there
+    if (row_to == 0) return;
+
+    // check if the move follows the rules of the game and if yes place the card
+    if (validMoveCheck(main.top_field[row_from - 1][column_from], main.bottom_field[row_to - 1][column_to])) {
+        main.bottom_field[row_to][column_to] = main.top_field[row_from - 1][column_from];
+        main.top_field[row_from - 1][column_from].value = @intFromEnum(main.Value.joker);
+        std.debug.print("Proslo\n", .{});
+    } else {
+        std.debug.print("Neproslo\n", .{});
     }
 }
 

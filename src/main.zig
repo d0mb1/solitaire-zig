@@ -102,10 +102,11 @@ pub fn main() !void {
                     1...4 => {
                         std.debug.print("TO: ", .{});
                         const to = try helpFn.getNum();
+                        // std.debug.print("from: {} to: {}\n", .{ from_final + 1, to - 1 });
 
                         // where to move the card
                         switch (to) {
-                            1...7 => moveCard.moveCardTestPrint(),
+                            1...7 => moveCard.final2bMove(from_final + 1, to - 1),
                             else => std.debug.print("Invalid Stack\n", .{}),
                         }
                     },
