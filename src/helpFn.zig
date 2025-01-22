@@ -129,7 +129,15 @@ pub fn isVisible(visibility: usize) bool {
 
 // prints the labels above top field
 pub fn topLabels() void {
-    std.debug.print("MOVES: {: >4}                         ╭───────────────────── 0 ─────────────────────╮\n╭─── 8 ───╮ ", .{main.moves});
+    var message: []const u8 = undefined;
+    switch (isWinnable()) {
+        true => switch (isWon()) {
+            true => message = "! YOU WON !",
+            false => message = "WINNABLE!!!",
+        },
+        false => message = "",
+    }
+    std.debug.print("MOVES: {: >4}       {s: >11}       ╭───────────────────── 0 ─────────────────────╮\n╭─── 8 ───╮ ", .{ main.moves, message });
 
     var gap: usize = 0;
     for (0..3) |row| {
@@ -202,7 +210,7 @@ pub fn getNum() !u8 {
 }
 
 // // determines if the game is winnable / there are no covered cards left
-pub fn isWinnable() bool {
+fn isWinnable() bool {
     var uncovered_cards: usize = 0;
 
     // checks the top field
@@ -220,5 +228,16 @@ pub fn isWinnable() bool {
         }
     }
 
-    if (uncovered_cards == 52) return true else false;
+    if (uncovered_cards == 52) return true else return false;
+}
+
+pub fn isWon() bool {
+    var cards_in_final_decks: usize = 0;
+
+    for (0..13) |row| {
+        for (2..6) |column| {
+            if (main.top_field[row][column].value != @intFromEnum(main.Value.joker)) cards_in_final_decks += 1;
+        }
+    }
+    if (cards_in_final_decks == 52) return true else return false;
 }

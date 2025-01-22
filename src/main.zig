@@ -82,14 +82,14 @@ pub fn main() !void {
     gameSetup.uncoverCards();
 
     while (true) {
-        // std.debug.print("\x1B[2J\x1B[H", .{});
+        std.debug.print("\x1B[2J\x1B[H", .{});
         helpFn.topLabels();
         printCard.printTopField();
         std.debug.print("\n", .{});
         helpFn.bottomLabels();
         printCard.printBottomField();
 
-        std.debug.print("(0 - 9)\nFROM: ", .{});
+        std.debug.print("(0 - 9) FROM: ", .{});
         const from = try helpFn.getNum();
 
         // switch cases that hadel game logic. All posibilities should be
@@ -98,13 +98,13 @@ pub fn main() !void {
 
             // from one of the finishing stacks
             0 => {
-                std.debug.print("(1 - 4)\nFROM: ", .{});
+                std.debug.print("(1 - 4) FROM: ", .{});
                 const from_final = try helpFn.getNum();
                 switch (from_final) {
 
                     // which finishing stack
                     1...4 => {
-                        std.debug.print("(1 - 7)\nTO: ", .{});
+                        std.debug.print("(1 - 7) TO: ", .{});
                         const to = try helpFn.getNum();
 
                         // where to move the card
@@ -119,11 +119,15 @@ pub fn main() !void {
 
             // from one of the game board stacks
             1...7 => {
-                std.debug.print("(1 - 13)\nWHAT: ", .{});
+                std.debug.print("(1 - 13) WHAT: ", .{});
                 const what = try helpFn.getNum();
 
                 // what card is being picked
                 switch (what) {
+
+                    // you can place a card straight to final stacks without
+                    // choosing a specific card
+                    0 => moveCard.b2finalMove(from - 1),
                     1...13 => {
                         const row = moveCard.findExactCardBottom(from - 1, what);
 
@@ -131,7 +135,7 @@ pub fn main() !void {
                         // begining
                         if (row == 13) continue;
 
-                        std.debug.print("(0 - 7)\nTO: ", .{});
+                        std.debug.print("(0 - 7) TO: ", .{});
                         const to = try helpFn.getNum();
 
                         // where to move the card
@@ -156,7 +160,7 @@ pub fn main() !void {
 
             // from the "discard" stack
             9 => {
-                std.debug.print("(0 - 7)\nTO: ", .{});
+                std.debug.print("(0 - 7) TO: ", .{});
                 const to = try helpFn.getNum();
 
                 // where to move card
@@ -171,6 +175,12 @@ pub fn main() !void {
             },
             else => std.debug.print("Invalid Stack\n", .{}),
         }
-        helpFn.isWinnable();
+        if (helpFn.isWon()) break;
     }
+    std.debug.print("\x1B[2J\x1B[H", .{});
+    helpFn.topLabels();
+    printCard.printTopField();
+    std.debug.print("\n", .{});
+    helpFn.bottomLabels();
+    printCard.printBottomField();
 }
