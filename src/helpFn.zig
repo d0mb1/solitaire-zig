@@ -3,6 +3,7 @@ const builtin = @import("builtin");
 const main = @import("main.zig");
 const printCard = @import("printCard.zig");
 const stdin = std.io.getStdIn().reader();
+const stdout = std.io.getStdOut().writer();
 
 // ╭─────────╮
 // │ 󰣑 󰣏 󰣐 󰣎 │
@@ -39,14 +40,14 @@ const stdin = std.io.getStdIn().reader();
 // │ 󰣏     Y ││ 󰣎     O ││ 󰣐     U │      │ 󰣑     W ││ 󰣏     O ││ 󰣎     N ││ 󰣐     ! │
 // ╰─────────╯╰─────────╯╰─────────╯      ╰─────────╯╰─────────╯╰─────────╯╰─────────╯
 
-pub fn winningMessage() void {
-    std.debug.print("╭─────────╮╭─────────╮╭─────────╮      ╭─────────╮╭─────────╮╭─────────╮╭─────────╮\n", .{});
-    std.debug.print("│ \x1b[31mY     󰣏\x1b[0m ││ O     󰣎 ││ \x1b[31mU     󰣐\x1b[0m │      │ W     󰣑 ││ \x1b[31mI     󰣏\x1b[0m ││ N     󰣎 ││ \x1b[31m!     󰣐\x1b[0m │\n", .{});
-    std.debug.print("│         ││         ││         │      │         ││         ││         ││         │\n", .{});
-    std.debug.print("│    \x1b[31m󰣏\x1b[0m    ││    󰣎    ││    \x1b[31m󰣐\x1b[0m    │      │    󰣑    ││    \x1b[31m󰣏\x1b[0m    ││    󰣎    ││    \x1b[31m󰣐\x1b[0m    │\n", .{});
-    std.debug.print("│         ││         ││         │      │         ││         ││         ││         │\n", .{});
-    std.debug.print("│ \x1b[31m󰣏     Y\x1b[0m ││ 󰣎     O ││ \x1b[31m󰣐     U\x1b[0m │      │ 󰣑     W ││ \x1b[31m󰣏     I\x1b[0m ││ 󰣎     N ││ \x1b[31m󰣐     !\x1b[0m │\n", .{});
-    std.debug.print("╰─────────╯╰─────────╯╰─────────╯      ╰─────────╯╰─────────╯╰─────────╯╰─────────╯\n", .{});
+pub fn winningMessage() !void {
+    try stdout.print("╭─────────╮╭─────────╮╭─────────╮      ╭─────────╮╭─────────╮╭─────────╮╭─────────╮\n", .{});
+    try stdout.print("│ \x1b[31mY     󰣏\x1b[0m ││ O     󰣎 ││ \x1b[31mU     󰣐\x1b[0m │      │ W     󰣑 ││ \x1b[31mI     󰣏\x1b[0m ││ N     󰣎 ││ \x1b[31m!     󰣐\x1b[0m │\n", .{});
+    try stdout.print("│         ││         ││         │      │         ││         ││         ││         │\n", .{});
+    try stdout.print("│    \x1b[31m󰣏\x1b[0m    ││    󰣎    ││    \x1b[31m󰣐\x1b[0m    │      │    󰣑    ││    \x1b[31m󰣏\x1b[0m    ││    󰣎    ││    \x1b[31m󰣐\x1b[0m    │\n", .{});
+    try stdout.print("│         ││         ││         │      │         ││         ││         ││         │\n", .{});
+    try stdout.print("│ \x1b[31m󰣏     Y\x1b[0m ││ 󰣎     O ││ \x1b[31m󰣐     U\x1b[0m │      │ 󰣑     W ││ \x1b[31m󰣏     I\x1b[0m ││ 󰣎     N ││ \x1b[31m󰣐     !\x1b[0m │\n", .{});
+    try stdout.print("╰─────────╯╰─────────╯╰─────────╯      ╰─────────╯╰─────────╯╰─────────╯╰─────────╯\n", .{});
 }
 
 // function return a string based on the card value/shape ID input helps with
@@ -145,13 +146,18 @@ pub fn isVisible(visibility: usize) bool {
 }
 
 // prints the labels above top field
-pub fn topLabels() void {
+pub fn topLabels() !void {
     var message: []const u8 = undefined;
     switch (isWinnable()) {
-        true => message = "WINNABLE!!!",
+        true => {
+            switch (isWon()) {
+                true => message = "",
+                false => message = "WINNABLE!!!",
+            }
+        },
         false => message = "",
     }
-    std.debug.print("\x1b[31mMOVES: {: >4}             {s: >11} ╭─────────────────────\x1b[0m 0 \x1b[31m─────────────────────╮\n╭───\x1b[0m 8 \x1b[31m───╮ ", .{ main.moves, message });
+    try stdout.print("\x1b[31mMOVES: {: >4}             {s: >11} ╭─────────────────────\x1b[0m 0 \x1b[31m─────────────────────╮\n╭───\x1b[0m 8 \x1b[31m───╮ ", .{ main.moves, message });
 
     var gap: usize = 0;
     for (0..3) |row| {
@@ -160,22 +166,22 @@ pub fn topLabels() void {
 
     switch (gap) {
         0, 1 => {},
-        2 => std.debug.print("   ", .{}),
-        else => std.debug.print("      ", .{}),
+        2 => try stdout.print("   ", .{}),
+        else => try stdout.print("      ", .{}),
     }
-    std.debug.print("╭───\x1b[0m 9 \x1b[31m───╮ ", .{});
+    try stdout.print("╭───\x1b[0m 9 \x1b[31m───╮ ", .{});
     switch (gap) {
-        0, 1 => std.debug.print("            ", .{}),
-        2 => std.debug.print("         ", .{}),
-        else => std.debug.print("      ", .{}),
+        0, 1 => try stdout.print("            ", .{}),
+        2 => try stdout.print("         ", .{}),
+        else => try stdout.print("      ", .{}),
     }
 
-    std.debug.print("├───\x1b[0m 1 \x1b[31m───╮ ╭───\x1b[0m 2 \x1b[31m───╮ ╭───\x1b[0m 3 \x1b[31m───╮ ╭───\x1b[0m 4 \x1b[31m───┤\x1b[0m\n", .{});
+    try stdout.print("├───\x1b[0m 1 \x1b[31m───╮ ╭───\x1b[0m 2 \x1b[31m───╮ ╭───\x1b[0m 3 \x1b[31m───╮ ╭───\x1b[0m 4 \x1b[31m───┤\x1b[0m\n", .{});
 }
 
 // prints the labels above bottom field
-pub fn bottomLabels() void {
-    std.debug.print("\x1b[31m╭───\x1b[0m 1 \x1b[31m───╮ ╭───\x1b[0m 2 \x1b[31m───╮ ╭───\x1b[0m 3 \x1b[31m───╮ ╭───\x1b[0m 4 \x1b[31m───╮ ╭───\x1b[0m 5 \x1b[31m───╮ ╭───\x1b[0m 6 \x1b[31m───╮ ╭───\x1b[0m 7 \x1b[31m───╮\x1b[0m\n", .{});
+pub fn bottomLabels() !void {
+    try stdout.print("\x1b[31m╭───\x1b[0m 1 \x1b[31m───╮ ╭───\x1b[0m 2 \x1b[31m───╮ ╭───\x1b[0m 3 \x1b[31m───╮ ╭───\x1b[0m 4 \x1b[31m───╮ ╭───\x1b[0m 5 \x1b[31m───╮ ╭───\x1b[0m 6 \x1b[31m───╮ ╭───\x1b[0m 7 \x1b[31m───╮\x1b[0m\n", .{});
 }
 
 // function that get user intiger input and returns it
@@ -199,7 +205,7 @@ pub fn getNum() !u8 {
                         error.InvalidCharacter => "▶ INVALID INPUT, TRY AGAIN\t\t\t\t▶ ",
                         error.Overflow => "▶ INVALID INPUT, TRY AGAIN\t\t\t\t▶ ",
                     };
-                    std.debug.print("{s}", .{error_message});
+                    try stdout.print("{s}", .{error_message});
                 }
             } else {
                 const parse_result = std.fmt.parseInt(u8, user_input, 10);
@@ -214,7 +220,7 @@ pub fn getNum() !u8 {
                         error.InvalidCharacter => "▶ INVALID INPUT, TRY AGAIN\t\t\t\t▶ ",
                         error.Overflow => "▶ INVALID INPUT, TRY AGAIN\t\t\t\t▶ ",
                     };
-                    std.debug.print("{s}", .{error_message});
+                    try stdout.print("{s}", .{error_message});
                 }
             }
         } else {
