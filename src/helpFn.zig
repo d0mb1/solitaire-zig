@@ -3,7 +3,6 @@ const builtin = @import("builtin");
 const main = @import("main.zig");
 const printCard = @import("printCard.zig");
 const stdin = std.io.getStdIn().reader();
-const stdout = std.io.getStdOut().writer();
 
 // ╭─────────╮
 // │ 󰣑 󰣏 󰣐 󰣎 │
@@ -41,6 +40,7 @@ const stdout = std.io.getStdOut().writer();
 // ╰─────────╯╰─────────╯╰─────────╯      ╰─────────╯╰─────────╯╰─────────╯╰─────────╯
 
 pub fn winningMessage() !void {
+    const stdout = std.io.getStdOut().writer();
     try stdout.print("╭─────────╮╭─────────╮╭─────────╮      ╭─────────╮╭─────────╮╭─────────╮╭─────────╮\n", .{});
     try stdout.print("│ \x1b[31mY     󰣏\x1b[0m ││ O     󰣎 ││ \x1b[31mU     󰣐\x1b[0m │      │ W     󰣑 ││ \x1b[31mI     󰣏\x1b[0m ││ N     󰣎 ││ \x1b[31m!     󰣐\x1b[0m │\n", .{});
     try stdout.print("│         ││         ││         │      │         ││         ││         ││         │\n", .{});
@@ -147,6 +147,7 @@ pub fn isVisible(visibility: usize) bool {
 
 // prints the labels above top field
 pub fn topLabels() !void {
+    const stdout = std.io.getStdOut().writer();
     var message: []const u8 = undefined;
     switch (isWinnable()) {
         true => {
@@ -181,11 +182,13 @@ pub fn topLabels() !void {
 
 // prints the labels above bottom field
 pub fn bottomLabels() !void {
+    const stdout = std.io.getStdOut().writer();
     try stdout.print("\x1b[31m╭───\x1b[0m 1 \x1b[31m───╮ ╭───\x1b[0m 2 \x1b[31m───╮ ╭───\x1b[0m 3 \x1b[31m───╮ ╭───\x1b[0m 4 \x1b[31m───╮ ╭───\x1b[0m 5 \x1b[31m───╮ ╭───\x1b[0m 6 \x1b[31m───╮ ╭───\x1b[0m 7 \x1b[31m───╮\x1b[0m\n", .{});
 }
 
 // function that get user intiger input and returns it
 pub fn getNum() !u8 {
+    const stdout = std.io.getStdOut().writer();
     var buffer: [100]u8 = undefined;
 
     // loop that will keep asking for input if the previous one was invalid

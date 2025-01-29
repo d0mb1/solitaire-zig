@@ -1,13 +1,14 @@
 const std = @import("std");
 const main = @import("main.zig");
 const helpFn = @import("helpFn.zig");
-const stdout = std.io.getStdOut().writer();
 
 pub fn topCardPrint() !void {
+    const stdout = std.io.getStdOut().writer();
     try stdout.print("╭─────────╮ ", .{});
 }
 
 pub fn middleCardPrint(card: main.Card) !void {
+    const stdout = std.io.getStdOut().writer();
 
     // checks if the card is visible
     if (helpFn.isVisible(card.visivility)) {
@@ -18,11 +19,13 @@ pub fn middleCardPrint(card: main.Card) !void {
 }
 
 pub fn bottomCardPrint() !void {
+    const stdout = std.io.getStdOut().writer();
     try stdout.print("╰─────────╯ ", .{});
 }
 
 // prints the outline of a card if the spot is empty
 pub fn emptySpacePrint(part_of_card: usize) !void {
+    const stdout = std.io.getStdOut().writer();
     switch (part_of_card) {
         0 => try stdout.print("╭─  ───  ─╮ ", .{}),
         2, 4 => try stdout.print("│         │ ", .{}),
@@ -33,10 +36,12 @@ pub fn emptySpacePrint(part_of_card: usize) !void {
 
 // prints empty space of card width size
 pub fn emptyPrint() !void {
+    const stdout = std.io.getStdOut().writer();
     try stdout.print("            ", .{});
 }
 
 pub fn topCardPrintSymbols(card: main.Card) !void {
+    const stdout = std.io.getStdOut().writer();
 
     // checks if the card is visible
     if (helpFn.isVisible(card.visivility)) {
@@ -52,6 +57,7 @@ pub fn topCardPrintSymbols(card: main.Card) !void {
 }
 
 pub fn middleCardPrintSymbols(card: main.Card) !void {
+    const stdout = std.io.getStdOut().writer();
 
     // checks if the card is visible
     if (helpFn.isVisible(card.visivility)) {
@@ -64,6 +70,7 @@ pub fn middleCardPrintSymbols(card: main.Card) !void {
 }
 
 pub fn bottomCardPrintSymbols(card: main.Card) !void {
+    const stdout = std.io.getStdOut().writer();
 
     // checks if the card is visible
     if (helpFn.isVisible(card.visivility)) {
@@ -108,6 +115,7 @@ pub fn restOfCardPrint(row: usize, column: usize, symbols: bool) !void {
 
 // prints the bottom field
 pub fn printBottomField() !void {
+    const stdout = std.io.getStdOut().writer();
 
     // count downs to three and then stops print
     var count_down: usize = 0;
@@ -191,6 +199,7 @@ pub fn printBottomField() !void {
 // index represents how many cards are on the stack and determines what
 // should be printed (0 to 3 depending on the index)
 pub fn spreadCards(part_of_card: usize, index: usize) !void {
+    const stdout = std.io.getStdOut().writer();
     switch (index) {
         0 => {
             try emptySpacePrint(part_of_card);
@@ -313,6 +322,7 @@ pub fn spreadCards(part_of_card: usize, index: usize) !void {
 // column multiple times but this was easier
 // TODO: Fix this later
 pub fn printTopField() !void {
+    const stdout = std.io.getStdOut().writer();
     var index: usize = 0;
 
     // there's 7 parts/rows to a card (top outline, top part with symbols,

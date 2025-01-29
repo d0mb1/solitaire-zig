@@ -16,7 +16,6 @@ const gameSetup = @import("gameSetup.zig");
 const moveCard = @import("moveCard.zig");
 
 const stdin = std.io.getStdIn().reader();
-const stdout = std.io.getStdOut().writer();
 
 pub const RED: []const u8 = "\x1b[31m";
 pub const RESET: []const u8 = "\x1b[0m";
@@ -77,6 +76,7 @@ pub var moves: u16 = 0;
 
 // --- MAIN FUNCTION --- //
 pub fn main() !void {
+    const stdout = std.io.getStdOut().writer();
 
     // setting up the game
     gameSetup.fillDeck();
