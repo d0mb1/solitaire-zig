@@ -15,7 +15,7 @@ pub fn fillDeck() void {
             main.deck[card_index] = main.Card{
                 .value = @intCast(value),
                 .shape = @intCast(shape),
-                .visivility = @intFromEnum(main.Visibility.covered),
+                .visibility = @intFromEnum(main.Visibility.covered),
             };
             card_index += 1;
         }
@@ -84,6 +84,6 @@ pub fn uncoverCards() void {
 
         // uncover top most card
         const row = moveCard.findFirstCardBottom(@intCast(column));
-        main.bottom_field[row - 1][column].visivility = @intFromEnum(main.Visibility.uncovered);
+        main.bottom_field[row - 1][column].visibility = @intFromEnum(main.Visibility.uncovered);
     }
 }

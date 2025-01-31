@@ -20,7 +20,7 @@ pub fn flipCard() void {
         for (0..num_of_cards_in_stack_9) |value| {
             row_in_stack_9 -= 1;
             main.top_field[value][0] = main.top_field[row_in_stack_9][stack9column];
-            main.top_field[value][0].visivility = @intFromEnum(main.Visibility.covered);
+            main.top_field[value][0].visibility = @intFromEnum(main.Visibility.covered);
             main.top_field[row_in_stack_9][stack9column].value = @intFromEnum(main.Value.joker);
         }
         main.moves += 1;
@@ -30,7 +30,7 @@ pub fn flipCard() void {
         var row_in_stack_8: usize = 0;
         while (main.top_field[row_in_stack_8][0].value != @intFromEnum(main.Value.joker)) : (row_in_stack_8 += 1) {}
         main.top_field[row_in_stack_9][stack9column] = main.top_field[row_in_stack_8 - 1][0];
-        main.top_field[row_in_stack_9][stack9column].visivility = @intFromEnum(main.Visibility.uncovered);
+        main.top_field[row_in_stack_9][stack9column].visibility = @intFromEnum(main.Visibility.uncovered);
         main.top_field[row_in_stack_8 - 1][0].value = @intFromEnum(main.Value.joker);
         main.moves += 1;
     }
@@ -39,7 +39,7 @@ pub fn flipCard() void {
 // find a card in a stack and returns the row index
 pub fn findExactCardBottom(column: u8, val: u8) u8 {
     var row: usize = 0;
-    while (main.bottom_field[row][column].value != val or main.bottom_field[row][column].visivility != @intFromEnum(main.Visibility.uncovered)) : (row += 1) {
+    while (main.bottom_field[row][column].value != val or main.bottom_field[row][column].visibility != @intFromEnum(main.Visibility.uncovered)) : (row += 1) {
         if (row == main.num_of_bot_field_rows - 1) {
             break;
         }
@@ -84,7 +84,7 @@ fn b2bMoveRun(row_from: u8, column_from: u8, amount_of_cards: usize, row_to: usi
     // if the card is the only card in the stack, there's no reason to uncover
     // the card below it cuz there's none
     if (row_from != 0) {
-        main.bottom_field[row_from - 1][column_from].visivility = @intFromEnum(main.Visibility.uncovered);
+        main.bottom_field[row_from - 1][column_from].visibility = @intFromEnum(main.Visibility.uncovered);
     }
 
     // loops over all the cards that should be moved and moves them
@@ -176,7 +176,7 @@ pub fn b2finalMove(column_from: u8) void {
 
         // if it's not the only card in the stack uncover the card underneath it
         if (row_from != 1) {
-            main.bottom_field[row_from - 2][column_from].visivility = @intFromEnum(main.Visibility.uncovered);
+            main.bottom_field[row_from - 2][column_from].visibility = @intFromEnum(main.Visibility.uncovered);
         }
         return;
     }
@@ -189,7 +189,7 @@ pub fn b2finalMove(column_from: u8) void {
 
         // if it's not the only card in the stack uncover the card underneath it
         if (row_from != 1) {
-            main.bottom_field[row_from - 2][column_from].visivility = @intFromEnum(main.Visibility.uncovered);
+            main.bottom_field[row_from - 2][column_from].visibility = @intFromEnum(main.Visibility.uncovered);
         }
         main.moves += 1;
     }

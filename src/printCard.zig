@@ -11,7 +11,7 @@ pub fn middleCardPrint(card: main.Card) !void {
     const stdout = std.io.getStdOut().writer();
 
     // checks if the card is visible
-    if (helpFn.isVisible(card.visivility)) {
+    if (helpFn.isVisible(card.visibility)) {
         try stdout.print("│         │ ", .{});
     } else {
         try stdout.print("│ ∷∷∷∷∷∷∷ │ ", .{});
@@ -44,7 +44,7 @@ pub fn topCardPrintSymbols(card: main.Card) !void {
     const stdout = std.io.getStdOut().writer();
 
     // checks if the card is visible
-    if (helpFn.isVisible(card.visivility)) {
+    if (helpFn.isVisible(card.visibility)) {
 
         // check what color should the output be
         try stdout.print("│{s: >2}     {s} │ ", .{
@@ -60,7 +60,7 @@ pub fn middleCardPrintSymbols(card: main.Card) !void {
     const stdout = std.io.getStdOut().writer();
 
     // checks if the card is visible
-    if (helpFn.isVisible(card.visivility)) {
+    if (helpFn.isVisible(card.visibility)) {
 
         // check what color should the output be
         try stdout.print("│    {s}    │ ", .{helpFn.usizeToShape(card)});
@@ -73,7 +73,7 @@ pub fn bottomCardPrintSymbols(card: main.Card) !void {
     const stdout = std.io.getStdOut().writer();
 
     // checks if the card is visible
-    if (helpFn.isVisible(card.visivility)) {
+    if (helpFn.isVisible(card.visibility)) {
 
         // check what color should the output be
         try stdout.print("│ {s}     {s: <2}│ ", .{

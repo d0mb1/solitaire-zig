@@ -239,15 +239,15 @@ fn isWinnable() bool {
     // checks the top field
     for (main.top_field) |row| {
         for (row, 0..) |card, i| {
-            if (card.visivility == @intFromEnum(main.Visibility.uncovered) and card.value != @intFromEnum(main.Value.joker)) uncovered_cards += 1;
-            if (card.visivility == @intFromEnum(main.Visibility.covered) and card.value != @intFromEnum(main.Value.joker) and i == 0) uncovered_cards += 1;
+            if (card.visibility == @intFromEnum(main.Visibility.uncovered) and card.value != @intFromEnum(main.Value.joker)) uncovered_cards += 1;
+            if (card.visibility == @intFromEnum(main.Visibility.covered) and card.value != @intFromEnum(main.Value.joker) and i == 0) uncovered_cards += 1;
         }
     }
 
     // checks the bottom field
     for (main.bottom_field) |row| {
         for (row) |card| {
-            if (card.visivility == @intFromEnum(main.Visibility.uncovered) and card.value != @intFromEnum(main.Value.joker)) uncovered_cards += 1;
+            if (card.visibility == @intFromEnum(main.Visibility.uncovered) and card.value != @intFromEnum(main.Value.joker)) uncovered_cards += 1;
         }
     }
 
