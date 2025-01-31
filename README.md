@@ -9,6 +9,8 @@ Also for some reason it only works when using the Command Prompt
 and not Windows PowerShell. Why? IDK. Maybe cuz Windows is shit.
 Haven't tried any other Windows shell.
 
-![Screenshot 1](https://github.com/d0mb1/solitaire-zig/blob/main/Screenshot%202025-01-31%20101517.png?raw=true)
+![Screenshot 1](https://github.com/d0mb1/solitaire-zig/blob/main/Screenshot1.png?raw=true)
 
-![Screenshot 2](https://github.com/d0mb1/solitaire-zig/blob/main/Screenshot%202025-01-31%20101624.png?raw=true)
+![Screenshot 2](https://github.com/d0mb1/solitaire-zig/blob/main/Screenshot2.png?raw=true)
+
+![Screenshot 3](https://github.com/d0mb1/solitaire-zig/blob/main/Screenshot3.png?raw=true)
