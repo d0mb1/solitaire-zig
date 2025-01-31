@@ -9,4 +9,4 @@ Haven't tried any other Windows shell.
 
 ![Screenshot 1](https://github.com/d0mb1/solitaire-zig/blob/main/Screenshot%202025-01-31%20101517.png?raw=true)
 
-![Screenshot 2](https://github.com/d0mb1/solitaire-zig/blob/main/Screenshot%2025-01-31%101624.png?raw=true)
+![Screenshot 2](https://github.com/d0mb1/solitaire-zig/blob/main/Screenshot%202025-01-31%20101624.png?raw=true)
