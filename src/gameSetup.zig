@@ -28,7 +28,8 @@ pub fn shuffleDeck() !void {
     // generating a random seed that ensures that the deck will be shuffled
     // differently each time
     var card_index: usize = main.num_of_cards - 1;
-    var prng = std.rand.DefaultPrng.init(blk: {
+    const rand = std.Random.DefaultPrng;
+    var prng = rand.init(blk: {
         var seed: u64 = undefined;
         try std.posix.getrandom(std.mem.asBytes(&seed));
         break :blk seed;
