@@ -1,6 +1,6 @@
 const std = @import("std");
 const builtin = @import("builtin");
-const main = @import("main.zig");
+const m = @import("main.zig");
 const printCard = @import("printCard.zig");
 const stdin = std.io.getStdIn().reader();
 
@@ -42,59 +42,58 @@ const stdin = std.io.getStdIn().reader();
 pub fn winningMessage() !void {
     const stdout = std.io.getStdOut().writer();
     try stdout.print("╭─────────╮╭─────────╮╭─────────╮      ╭─────────╮╭─────────╮╭─────────╮╭─────────╮\n", .{});
-    try stdout.print("│ \x1b[31mY     󰣏\x1b[0m ││ O     󰣎 ││ \x1b[31mU     󰣐\x1b[0m │      │ W     󰣑 ││ \x1b[31mI     󰣏\x1b[0m ││ N     󰣎 ││ \x1b[31m!     󰣐\x1b[0m │\n", .{});
+    try stdout.print("│ " ++ m.RED ++ "Y     󰣏" ++ m.RESET ++ " ││ O     󰣎 ││ " ++ m.RED ++ "U     󰣐" ++ m.RESET ++ " │      │ W     󰣑 ││ " ++ m.RED ++ "I     󰣏" ++ m.RESET ++ " ││ N     󰣎 ││ " ++ m.RED ++ "!     󰣐" ++ m.RESET ++ " │\n", .{});
     try stdout.print("│         ││         ││         │      │         ││         ││         ││         │\n", .{});
-    try stdout.print("│    \x1b[31m󰣏\x1b[0m    ││    󰣎    ││    \x1b[31m󰣐\x1b[0m    │      │    󰣑    ││    \x1b[31m󰣏\x1b[0m    ││    󰣎    ││    \x1b[31m󰣐\x1b[0m    │\n", .{});
+    try stdout.print("│    " ++ m.RED ++ "󰣏" ++ m.RESET ++ "    ││    󰣎    ││    " ++ m.RED ++ "󰣐" ++ m.RESET ++ "    │      │    󰣑    ││    " ++ m.RED ++ "󰣏" ++ m.RESET ++ "    ││    󰣎    ││    " ++ m.RED ++ "󰣐" ++ m.RESET ++ "    │\n", .{});
     try stdout.print("│         ││         ││         │      │         ││         ││         ││         │\n", .{});
-    try stdout.print("│ \x1b[31m󰣏     Y\x1b[0m ││ 󰣎     O ││ \x1b[31m󰣐     U\x1b[0m │      │ 󰣑     W ││ \x1b[31m󰣏     I\x1b[0m ││ 󰣎     N ││ \x1b[31m󰣐     !\x1b[0m │\n", .{});
+    try stdout.print("│ " ++ m.RED ++ "󰣏     Y" ++ m.RESET ++ " ││ 󰣎     O ││ " ++ m.RED ++ "󰣐     U" ++ m.RESET ++ " │      │ 󰣑     W ││ " ++ m.RED ++ "󰣏     I" ++ m.RESET ++ " ││ 󰣎     N ││ " ++ m.RED ++ "󰣐     !" ++ m.RESET ++ " │\n", .{});
     try stdout.print("╰─────────╯╰─────────╯╰─────────╯      ╰─────────╯╰─────────╯╰─────────╯╰─────────╯\n", .{});
 }
 
 // function return a string based on the card value/shape ID input helps with
 // printing cards
-pub fn usizeToValue(card: main.Card, possition: bool) []const u8 {
+pub fn valueString(card: m.Card, possition: m.SymbolPosition) []const u8 {
     if (isRed(card.shape)) {
 
         // for some reason I have to check which part of the card is being
         // printed because the ANSI escape codes change the position of the
         // value
-        if (possition) {
-            return switch (card.value) {
+        return switch (possition) {
+            .top => switch (card.value) {
                 0 => "X", // empty card that'll represent and empty space
-                1 => "\x1b[31m A\x1b[0m",
-                2 => "\x1b[31m 2\x1b[0m",
-                3 => "\x1b[31m 3\x1b[0m",
-                4 => "\x1b[31m 4\x1b[0m",
-                5 => "\x1b[31m 5\x1b[0m",
-                6 => "\x1b[31m 6\x1b[0m",
-                7 => "\x1b[31m 7\x1b[0m",
-                8 => "\x1b[31m 8\x1b[0m",
-                9 => "\x1b[31m 9\x1b[0m",
-                10 => "\x1b[31m10\x1b[0m",
-                11 => "\x1b[31m J\x1b[0m",
-                12 => "\x1b[31m Q\x1b[0m",
-                13 => "\x1b[31m K\x1b[0m",
+                1 => m.RED ++ " A" ++ m.RESET,
+                2 => m.RED ++ " 2" ++ m.RESET,
+                3 => m.RED ++ " 3" ++ m.RESET,
+                4 => m.RED ++ " 4" ++ m.RESET,
+                5 => m.RED ++ " 5" ++ m.RESET,
+                6 => m.RED ++ " 6" ++ m.RESET,
+                7 => m.RED ++ " 7" ++ m.RESET,
+                8 => m.RED ++ " 8" ++ m.RESET,
+                9 => m.RED ++ " 9" ++ m.RESET,
+                10 => m.RED ++ "10" ++ m.RESET,
+                11 => m.RED ++ " J" ++ m.RESET,
+                12 => m.RED ++ " Q" ++ m.RESET,
+                13 => m.RED ++ " K" ++ m.RESET,
                 else => unreachable,
-            };
-        } else {
-            return switch (card.value) {
+            },
+            .bottom => switch (card.value) {
                 0 => "X", // empty card that'll represent and empty space
-                1 => "\x1b[31mA \x1b[0m",
-                2 => "\x1b[31m2 \x1b[0m",
-                3 => "\x1b[31m3 \x1b[0m",
-                4 => "\x1b[31m4 \x1b[0m",
-                5 => "\x1b[31m5 \x1b[0m",
-                6 => "\x1b[31m6 \x1b[0m",
-                7 => "\x1b[31m7 \x1b[0m",
-                8 => "\x1b[31m8 \x1b[0m",
-                9 => "\x1b[31m9 \x1b[0m",
-                10 => "\x1b[31m10\x1b[0m",
-                11 => "\x1b[31mJ \x1b[0m",
-                12 => "\x1b[31mQ \x1b[0m",
-                13 => "\x1b[31mK \x1b[0m",
+                1 => m.RED ++ "A " ++ m.RESET,
+                2 => m.RED ++ "2 " ++ m.RESET,
+                3 => m.RED ++ "3 " ++ m.RESET,
+                4 => m.RED ++ "4 " ++ m.RESET,
+                5 => m.RED ++ "5 " ++ m.RESET,
+                6 => m.RED ++ "6 " ++ m.RESET,
+                7 => m.RED ++ "7 " ++ m.RESET,
+                8 => m.RED ++ "8 " ++ m.RESET,
+                9 => m.RED ++ "9 " ++ m.RESET,
+                10 => m.RED ++ "10" ++ m.RESET,
+                11 => m.RED ++ "J " ++ m.RESET,
+                12 => m.RED ++ "Q " ++ m.RESET,
+                13 => m.RED ++ "K " ++ m.RESET,
                 else => unreachable,
-            };
-        }
+            },
+        };
     } else {
         return switch (card.value) {
             0 => "X", // empty card that'll represent and empty space
@@ -117,32 +116,18 @@ pub fn usizeToValue(card: main.Card, possition: bool) []const u8 {
 }
 
 // transers usize to string
-pub fn usizeToShape(card: main.Card) []const u8 {
-    if (isRed(card.shape)) {
-        return switch (card.shape) {
-            0 => "\x1b[31m󰣐\x1b[0m", // hearts
-            1 => "\x1b[31m󰣑\x1b[0m", // spades
-            2 => "\x1b[31m󰣏\x1b[0m", // diamonds
-            3 => "\x1b[31m󰣎\x1b[0m", // clubs
-        };
-    } else {
-        return switch (card.shape) {
-            0 => "󰣐", // hearts
-            1 => "󰣑", // spades
-            2 => "󰣏", // diamonds
-            3 => "󰣎", // clubs
-        };
-    }
+pub fn shapeString(card: m.Card) []const u8 {
+    return switch (card.shape) {
+        0 => m.RED ++ "󰣐" ++ m.RESET, // hearts
+        1 => "󰣑", // spades
+        2 => m.RED ++ "󰣏" ++ m.RESET, // diamonds
+        3 => "󰣎", // clubs
+    };
 }
 
 // checks if the card is red
 pub fn isRed(shape: usize) bool {
     if (0 == shape % 2) return true else return false;
-}
-
-// checks if the card is visible
-pub fn isVisible(visibility: usize) bool {
-    if (0 == visibility % 2) return false else return true;
 }
 
 // prints the labels above top field
@@ -158,11 +143,13 @@ pub fn topLabels() !void {
         },
         false => message = "",
     }
-    try stdout.print("\x1b[31mMOVES: {: >4}             {s: >11} ╭─────────────────────\x1b[0m 0 \x1b[31m─────────────────────╮\n╭───\x1b[0m 8 \x1b[31m───╮ ", .{ main.moves, message });
+    try stdout.print(m.RED ++ "MOVES: {: >4}             {s: >11} ", .{ m.moves, message });
+    try stdout.print("╭───────────────────── " ++ m.RESET ++ "0" ++ m.RED ++ " ─────────────────────╮\n", .{});
+    try stdout.print("╭─── " ++ m.RESET ++ "8" ++ m.RED ++ " ───╮ ", .{});
 
     var gap: usize = 0;
     for (0..3) |row| {
-        if (main.top_field[row][1].value != @intFromEnum(main.Value.joker)) gap += 1;
+        if (m.top_field[row][1].value != @intFromEnum(m.Value.joker)) gap += 1;
     }
 
     switch (gap) {
@@ -170,20 +157,27 @@ pub fn topLabels() !void {
         2 => try stdout.print("   ", .{}),
         else => try stdout.print("      ", .{}),
     }
-    try stdout.print("╭───\x1b[0m 9 \x1b[31m───╮ ", .{});
+    try stdout.print("╭─── " ++ m.RESET ++ "9" ++ m.RED ++ " ───╮ ", .{});
     switch (gap) {
         0, 1 => try stdout.print("            ", .{}),
         2 => try stdout.print("         ", .{}),
         else => try stdout.print("      ", .{}),
     }
 
-    try stdout.print("├───\x1b[0m 1 \x1b[31m───╮ ╭───\x1b[0m 2 \x1b[31m───╮ ╭───\x1b[0m 3 \x1b[31m───╮ ╭───\x1b[0m 4 \x1b[31m───┤\x1b[0m\n", .{});
+    try stdout.print("├─── " ++ m.RESET ++ "1" ++ m.RED ++ " ───╮ ╭─── " ++ m.RESET ++ "2" ++ m.RED ++ " ───╮ ", .{});
+    try stdout.print("╭─── " ++ m.RESET ++ "3" ++ m.RED ++ " ───╮ ╭─── " ++ m.RESET ++ "4" ++ m.RED ++ " ───┤" ++ m.RESET ++ "\n", .{});
 }
 
 // prints the labels above bottom field
 pub fn bottomLabels() !void {
     const stdout = std.io.getStdOut().writer();
-    try stdout.print("\x1b[31m╭───\x1b[0m 1 \x1b[31m───╮ ╭───\x1b[0m 2 \x1b[31m───╮ ╭───\x1b[0m 3 \x1b[31m───╮ ╭───\x1b[0m 4 \x1b[31m───╮ ╭───\x1b[0m 5 \x1b[31m───╮ ╭───\x1b[0m 6 \x1b[31m───╮ ╭───\x1b[0m 7 \x1b[31m───╮\x1b[0m\n", .{});
+    try stdout.print(m.RED ++ "╭─── " ++ m.RESET ++ "1" ++ m.RED ++ " ───╮ ", .{});
+    try stdout.print("╭─── " ++ m.RESET ++ "2" ++ m.RED ++ " ───╮ ", .{});
+    try stdout.print("╭─── " ++ m.RESET ++ "3" ++ m.RED ++ " ───╮ ", .{});
+    try stdout.print("╭─── " ++ m.RESET ++ "4" ++ m.RED ++ " ───╮ ", .{});
+    try stdout.print("╭─── " ++ m.RESET ++ "5" ++ m.RED ++ " ───╮ ", .{});
+    try stdout.print("╭─── " ++ m.RESET ++ "6" ++ m.RED ++ " ───╮ ", .{});
+    try stdout.print("╭─── " ++ m.RESET ++ "7" ++ m.RED ++ " ───╮ \n" ++ m.RESET, .{});
 }
 
 // function that get user intiger input and returns it
@@ -237,17 +231,17 @@ fn isWinnable() bool {
     var uncovered_cards: usize = 0;
 
     // checks the top field
-    for (main.top_field) |row| {
+    for (m.top_field) |row| {
         for (row, 0..) |card, i| {
-            if (card.visibility == @intFromEnum(main.Visibility.uncovered) and card.value != @intFromEnum(main.Value.joker)) uncovered_cards += 1;
-            if (card.visibility == @intFromEnum(main.Visibility.covered) and card.value != @intFromEnum(main.Value.joker) and i == 0) uncovered_cards += 1;
+            if (card.visible == true and card.value != @intFromEnum(m.Value.joker)) uncovered_cards += 1;
+            if (card.visible == false and card.value != @intFromEnum(m.Value.joker) and i == 0) uncovered_cards += 1;
         }
     }
 
     // checks the bottom field
-    for (main.bottom_field) |row| {
+    for (m.bottom_field) |row| {
         for (row) |card| {
-            if (card.visibility == @intFromEnum(main.Visibility.uncovered) and card.value != @intFromEnum(main.Value.joker)) uncovered_cards += 1;
+            if (card.visible == true and card.value != @intFromEnum(m.Value.joker)) uncovered_cards += 1;
         }
     }
 
@@ -259,7 +253,7 @@ pub fn isWon() bool {
 
     for (0..13) |row| {
         for (2..6) |column| {
-            if (main.top_field[row][column].value != @intFromEnum(main.Value.joker)) cards_in_final_decks += 1;
+            if (m.top_field[row][column].value != @intFromEnum(m.Value.joker)) cards_in_final_decks += 1;
         }
     }
     if (cards_in_final_decks == 52) return true else return false;

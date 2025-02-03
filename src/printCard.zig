@@ -1,5 +1,5 @@
 const std = @import("std");
-const main = @import("main.zig");
+const m = @import("main.zig");
 const helpFn = @import("helpFn.zig");
 
 pub fn topCardPrint() !void {
@@ -7,11 +7,11 @@ pub fn topCardPrint() !void {
     try stdout.print("╭─────────╮ ", .{});
 }
 
-pub fn middleCardPrint(card: main.Card) !void {
+pub fn middleCardPrint(card: m.Card) !void {
     const stdout = std.io.getStdOut().writer();
 
     // checks if the card is visible
-    if (helpFn.isVisible(card.visibility)) {
+    if (card.visible) {
         try stdout.print("│         │ ", .{});
     } else {
         try stdout.print("│ ∷∷∷∷∷∷∷ │ ", .{});
@@ -40,45 +40,45 @@ pub fn emptyPrint() !void {
     try stdout.print("            ", .{});
 }
 
-pub fn topCardPrintSymbols(card: main.Card) !void {
+pub fn topCardPrintSymbols(card: m.Card) !void {
     const stdout = std.io.getStdOut().writer();
 
     // checks if the card is visible
-    if (helpFn.isVisible(card.visibility)) {
+    if (card.visible) {
 
         // check what color should the output be
         try stdout.print("│{s: >2}     {s} │ ", .{
-            helpFn.usizeToValue(card, true),
-            helpFn.usizeToShape(card),
+            helpFn.valueString(card, .top),
+            helpFn.shapeString(card),
         });
     } else {
         try middleCardPrint(card);
     }
 }
 
-pub fn middleCardPrintSymbols(card: main.Card) !void {
+pub fn middleCardPrintSymbols(card: m.Card) !void {
     const stdout = std.io.getStdOut().writer();
 
     // checks if the card is visible
-    if (helpFn.isVisible(card.visibility)) {
+    if (card.visible) {
 
         // check what color should the output be
-        try stdout.print("│    {s}    │ ", .{helpFn.usizeToShape(card)});
+        try stdout.print("│    {s}    │ ", .{helpFn.shapeString(card)});
     } else {
         try middleCardPrint(card);
     }
 }
 
-pub fn bottomCardPrintSymbols(card: main.Card) !void {
+pub fn bottomCardPrintSymbols(card: m.Card) !void {
     const stdout = std.io.getStdOut().writer();
 
     // checks if the card is visible
-    if (helpFn.isVisible(card.visibility)) {
+    if (card.visible) {
 
         // check what color should the output be
         try stdout.print("│ {s}     {s: <2}│ ", .{
-            helpFn.usizeToShape(card),
-            helpFn.usizeToValue(card, false),
+            helpFn.shapeString(card),
+            helpFn.valueString(card, .bottom),
         });
     } else {
         try middleCardPrint(card);
@@ -90,7 +90,7 @@ pub fn restOfCardPrint(row: usize, column: usize, symbols: bool) !void {
     var index: usize = 0;
 
     // finding the top card in the stack and counting how many rows above it is
-    while (main.bottom_field[row - index][column].value == @intFromEnum(main.Value.joker)) : (index += 1) {
+    while (m.bottom_field[row - index][column].value == @intFromEnum(m.Value.joker)) : (index += 1) {
         if (row - index == 0) {
             break;
         }
@@ -100,13 +100,13 @@ pub fn restOfCardPrint(row: usize, column: usize, symbols: bool) !void {
     // prints apropriately
     switch (symbols) {
         true => switch (index) {
-            0 => try middleCardPrint(main.bottom_field[row - index][column]),
-            1 => try middleCardPrintSymbols(main.bottom_field[row - index][column]),
-            2 => try bottomCardPrintSymbols(main.bottom_field[row - index][column]),
+            0 => try middleCardPrint(m.bottom_field[row - index][column]),
+            1 => try middleCardPrintSymbols(m.bottom_field[row - index][column]),
+            2 => try bottomCardPrintSymbols(m.bottom_field[row - index][column]),
             else => try emptyPrint(),
         },
         false => switch (index) {
-            0...2 => try middleCardPrint(main.bottom_field[row - index][column]),
+            0...2 => try middleCardPrint(m.bottom_field[row - index][column]),
             3 => try bottomCardPrint(),
             else => try emptyPrint(),
         },
@@ -124,21 +124,21 @@ pub fn printBottomField() !void {
     var part_of_card: usize = 0;
 
     // iterates over rows in the bottom field
-    for (0..main.bottom_field.len) |row| {
+    for (0..m.bottom_field.len) |row| {
 
         // counts how many spaces are empty on a row
         var empty_cards: usize = 0;
 
         // iterates over columns / cards in a row
-        for (0..main.bottom_field[row].len) |column| {
+        for (0..m.bottom_field[row].len) |column| {
 
             // checks if the card isn't joker (empty space)
-            if (main.bottom_field[row][column].value != @intFromEnum(main.Value.joker)) {
+            if (m.bottom_field[row][column].value != @intFromEnum(m.Value.joker)) {
                 try topCardPrint();
             } else {
 
                 // checks if the stack is empty
-                if (main.bottom_field[0][column].value == @intFromEnum(main.Value.joker)) {
+                if (m.bottom_field[0][column].value == @intFromEnum(m.Value.joker)) {
 
                     // if it's empty call a function that prints card outline
                     try emptySpacePrint(part_of_card);
@@ -152,7 +152,7 @@ pub fn printBottomField() !void {
 
         // checks if the row is empty / there's only empty cards
         // (empty_cards = 7)
-        if (empty_cards == main.num_of_bot_field_columns) {
+        if (empty_cards == m.num_of_bot_field_columns) {
 
             // if the whole row is empty adds 1 to a count down
             count_down += 1;
@@ -169,15 +169,15 @@ pub fn printBottomField() !void {
         try stdout.print("\n", .{});
 
         // iterates over columns / cards in a row
-        for (0..main.bottom_field[row].len) |column| {
+        for (0..m.bottom_field[row].len) |column| {
 
             // checks if the card isn't joker (empty space)
-            if (main.bottom_field[row][column].value != @intFromEnum(main.Value.joker)) {
-                try topCardPrintSymbols(main.bottom_field[row][column]);
+            if (m.bottom_field[row][column].value != @intFromEnum(m.Value.joker)) {
+                try topCardPrintSymbols(m.bottom_field[row][column]);
             } else {
 
                 // checks if the stack is empty
-                if (main.bottom_field[0][column].value == @intFromEnum(main.Value.joker)) {
+                if (m.bottom_field[0][column].value == @intFromEnum(m.Value.joker)) {
 
                     // is it's empty call a function that prints card outline
                     try emptySpacePrint(part_of_card);
@@ -212,19 +212,19 @@ pub fn spreadCards(part_of_card: usize, index: usize) !void {
                     try emptyPrint();
                 },
                 1 => {
-                    try topCardPrintSymbols(main.top_field[index - 1][1]);
+                    try topCardPrintSymbols(m.top_field[index - 1][1]);
                     try emptyPrint();
                 },
                 2, 4 => {
-                    try middleCardPrint(main.top_field[index - 1][1]);
+                    try middleCardPrint(m.top_field[index - 1][1]);
                     try emptyPrint();
                 },
                 3 => {
-                    try middleCardPrintSymbols(main.top_field[index - 1][1]);
+                    try middleCardPrintSymbols(m.top_field[index - 1][1]);
                     try emptyPrint();
                 },
                 5 => {
-                    try bottomCardPrintSymbols(main.top_field[index - 1][1]);
+                    try bottomCardPrintSymbols(m.top_field[index - 1][1]);
                     try emptyPrint();
                 },
                 6 => {
@@ -242,31 +242,31 @@ pub fn spreadCards(part_of_card: usize, index: usize) !void {
                     try stdout.print("         ", .{});
                 },
                 1 => {
-                    if (helpFn.isRed(main.top_field[index - 2][1].shape)) {
-                        try stdout.print("│\x1b[31m{s: >2}\x1b[0m", .{helpFn.usizeToValue(main.top_field[index - 2][1], true)});
+                    if (helpFn.isRed(m.top_field[index - 2][1].shape)) {
+                        try stdout.print("│" ++ m.RED ++ "{s: >2}" ++ m.RESET, .{helpFn.valueString(m.top_field[index - 2][1], .top)});
                     } else {
-                        try stdout.print("│{s: >2}", .{helpFn.usizeToValue(main.top_field[index - 2][1], true)});
+                        try stdout.print("│{s: >2}", .{helpFn.valueString(m.top_field[index - 2][1], .top)});
                     }
-                    try topCardPrintSymbols(main.top_field[index - 1][1]);
+                    try topCardPrintSymbols(m.top_field[index - 1][1]);
                     try stdout.print("         ", .{});
                 },
                 2, 4 => {
                     try stdout.print("│  ", .{});
-                    try middleCardPrint(main.top_field[index - 1][1]);
+                    try middleCardPrint(m.top_field[index - 1][1]);
                     try stdout.print("         ", .{});
                 },
                 3 => {
                     try stdout.print("│  ", .{});
-                    try middleCardPrintSymbols(main.top_field[index - 1][1]);
+                    try middleCardPrintSymbols(m.top_field[index - 1][1]);
                     try stdout.print("         ", .{});
                 },
                 5 => {
-                    if (helpFn.isRed(main.top_field[index - 2][1].shape)) {
-                        try stdout.print("│ \x1b[31m{s}\x1b[0m", .{helpFn.usizeToShape(main.top_field[index - 2][1])});
+                    if (helpFn.isRed(m.top_field[index - 2][1].shape)) {
+                        try stdout.print("│ " ++ m.RED ++ "{s}" ++ m.RESET, .{helpFn.shapeString(m.top_field[index - 2][1])});
                     } else {
-                        try stdout.print("│ {s}", .{helpFn.usizeToShape(main.top_field[index - 2][1])});
+                        try stdout.print("│ {s}", .{helpFn.shapeString(m.top_field[index - 2][1])});
                     }
-                    try bottomCardPrintSymbols(main.top_field[index - 1][1]);
+                    try bottomCardPrintSymbols(m.top_field[index - 1][1]);
                     try stdout.print("         ", .{});
                 },
                 6 => {
@@ -285,25 +285,25 @@ pub fn spreadCards(part_of_card: usize, index: usize) !void {
                     try stdout.print("      ", .{});
                 },
                 1 => {
-                    try stdout.print("│{s: >2}", .{helpFn.usizeToValue(main.top_field[index - 3][1], true)});
-                    try stdout.print("│{s: >2}", .{helpFn.usizeToValue(main.top_field[index - 2][1], true)});
-                    try topCardPrintSymbols(main.top_field[index - 1][1]);
+                    try stdout.print("│{s: >2}", .{helpFn.valueString(m.top_field[index - 3][1], .top)});
+                    try stdout.print("│{s: >2}", .{helpFn.valueString(m.top_field[index - 2][1], .top)});
+                    try topCardPrintSymbols(m.top_field[index - 1][1]);
                     try stdout.print("      ", .{});
                 },
                 2, 4 => {
                     try stdout.print("│  │  ", .{});
-                    try middleCardPrint(main.top_field[index - 1][1]);
+                    try middleCardPrint(m.top_field[index - 1][1]);
                     try stdout.print("      ", .{});
                 },
                 3 => {
                     try stdout.print("│  │  ", .{});
-                    try middleCardPrintSymbols(main.top_field[index - 1][1]);
+                    try middleCardPrintSymbols(m.top_field[index - 1][1]);
                     try stdout.print("      ", .{});
                 },
                 5 => {
-                    try stdout.print("│ {s}", .{helpFn.usizeToShape(main.top_field[index - 3][1])});
-                    try stdout.print("│ {s}", .{helpFn.usizeToShape(main.top_field[index - 2][1])});
-                    try bottomCardPrintSymbols(main.top_field[index - 1][1]);
+                    try stdout.print("│ {s}", .{helpFn.shapeString(m.top_field[index - 3][1])});
+                    try stdout.print("│ {s}", .{helpFn.shapeString(m.top_field[index - 2][1])});
+                    try bottomCardPrintSymbols(m.top_field[index - 1][1]);
                     try stdout.print("      ", .{});
                 },
                 6 => {
@@ -330,8 +330,8 @@ pub fn printTopField() !void {
     // track of which part should be printed
     var part_of_card: usize = 0;
     while (part_of_card < 7) : (part_of_card += 1) {
-        for (0..main.top_field[0].len) |column| {
-            while (main.top_field[index][column].value != @intFromEnum(main.Value.joker)) {
+        for (0..m.top_field[0].len) |column| {
+            while (m.top_field[index][column].value != @intFromEnum(m.Value.joker)) {
                 index += 1;
             }
             if (column == 1) {
@@ -341,10 +341,10 @@ pub fn printTopField() !void {
             } else {
                 switch (part_of_card) {
                     0 => try topCardPrint(),
-                    1 => try topCardPrintSymbols(main.top_field[index - 1][column]),
-                    2, 4 => try middleCardPrint(main.top_field[index - 1][column]),
-                    3 => try middleCardPrintSymbols(main.top_field[index - 1][column]),
-                    5 => try bottomCardPrintSymbols(main.top_field[index - 1][column]),
+                    1 => try topCardPrintSymbols(m.top_field[index - 1][column]),
+                    2, 4 => try middleCardPrint(m.top_field[index - 1][column]),
+                    3 => try middleCardPrintSymbols(m.top_field[index - 1][column]),
+                    5 => try bottomCardPrintSymbols(m.top_field[index - 1][column]),
                     6 => try bottomCardPrint(),
                     else => unreachable,
                 }

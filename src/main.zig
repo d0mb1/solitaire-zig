@@ -25,7 +25,7 @@ pub const RESET: []const u8 = "\x1b[0m";
 // but I've run in to a problem when I wanted to generate the deck
 // but since you can't iterate over enums as far as I know
 // I had to do it this way
-pub const Card = struct { value: u4, shape: u2, visibility: u1 };
+pub const Card = struct { value: u4, shape: u2, visible: bool };
 
 // creating enums so we can easily check card properties in if statements
 pub const Value = enum(u4) {
@@ -47,6 +47,7 @@ pub const Value = enum(u4) {
 // reds are even and blacks are odd for easier checking when placing on a stack
 pub const Shape = enum(u2) { hearts, spades, diamonds, clubs };
 pub const Visibility = enum(u1) { covered, uncovered };
+pub const SymbolPosition = enum(u1) { top, bottom };
 
 // defines the number of cards in a standard card deck
 pub const num_of_cards = 52;
