@@ -1,15 +1,4 @@
-// ---SOLITAIRE--- //
-
-// For running this game you'll need to have a nerd font installed
-// and set up in your terminal. If you're using windows you'll also need to
-// run "chcp 65001" command to enable unicode in your terminal.
-// Also for some reason it only works when using the Command Prompt
-// and not Windows PowerShell. Why? IDK. Maybe cuz Windows is shit.
-// Haven't tried any other Windows shell.
-
-// importing standard library
 const std = @import("std");
-// importing file with card print functions
 const printCard = @import("printCard.zig");
 const helpFn = @import("helpFn.zig");
 const gameSetup = @import("gameSetup.zig");
@@ -17,53 +6,52 @@ const moveCard = @import("moveCard.zig");
 
 const stdin = std.io.getStdIn().reader();
 
+// color for terminal
 pub const RED: []const u8 = "\x1b[31m";
 pub const RESET: []const u8 = "\x1b[0m";
 
 // creating a card struct
-// I'd like to give the different properties the type of enums
-// but I've run in to a problem when I wanted to generate the deck
-// but since you can't iterate over enums as far as I know
-// I had to do it this way
 pub const Card = struct {
     value: Values,
     shape: Shapes,
     visible: bool,
 
+    // create a card
     pub fn init(self: *Card, val_index: usize, shp_index: usize) void {
         self.value = Values.init(val_index);
         self.shape = Shapes.init(shp_index);
         self.visible = false;
     }
 
+    //checks if card is joker
     pub fn isJoker(self: Card) bool {
         if (self.value == Values.joker) return true else return false;
     }
 
+    //checks if card is red
     pub fn isRed(self: Card) bool {
         // if (0 == shape % 2) return true else return false;
         if (@intFromEnum(self.shape) % 2 == 0) return true else return false;
     }
 
-    pub fn isSameShapeAs(self: Card, card: Card) bool {
-        if (self.shape == card.shape) return true else return false;
-    }
-
-    pub fn isShape(self: Card, shape: Shapes) bool {
-        if (self.shape == shape) return true else return false;
-    }
-
+    // checks if card is the input value
     pub fn isValue(self: Card, value: Values) bool {
         if (self.value == value) return true else return false;
     }
 
-    pub fn isOneBiggerThen(self: Card, card: Card) bool {
+    // checks if card is the input shape
+    pub fn isShape(self: Card, shape: Shapes) bool {
+        if (self.shape == shape) return true else return false;
+    }
+
+    // checks if the card value is one bigger than the input card
+    pub fn isOneBiggerThan(self: Card, card: Card) bool {
         if (@intFromEnum(self.value) == @intFromEnum(card.value) + 1) return true else return false;
     }
 };
 
 // creating enums so we can easily check card properties in if statements
-pub const Values = enum(u4) {
+pub const Values = enum {
     joker,
     ace,
     two,
@@ -100,7 +88,7 @@ pub const Values = enum(u4) {
     }
 };
 // reds are even and blacks are odd for easier checking when placing on a stack
-pub const Shapes = enum(u2) {
+pub const Shapes = enum {
     hearts,
     spades,
     diamonds,
@@ -116,8 +104,8 @@ pub const Shapes = enum(u2) {
         };
     }
 };
-
-pub const SymbolPosition = enum(u1) {
+// if the symbol is on the top of a card or bottom
+pub const SymbolPosition = enum {
     top,
     bottom,
 };

@@ -122,11 +122,6 @@ pub fn shapeString(card: m.Card) []const u8 {
     };
 }
 
-// checks if the card is red
-pub fn isRed(shape: usize) bool {
-    if (0 == shape % 2) return true else return false;
-}
-
 // prints the labels above top field
 pub fn topLabels() !void {
     const stdout = std.io.getStdOut().writer();
@@ -149,6 +144,8 @@ pub fn topLabels() !void {
         if (!m.top_field[row][1].isJoker()) gap += 1;
     }
 
+    // because when there are more cards in stack 9 the cards spread out
+    // so we need to move the label 9 too
     switch (gap) {
         0, 1 => {},
         2 => try stdout.print("   ", .{}),
@@ -177,7 +174,7 @@ pub fn bottomLabels() !void {
     try stdout.print("╭─── " ++ m.RESET ++ "7" ++ m.RED ++ " ───╮ \n" ++ m.RESET, .{});
 }
 
-// function that get user intiger input and returns it
+// function that gets user intiger input and returns it
 pub fn getNum() !u8 {
     const stdout = std.io.getStdOut().writer();
     var buffer: [100]u8 = undefined;
@@ -245,6 +242,7 @@ fn isWinnable() bool {
     if (uncovered_cards == 52) return true else return false;
 }
 
+// when all cards are in the final deck
 pub fn isWon() bool {
     var cards_in_final_decks: usize = 0;
 

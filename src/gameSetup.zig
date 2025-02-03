@@ -1,12 +1,12 @@
 const std = @import("std");
-const main = @import("main.zig");
+const m = @import("main.zig");
 const moveCard = @import("moveCard.zig");
 
 pub fn generateDeck() void {
     var index: usize = 0;
     for (0..4) |shape| {
         for (1..14) |value| {
-            main.deck[index].init(value, shape);
+            m.deck[index].init(value, shape);
             index += 1;
         }
     }
@@ -17,7 +17,7 @@ pub fn shuffleDeck() !void {
 
     // generating a random seed that ensures that the deck will be shuffled
     // differently each time
-    var card_index: usize = main.num_of_cards - 1;
+    var card_index: usize = m.num_of_cards - 1;
     const rand = std.Random.DefaultPrng;
     var prng = rand.init(blk: {
         var seed: u64 = undefined;
@@ -28,9 +28,9 @@ pub fn shuffleDeck() !void {
 
         // randomly choosing a card that will be swapped
         const j = prng.random().intRangeAtMost(usize, 0, card_index);
-        const temp = main.deck[card_index];
-        main.deck[card_index] = main.deck[j];
-        main.deck[j] = temp;
+        const temp = m.deck[card_index];
+        m.deck[card_index] = m.deck[j];
+        m.deck[j] = temp;
     }
 }
 
@@ -43,8 +43,8 @@ pub fn fillFields() void {
 
     // stagger where the cards are placed
     while (row < 7) : (row += 1) {
-        while (column < main.num_of_bot_field_columns) : (column += 1) {
-            main.bottom_field[row][column] = main.deck[card_index];
+        while (column < m.num_of_bot_field_columns) : (column += 1) {
+            m.bottom_field[row][column] = m.deck[card_index];
             card_index += 1;
         }
         row_start += 1;
@@ -56,11 +56,11 @@ pub fn fillFields() void {
 // fills top fields
 fn fillTopField(i: usize) void {
     var card_index: usize = i;
-    const num_of_rem_cards: usize = main.num_of_cards - card_index;
+    const num_of_rem_cards: usize = m.num_of_cards - card_index;
     for (0..num_of_rem_cards) |row| {
 
         // remaining cards are placed in to the eighth stack in the top field
-        main.top_field[row][0] = main.deck[card_index];
+        m.top_field[row][0] = m.deck[card_index];
         card_index += 1;
     }
 }
@@ -70,10 +70,10 @@ fn fillTopField(i: usize) void {
 pub fn uncoverCards() void {
 
     // steps thrue all the columns
-    for (0..main.bottom_field[0].len) |column| {
+    for (0..m.bottom_field[0].len) |column| {
 
         // uncover top most card
         const row = moveCard.findFirstCardBottom(@intCast(column));
-        main.bottom_field[row - 1][column].visible = true;
+        m.bottom_field[row - 1][column].visible = true;
     }
 }
