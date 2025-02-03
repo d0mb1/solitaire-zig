@@ -2,6 +2,16 @@ const std = @import("std");
 const main = @import("main.zig");
 const moveCard = @import("moveCard.zig");
 
+pub fn generateDeck() void {
+    var index: usize = 0;
+    for (0..4) |shape| {
+        for (1..14) |value| {
+            main.deck[index].init(value, shape);
+            index += 1;
+        }
+    }
+}
+
 // shuffle magic! done by the Fisher–Yates shuffeling algorithm
 pub fn shuffleDeck() !void {
 
