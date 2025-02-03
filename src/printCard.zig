@@ -90,7 +90,7 @@ pub fn restOfCardPrint(row: usize, column: usize, symbols: bool) !void {
     var index: usize = 0;
 
     // finding the top card in the stack and counting how many rows above it is
-    while (m.bottom_field[row - index][column].value == @intFromEnum(m.Value.joker)) : (index += 1) {
+    while (m.bottom_field[row - index][column].isJoker()) : (index += 1) {
         if (row - index == 0) {
             break;
         }
@@ -133,12 +133,12 @@ pub fn printBottomField() !void {
         for (0..m.bottom_field[row].len) |column| {
 
             // checks if the card isn't joker (empty space)
-            if (m.bottom_field[row][column].value != @intFromEnum(m.Value.joker)) {
+            if (!m.bottom_field[row][column].isJoker()) {
                 try topCardPrint();
             } else {
 
                 // checks if the stack is empty
-                if (m.bottom_field[0][column].value == @intFromEnum(m.Value.joker)) {
+                if (m.bottom_field[0][column].isJoker()) {
 
                     // if it's empty call a function that prints card outline
                     try emptySpacePrint(part_of_card);
@@ -172,12 +172,12 @@ pub fn printBottomField() !void {
         for (0..m.bottom_field[row].len) |column| {
 
             // checks if the card isn't joker (empty space)
-            if (m.bottom_field[row][column].value != @intFromEnum(m.Value.joker)) {
+            if (!m.bottom_field[row][column].isJoker()) {
                 try topCardPrintSymbols(m.bottom_field[row][column]);
             } else {
 
                 // checks if the stack is empty
-                if (m.bottom_field[0][column].value == @intFromEnum(m.Value.joker)) {
+                if (m.bottom_field[0][column].isJoker()) {
 
                     // is it's empty call a function that prints card outline
                     try emptySpacePrint(part_of_card);
@@ -242,7 +242,7 @@ pub fn spreadCards(part_of_card: usize, index: usize) !void {
                     try stdout.print("         ", .{});
                 },
                 1 => {
-                    if (helpFn.isRed(m.top_field[index - 2][1].shape)) {
+                    if ((m.top_field[index - 2][1].isRed())) {
                         try stdout.print("│" ++ m.RED ++ "{s: >2}" ++ m.RESET, .{helpFn.valueString(m.top_field[index - 2][1], .top)});
                     } else {
                         try stdout.print("│{s: >2}", .{helpFn.valueString(m.top_field[index - 2][1], .top)});
@@ -261,7 +261,7 @@ pub fn spreadCards(part_of_card: usize, index: usize) !void {
                     try stdout.print("         ", .{});
                 },
                 5 => {
-                    if (helpFn.isRed(m.top_field[index - 2][1].shape)) {
+                    if ((m.top_field[index - 2][1].isRed())) {
                         try stdout.print("│ " ++ m.RED ++ "{s}" ++ m.RESET, .{helpFn.shapeString(m.top_field[index - 2][1])});
                     } else {
                         try stdout.print("│ {s}", .{helpFn.shapeString(m.top_field[index - 2][1])});
@@ -331,7 +331,7 @@ pub fn printTopField() !void {
     var part_of_card: usize = 0;
     while (part_of_card < 7) : (part_of_card += 1) {
         for (0..m.top_field[0].len) |column| {
-            while (m.top_field[index][column].value != @intFromEnum(m.Value.joker)) {
+            while (!m.top_field[index][column].isJoker()) {
                 index += 1;
             }
             if (column == 1) {

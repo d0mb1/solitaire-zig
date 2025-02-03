@@ -25,10 +25,39 @@ pub const RESET: []const u8 = "\x1b[0m";
 // but I've run in to a problem when I wanted to generate the deck
 // but since you can't iterate over enums as far as I know
 // I had to do it this way
-pub const Card = struct { value: u4, shape: u2, visible: bool };
+pub const Card = struct {
+    value: Values,
+    shape: Shapes,
+    visible: bool,
+
+    pub fn isJoker(self: Card) bool {
+        if (self.value == Values.joker) return true else return false;
+    }
+
+    pub fn isRed(self: Card) bool {
+        // if (0 == shape % 2) return true else return false;
+        if (@intFromEnum(self.shape) % 2 == 0) return true else return false;
+    }
+
+    pub fn isSameShapeAs(self: Card, card: Card) bool {
+        if (self.shape == card.shape) return true else return false;
+    }
+
+    pub fn isShape(self: Card, shape: Shapes) bool {
+        if (self.shape == shape) return true else return false;
+    }
+
+    pub fn isValue(self: Card, value: Values) bool {
+        if (self.value == value) return true else return false;
+    }
+
+    pub fn isOneBiggerThen(self: Card, card: Card) bool {
+        if (@intFromEnum(self.value) == @intFromEnum(card.value) + 1) return true else return false;
+    }
+};
 
 // creating enums so we can easily check card properties in if statements
-pub const Value = enum(u4) {
+pub const Values = enum(u4) {
     joker,
     ace,
     two,
@@ -45,9 +74,17 @@ pub const Value = enum(u4) {
     king,
 };
 // reds are even and blacks are odd for easier checking when placing on a stack
-pub const Shape = enum(u2) { hearts, spades, diamonds, clubs };
-pub const Visibility = enum(u1) { covered, uncovered };
-pub const SymbolPosition = enum(u1) { top, bottom };
+pub const Shapes = enum(u2) {
+    hearts,
+    spades,
+    diamonds,
+    clubs,
+};
+
+pub const SymbolPosition = enum(u1) {
+    top,
+    bottom,
+};
 
 // defines the number of cards in a standard card deck
 pub const num_of_cards = 52;
@@ -67,8 +104,65 @@ pub const num_of_top_field_rows = 25;
 // there are 6 stacks in the top filed in solitaire
 pub const num_of_top_field_columns = 6;
 
-// creating an array that will represent a card deck
-pub var deck: [num_of_cards]Card = undefined;
+// creating a deck/array with all possible cards
+pub var deck = [52]Card{
+    .{ .value = Values.ace, .shape = Shapes.hearts, .visible = false },
+    .{ .value = Values.two, .shape = Shapes.hearts, .visible = false },
+    .{ .value = Values.three, .shape = Shapes.hearts, .visible = false },
+    .{ .value = Values.four, .shape = Shapes.hearts, .visible = false },
+    .{ .value = Values.five, .shape = Shapes.hearts, .visible = false },
+    .{ .value = Values.six, .shape = Shapes.hearts, .visible = false },
+    .{ .value = Values.seven, .shape = Shapes.hearts, .visible = false },
+    .{ .value = Values.eight, .shape = Shapes.hearts, .visible = false },
+    .{ .value = Values.nine, .shape = Shapes.hearts, .visible = false },
+    .{ .value = Values.ten, .shape = Shapes.hearts, .visible = false },
+    .{ .value = Values.jack, .shape = Shapes.hearts, .visible = false },
+    .{ .value = Values.queen, .shape = Shapes.hearts, .visible = false },
+    .{ .value = Values.king, .shape = Shapes.hearts, .visible = false },
+
+    .{ .value = Values.ace, .shape = Shapes.spades, .visible = false },
+    .{ .value = Values.two, .shape = Shapes.spades, .visible = false },
+    .{ .value = Values.three, .shape = Shapes.spades, .visible = false },
+    .{ .value = Values.four, .shape = Shapes.spades, .visible = false },
+    .{ .value = Values.five, .shape = Shapes.spades, .visible = false },
+    .{ .value = Values.six, .shape = Shapes.spades, .visible = false },
+    .{ .value = Values.seven, .shape = Shapes.spades, .visible = false },
+    .{ .value = Values.eight, .shape = Shapes.spades, .visible = false },
+    .{ .value = Values.nine, .shape = Shapes.spades, .visible = false },
+    .{ .value = Values.ten, .shape = Shapes.spades, .visible = false },
+    .{ .value = Values.jack, .shape = Shapes.spades, .visible = false },
+    .{ .value = Values.queen, .shape = Shapes.spades, .visible = false },
+    .{ .value = Values.king, .shape = Shapes.spades, .visible = false },
+
+    .{ .value = Values.ace, .shape = Shapes.diamonds, .visible = false },
+    .{ .value = Values.two, .shape = Shapes.diamonds, .visible = false },
+    .{ .value = Values.three, .shape = Shapes.diamonds, .visible = false },
+    .{ .value = Values.four, .shape = Shapes.diamonds, .visible = false },
+    .{ .value = Values.five, .shape = Shapes.diamonds, .visible = false },
+    .{ .value = Values.six, .shape = Shapes.diamonds, .visible = false },
+    .{ .value = Values.seven, .shape = Shapes.diamonds, .visible = false },
+    .{ .value = Values.eight, .shape = Shapes.diamonds, .visible = false },
+    .{ .value = Values.nine, .shape = Shapes.diamonds, .visible = false },
+    .{ .value = Values.ten, .shape = Shapes.diamonds, .visible = false },
+    .{ .value = Values.jack, .shape = Shapes.diamonds, .visible = false },
+    .{ .value = Values.queen, .shape = Shapes.diamonds, .visible = false },
+    .{ .value = Values.king, .shape = Shapes.diamonds, .visible = false },
+
+    .{ .value = Values.ace, .shape = Shapes.clubs, .visible = false },
+    .{ .value = Values.two, .shape = Shapes.clubs, .visible = false },
+    .{ .value = Values.three, .shape = Shapes.clubs, .visible = false },
+    .{ .value = Values.four, .shape = Shapes.clubs, .visible = false },
+    .{ .value = Values.five, .shape = Shapes.clubs, .visible = false },
+    .{ .value = Values.six, .shape = Shapes.clubs, .visible = false },
+    .{ .value = Values.seven, .shape = Shapes.clubs, .visible = false },
+    .{ .value = Values.eight, .shape = Shapes.clubs, .visible = false },
+    .{ .value = Values.nine, .shape = Shapes.clubs, .visible = false },
+    .{ .value = Values.ten, .shape = Shapes.clubs, .visible = false },
+    .{ .value = Values.jack, .shape = Shapes.clubs, .visible = false },
+    .{ .value = Values.queen, .shape = Shapes.clubs, .visible = false },
+    .{ .value = Values.king, .shape = Shapes.clubs, .visible = false },
+};
+
 pub var bottom_field: [num_of_bot_field_rows][num_of_bot_field_columns]Card = undefined;
 pub var top_field: [num_of_top_field_rows][num_of_top_field_columns]Card = undefined;
 
@@ -78,9 +172,6 @@ pub var moves: u16 = 0;
 // --- MAIN FUNCTION --- //
 pub fn main() !void {
     const stdout = std.io.getStdOut().writer();
-
-    // setting up the game
-    gameSetup.fillDeck();
 
     // shuffle twice just in case
     try gameSetup.shuffleDeck();

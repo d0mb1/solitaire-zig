@@ -2,26 +2,6 @@ const std = @import("std");
 const main = @import("main.zig");
 const moveCard = @import("moveCard.zig");
 
-// generates all possible cards and places them in a deck
-pub fn fillDeck() void {
-
-    // there's 4  possible shapes
-    var card_index: usize = 0;
-    for (0..4) |shape| {
-
-        // 0 reserved for an empty card that represents empty space
-        // it also moves the index up so it matches card numbering
-        for (1..14) |value| {
-            main.deck[card_index] = main.Card{
-                .value = @intCast(value),
-                .shape = @intCast(shape),
-                .visible = false,
-            };
-            card_index += 1;
-        }
-    }
-}
-
 // shuffle magic! done by the Fisher–Yates shuffeling algorithm
 pub fn shuffleDeck() !void {
 

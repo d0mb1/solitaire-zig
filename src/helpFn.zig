@@ -53,64 +53,61 @@ pub fn winningMessage() !void {
 // function return a string based on the card value/shape ID input helps with
 // printing cards
 pub fn valueString(card: m.Card, possition: m.SymbolPosition) []const u8 {
-    if (isRed(card.shape)) {
+    if (card.isRed()) {
 
         // for some reason I have to check which part of the card is being
         // printed because the ANSI escape codes change the position of the
         // value
         return switch (possition) {
             .top => switch (card.value) {
-                0 => "X", // empty card that'll represent and empty space
-                1 => m.RED ++ " A" ++ m.RESET,
-                2 => m.RED ++ " 2" ++ m.RESET,
-                3 => m.RED ++ " 3" ++ m.RESET,
-                4 => m.RED ++ " 4" ++ m.RESET,
-                5 => m.RED ++ " 5" ++ m.RESET,
-                6 => m.RED ++ " 6" ++ m.RESET,
-                7 => m.RED ++ " 7" ++ m.RESET,
-                8 => m.RED ++ " 8" ++ m.RESET,
-                9 => m.RED ++ " 9" ++ m.RESET,
-                10 => m.RED ++ "10" ++ m.RESET,
-                11 => m.RED ++ " J" ++ m.RESET,
-                12 => m.RED ++ " Q" ++ m.RESET,
-                13 => m.RED ++ " K" ++ m.RESET,
-                else => unreachable,
+                .joker => "X", // empty card that'll represent and empty space
+                .ace => m.RED ++ " A" ++ m.RESET,
+                .two => m.RED ++ " 2" ++ m.RESET,
+                .three => m.RED ++ " 3" ++ m.RESET,
+                .four => m.RED ++ " 4" ++ m.RESET,
+                .five => m.RED ++ " 5" ++ m.RESET,
+                .six => m.RED ++ " 6" ++ m.RESET,
+                .seven => m.RED ++ " 7" ++ m.RESET,
+                .eight => m.RED ++ " 8" ++ m.RESET,
+                .nine => m.RED ++ " 9" ++ m.RESET,
+                .ten => m.RED ++ "10" ++ m.RESET,
+                .jack => m.RED ++ " J" ++ m.RESET,
+                .queen => m.RED ++ " Q" ++ m.RESET,
+                .king => m.RED ++ " K" ++ m.RESET,
             },
             .bottom => switch (card.value) {
-                0 => "X", // empty card that'll represent and empty space
-                1 => m.RED ++ "A " ++ m.RESET,
-                2 => m.RED ++ "2 " ++ m.RESET,
-                3 => m.RED ++ "3 " ++ m.RESET,
-                4 => m.RED ++ "4 " ++ m.RESET,
-                5 => m.RED ++ "5 " ++ m.RESET,
-                6 => m.RED ++ "6 " ++ m.RESET,
-                7 => m.RED ++ "7 " ++ m.RESET,
-                8 => m.RED ++ "8 " ++ m.RESET,
-                9 => m.RED ++ "9 " ++ m.RESET,
-                10 => m.RED ++ "10" ++ m.RESET,
-                11 => m.RED ++ "J " ++ m.RESET,
-                12 => m.RED ++ "Q " ++ m.RESET,
-                13 => m.RED ++ "K " ++ m.RESET,
-                else => unreachable,
+                .joker => "X", // empty card that'll represent and empty space
+                .ace => m.RED ++ "A " ++ m.RESET,
+                .two => m.RED ++ "2 " ++ m.RESET,
+                .three => m.RED ++ "3 " ++ m.RESET,
+                .four => m.RED ++ "4 " ++ m.RESET,
+                .five => m.RED ++ "5 " ++ m.RESET,
+                .six => m.RED ++ "6 " ++ m.RESET,
+                .seven => m.RED ++ "7 " ++ m.RESET,
+                .eight => m.RED ++ "8 " ++ m.RESET,
+                .nine => m.RED ++ "9 " ++ m.RESET,
+                .ten => m.RED ++ "10" ++ m.RESET,
+                .jack => m.RED ++ "J " ++ m.RESET,
+                .queen => m.RED ++ "Q " ++ m.RESET,
+                .king => m.RED ++ "K " ++ m.RESET,
             },
         };
     } else {
         return switch (card.value) {
-            0 => "X", // empty card that'll represent and empty space
-            1 => "A",
-            2 => "2",
-            3 => "3",
-            4 => "4",
-            5 => "5",
-            6 => "6",
-            7 => "7",
-            8 => "8",
-            9 => "9",
-            10 => "10",
-            11 => "J",
-            12 => "Q",
-            13 => "K",
-            else => unreachable,
+            .joker => "X", // empty card that'll represent and empty space
+            .ace => "A",
+            .two => "2",
+            .three => "3",
+            .four => "4",
+            .five => "5",
+            .six => "6",
+            .seven => "7",
+            .eight => "8",
+            .nine => "9",
+            .ten => "10",
+            .jack => "J",
+            .queen => "Q",
+            .king => "K",
         };
     }
 }
@@ -118,10 +115,10 @@ pub fn valueString(card: m.Card, possition: m.SymbolPosition) []const u8 {
 // transers usize to string
 pub fn shapeString(card: m.Card) []const u8 {
     return switch (card.shape) {
-        0 => m.RED ++ "󰣐" ++ m.RESET, // hearts
-        1 => "󰣑", // spades
-        2 => m.RED ++ "󰣏" ++ m.RESET, // diamonds
-        3 => "󰣎", // clubs
+        .hearts => m.RED ++ "󰣐" ++ m.RESET, // hearts
+        .spades => "󰣑", // spades
+        .diamonds => m.RED ++ "󰣏" ++ m.RESET, // diamonds
+        .clubs => "󰣎", // clubs
     };
 }
 
@@ -149,7 +146,7 @@ pub fn topLabels() !void {
 
     var gap: usize = 0;
     for (0..3) |row| {
-        if (m.top_field[row][1].value != @intFromEnum(m.Value.joker)) gap += 1;
+        if (!m.top_field[row][1].isJoker()) gap += 1;
     }
 
     switch (gap) {
@@ -233,15 +230,15 @@ fn isWinnable() bool {
     // checks the top field
     for (m.top_field) |row| {
         for (row, 0..) |card, i| {
-            if (card.visible == true and card.value != @intFromEnum(m.Value.joker)) uncovered_cards += 1;
-            if (card.visible == false and card.value != @intFromEnum(m.Value.joker) and i == 0) uncovered_cards += 1;
+            if (card.visible == true and !card.isJoker()) uncovered_cards += 1;
+            if (card.visible == false and !card.isJoker() and i == 0) uncovered_cards += 1;
         }
     }
 
     // checks the bottom field
     for (m.bottom_field) |row| {
         for (row) |card| {
-            if (card.visible == true and card.value != @intFromEnum(m.Value.joker)) uncovered_cards += 1;
+            if (card.visible == true and !card.isJoker()) uncovered_cards += 1;
         }
     }
 
@@ -253,7 +250,7 @@ pub fn isWon() bool {
 
     for (0..13) |row| {
         for (2..6) |column| {
-            if (m.top_field[row][column].value != @intFromEnum(m.Value.joker)) cards_in_final_decks += 1;
+            if (!m.top_field[row][column].isJoker()) cards_in_final_decks += 1;
         }
     }
     if (cards_in_final_decks == 52) return true else return false;
