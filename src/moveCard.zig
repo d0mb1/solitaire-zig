@@ -1,6 +1,7 @@
 const std = @import("std");
 const m = @import("main.zig");
 const helpFn = @import("helpFn.zig");
+const printCard = @import("printCard.zig");
 
 // flips cards between stack 8 and 9
 pub fn flipCard() void {
@@ -250,5 +251,62 @@ pub fn final2bMove(column_from: u8, column_to: u8) void {
         m.bottom_field[row_to][column_to] = m.top_field[row_from - 1][column_from];
         m.top_field[row_from - 1][column_from].value = .joker;
         m.moves += 1;
+    }
+}
+
+// Automatically moves all possible cards to the final stacks
+pub fn autoComplete() !void {
+    const stdout = std.io.getStdOut().writer();
+    var moved: bool = true;
+    while (moved) {
+        moved = false;
+
+        // Check discard pile (stack 9)
+        const prev_moves = m.moves;
+        t2finalMove();
+        if (m.moves > prev_moves) {
+            moved = true;
+            try stdout.print("\x1B[2J\x1B[H", .{});
+            try helpFn.topLabels();
+            try printCard.printTopField();
+            try stdout.print("\n", .{});
+            try helpFn.bottomLabels();
+            try printCard.printBottomField();
+            std.time.sleep(500000000);
+            continue;
+        }
+
+        // Check each bottom field stack
+        for (0..m.num_of_bot_field_columns) |column| {
+            const prev_moves_col = m.moves;
+            b2finalMove(@intCast(column));
+            if (m.moves > prev_moves_col) {
+                moved = true;
+                try stdout.print("\x1B[2J\x1B[H", .{});
+                try helpFn.topLabels();
+                try printCard.printTopField();
+                try stdout.print("\n", .{});
+                try helpFn.bottomLabels();
+                try printCard.printBottomField();
+                std.time.sleep(500000000);
+                break;
+            }
+        }
+
+        if (moved) continue;
+
+        if (helpFn.isWon()) break;
+
+        if (moved) {} else {
+            moved = true;
+            flipCard();
+            try stdout.print("\x1B[2J\x1B[H", .{});
+            try helpFn.topLabels();
+            try printCard.printTopField();
+            try stdout.print("\n", .{});
+            try helpFn.bottomLabels();
+            try printCard.printBottomField();
+            std.time.sleep(500000000);
+        }
     }
 }

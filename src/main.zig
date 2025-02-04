@@ -25,28 +25,28 @@ pub const Card = struct {
 
     //checks if card is joker
     pub fn isJoker(self: Card) bool {
-        if (self.value == Values.joker) return true else return false;
+        return if (self.value == Values.joker) true else false;
     }
 
     //checks if card is red
     pub fn isRed(self: Card) bool {
         // if (0 == shape % 2) return true else return false;
-        if (@intFromEnum(self.shape) % 2 == 0) return true else return false;
+        return if (@intFromEnum(self.shape) % 2 == 0) true else false;
     }
 
     // checks if card is the input value
     pub fn isValue(self: Card, value: Values) bool {
-        if (self.value == value) return true else return false;
+        return if (self.value == value) true else false;
     }
 
     // checks if card is the input shape
     pub fn isShape(self: Card, shape: Shapes) bool {
-        if (self.shape == shape) return true else return false;
+        return if (self.shape == shape) true else false;
     }
 
     // checks if the card value is one bigger than the input card
     pub fn isOneBiggerThan(self: Card, card: Card) bool {
-        if (@intFromEnum(self.value) == @intFromEnum(card.value) + 1) return true else return false;
+        return if (@intFromEnum(self.value) == @intFromEnum(card.value) + 1) true else false;
     }
 };
 
@@ -242,6 +242,8 @@ pub fn main() !void {
             },
             else => try stdout.print("Invalid Stack\n", .{}),
         }
+
+        if (helpFn.isWinnable()) try moveCard.autoComplete();
         if (helpFn.isWon()) break;
     }
     try stdout.print("\x1B[2J\x1B[H", .{});

@@ -221,7 +221,7 @@ pub fn getNum() !u8 {
 }
 
 // // determines if the game is winnable / there are no covered cards left
-fn isWinnable() bool {
+pub fn isWinnable() bool {
     var uncovered_cards: usize = 0;
 
     // checks the top field
