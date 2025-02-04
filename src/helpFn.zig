@@ -134,11 +134,11 @@ pub fn topLabels(time: i64) !void {
                 true => {
                     const final_time = std.time.timestamp() - time;
                     const hours = @divTrunc(@divTrunc(final_time, 60), 60);
-                    const minutes = @divTrunc(final_time, 60);
+                    const minutes = @mod(@divTrunc(final_time, 60), 60);
                     const seconds = @mod(final_time, 60);
 
                     var buf: [100]u8 = undefined;
-                    const time_display = try std.fmt.bufPrint(&buf, "{} HRs {} MINs {} SECs", .{ hours, minutes, seconds });
+                    const time_display = try std.fmt.bufPrint(&buf, "{} HRS {} MINS {} SECS", .{ hours, minutes, seconds });
                     message = time_display;
                 },
                 false => message = "TYPE 52 TO AUTOCOMPLETE",
