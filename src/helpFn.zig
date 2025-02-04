@@ -137,7 +137,7 @@ pub fn topLabels(time: i64) !void {
                     const seconds = @mod(final_time, 60);
 
                     var buf: [100]u8 = undefined;
-                    const time_display = try std.fmt.bufPrint(&buf, "IN {}H {}M {}S", .{ hours, minutes, seconds });
+                    const time_display = try std.fmt.bufPrint(&buf, "{} HRs {} MINs {} SECs", .{ hours, minutes, seconds });
                     message = time_display;
                 },
                 false => message = "TYPE 52 TO AUTOCOMPLETE",
@@ -145,7 +145,7 @@ pub fn topLabels(time: i64) !void {
         },
         false => message = "",
     }
-    try stdout.print("MOVES:{: >4}  {s: >23} ", .{ m.moves, message });
+    try stdout.print("MOVES:{: >4} {s: >24} ", .{ m.moves, message });
     try stdout.print(m.RED ++ "╭───────────────────── " ++ m.RESET ++ "0" ++ m.RED ++ " ─────────────────────╮\n", .{});
     try stdout.print("╭─── " ++ m.RESET ++ "8" ++ m.RED ++ " ───╮ ", .{});
 
