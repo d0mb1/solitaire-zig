@@ -177,9 +177,11 @@ pub fn main() !void {
                         // where to move the card
                         switch (to) {
                             1...7 => moveCard.final2bMove(from_final + 1, to - 1),
+                            52 => if (helpFn.isWinnable()) try moveCard.autoComplete(),
                             else => try stdout.print("Invalid Stack\n", .{}),
                         }
                     },
+                    52 => if (helpFn.isWinnable()) try moveCard.autoComplete(),
                     else => try stdout.print("Invalid Stack\n", .{}),
                 }
             },
@@ -213,9 +215,11 @@ pub fn main() !void {
                             0 => {
                                 moveCard.b2finalMove(from - 1);
                             },
+                            52 => if (helpFn.isWinnable()) try moveCard.autoComplete(),
                             else => try stdout.print("Invalid Stack\n", .{}),
                         }
                     },
+                    52 => if (helpFn.isWinnable()) try moveCard.autoComplete(),
                     else => try stdout.print("Invalid Card Value\n", .{}),
                 }
             },
@@ -237,13 +241,15 @@ pub fn main() !void {
                         moveCard.t2bMove(from - 8, to - 1);
                     },
                     0 => moveCard.t2finalMove(),
+                    52 => if (helpFn.isWinnable()) try moveCard.autoComplete(),
                     else => try stdout.print("Invalid Stack\n", .{}),
                 }
             },
+            52 => if (helpFn.isWinnable()) try moveCard.autoComplete(),
             else => try stdout.print("Invalid Stack\n", .{}),
         }
 
-        if (helpFn.isWinnable()) try moveCard.autoComplete();
+        // if (helpFn.isWinnable()) try moveCard.autoComplete();
         if (helpFn.isWon()) break;
     }
     try stdout.print("\x1B[2J\x1B[H", .{});

@@ -130,13 +130,14 @@ pub fn topLabels() !void {
         true => {
             switch (isWon()) {
                 true => message = "",
-                false => message = "WINNABLE!!!",
+                // false => message = "WINNABLE!!!",
+                false => message = "TYPE 52 TO AUTOCOMPLETE",
             }
         },
         false => message = "",
     }
-    try stdout.print(m.RED ++ "MOVES: {: >4}             {s: >11} ", .{ m.moves, message });
-    try stdout.print("╭───────────────────── " ++ m.RESET ++ "0" ++ m.RED ++ " ─────────────────────╮\n", .{});
+    try stdout.print("MOVES:{: >4}  {s: >23} ", .{ m.moves, message });
+    try stdout.print(m.RED ++ "╭───────────────────── " ++ m.RESET ++ "0" ++ m.RED ++ " ─────────────────────╮\n", .{});
     try stdout.print("╭─── " ++ m.RESET ++ "8" ++ m.RED ++ " ───╮ ", .{});
 
     var gap: usize = 0;
