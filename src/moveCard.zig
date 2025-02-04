@@ -142,7 +142,7 @@ pub fn findFirstCardBottom(column: u8) u8 {
 }
 
 // finds the top most card in a top field stack
-fn findFirstCardTop(column: u8) u8 {
+pub fn findFirstCardTop(column: u8) u8 {
     var row: usize = 0;
     while (!m.top_field[row][column].isJoker()) : (row += 1) {}
     return @intCast(row);
@@ -256,6 +256,7 @@ pub fn final2bMove(column_from: u8, column_to: u8) void {
 
 // Automatically moves all possible cards to the final stacks
 pub fn autoComplete(time: i64) !void {
+    const stdout = std.io.getStdOut().writer();
     var moved: bool = true;
     while (moved) {
         moved = false;
@@ -266,6 +267,7 @@ pub fn autoComplete(time: i64) !void {
         if (m.moves > prev_moves) {
             moved = true;
             try printCard.printFields(time);
+            stdout.print("AUTOCOMPLEATING...\n", .{});
             std.time.sleep(500000000);
             continue;
         }
@@ -277,6 +279,7 @@ pub fn autoComplete(time: i64) !void {
             if (m.moves > prev_moves_col) {
                 moved = true;
                 try printCard.printFields(time);
+                stdout.print("AUTOCOMPLEATING...\n", .{});
                 std.time.sleep(500000000);
                 break;
             }
@@ -290,6 +293,7 @@ pub fn autoComplete(time: i64) !void {
             moved = true;
             flipCard();
             try printCard.printFields(time);
+            stdout.print("AUTOCOMPLEATING...\n", .{});
             std.time.sleep(500000000);
         }
     }
