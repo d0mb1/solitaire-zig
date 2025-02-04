@@ -355,10 +355,10 @@ pub fn printTopField() !void {
     }
 }
 
-pub fn printFields() !void {
+pub fn printFields(time: i64) !void {
     const stdout = std.io.getStdOut().writer();
     try stdout.print("\x1B[2J\x1B[H", .{});
-    try helpFn.topLabels();
+    try helpFn.topLabels(time);
     try printTopField();
     try stdout.print("\n", .{});
     try helpFn.bottomLabels();

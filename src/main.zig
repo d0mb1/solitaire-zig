@@ -139,17 +139,16 @@ pub var moves: u16 = 0;
 
 // --- MAIN FUNCTION --- //
 pub fn main() !void {
+    const time = std.time.timestamp();
     const stdout = std.io.getStdOut().writer();
 
     gameSetup.generateDeck();
-    // shuffle twice just in case
-    try gameSetup.shuffleDeck();
     try gameSetup.shuffleDeck();
     gameSetup.fillFields();
     gameSetup.uncoverCards();
 
     while (true) {
-        try printCard.printFields();
+        try printCard.printFields(time);
 
         try stdout.print("▶ PICK A STACK (0 - 9) FROM WHICH TO TAKE A CARD OUT OF\t▶ ", .{});
         const from = try helpFn.getNum();
@@ -172,11 +171,11 @@ pub fn main() !void {
                         // where to move the card
                         switch (to) {
                             1...7 => moveCard.final2bMove(from_final + 1, to - 1),
-                            52 => if (helpFn.isWinnable()) try moveCard.autoComplete(),
+                            52 => if (helpFn.isWinnable()) try moveCard.autoComplete(time),
                             else => try stdout.print("Invalid Stack\n", .{}),
                         }
                     },
-                    52 => if (helpFn.isWinnable()) try moveCard.autoComplete(),
+                    52 => if (helpFn.isWinnable()) try moveCard.autoComplete(time),
                     else => try stdout.print("Invalid Stack\n", .{}),
                 }
             },
@@ -210,11 +209,11 @@ pub fn main() !void {
                             0 => {
                                 moveCard.b2finalMove(from - 1);
                             },
-                            52 => if (helpFn.isWinnable()) try moveCard.autoComplete(),
+                            52 => if (helpFn.isWinnable()) try moveCard.autoComplete(time),
                             else => try stdout.print("Invalid Stack\n", .{}),
                         }
                     },
-                    52 => if (helpFn.isWinnable()) try moveCard.autoComplete(),
+                    52 => if (helpFn.isWinnable()) try moveCard.autoComplete(time),
                     else => try stdout.print("Invalid Card Value\n", .{}),
                 }
             },
@@ -236,18 +235,17 @@ pub fn main() !void {
                         moveCard.t2bMove(from - 8, to - 1);
                     },
                     0 => moveCard.t2finalMove(),
-                    52 => if (helpFn.isWinnable()) try moveCard.autoComplete(),
+                    52 => if (helpFn.isWinnable()) try moveCard.autoComplete(time),
                     else => try stdout.print("Invalid Stack\n", .{}),
                 }
             },
-            52 => if (helpFn.isWinnable()) try moveCard.autoComplete(),
+            52 => if (helpFn.isWinnable()) try moveCard.autoComplete(time),
             else => try stdout.print("Invalid Stack\n", .{}),
         }
 
-        // if (helpFn.isWinnable()) try moveCard.autoComplete();
         if (helpFn.isWon()) break;
     }
-    try printCard.printFields();
+    try printCard.printFields(time);
     try stdout.print("\n", .{});
     try helpFn.winningMessage();
 }

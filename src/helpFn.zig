@@ -123,14 +123,23 @@ pub fn shapeString(card: m.Card) []const u8 {
 }
 
 // prints the labels above top field
-pub fn topLabels() !void {
+pub fn topLabels(time: i64) !void {
     const stdout = std.io.getStdOut().writer();
     var message: []const u8 = undefined;
+
     switch (isWinnable()) {
         true => {
             switch (isWon()) {
-                true => message = "",
-                // false => message = "WINNABLE!!!",
+                true => {
+                    const final_time = std.time.timestamp() - time;
+                    const hours = @divTrunc(@divTrunc(final_time, 60), 60);
+                    const minutes = @divTrunc(final_time, 60);
+                    const seconds = @mod(final_time, 60);
+
+                    var buf: [100]u8 = undefined;
+                    const time_display = try std.fmt.bufPrint(&buf, "IN {}H {}M {}S", .{ hours, minutes, seconds });
+                    message = time_display;
+                },
                 false => message = "TYPE 52 TO AUTOCOMPLETE",
             }
         },

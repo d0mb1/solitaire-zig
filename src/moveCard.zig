@@ -255,7 +255,7 @@ pub fn final2bMove(column_from: u8, column_to: u8) void {
 }
 
 // Automatically moves all possible cards to the final stacks
-pub fn autoComplete() !void {
+pub fn autoComplete(time: i64) !void {
     var moved: bool = true;
     while (moved) {
         moved = false;
@@ -265,7 +265,7 @@ pub fn autoComplete() !void {
         t2finalMove();
         if (m.moves > prev_moves) {
             moved = true;
-            try printCard.printFields();
+            try printCard.printFields(time);
             std.time.sleep(500000000);
             continue;
         }
@@ -276,7 +276,7 @@ pub fn autoComplete() !void {
             b2finalMove(@intCast(column));
             if (m.moves > prev_moves_col) {
                 moved = true;
-                try printCard.printFields();
+                try printCard.printFields(time);
                 std.time.sleep(500000000);
                 break;
             }
@@ -289,7 +289,7 @@ pub fn autoComplete() !void {
         if (moved) {} else {
             moved = true;
             flipCard();
-            try printCard.printFields();
+            try printCard.printFields(time);
             std.time.sleep(500000000);
         }
     }
