@@ -149,12 +149,7 @@ pub fn main() !void {
     gameSetup.uncoverCards();
 
     while (true) {
-        try stdout.print("\x1B[2J\x1B[H", .{});
-        try helpFn.topLabels();
-        try printCard.printTopField();
-        try stdout.print("\n", .{});
-        try helpFn.bottomLabels();
-        try printCard.printBottomField();
+        try printCard.printFields();
 
         try stdout.print("▶ PICK A STACK (0 - 9) FROM WHICH TO TAKE A CARD OUT OF\t▶ ", .{});
         const from = try helpFn.getNum();
@@ -252,12 +247,7 @@ pub fn main() !void {
         // if (helpFn.isWinnable()) try moveCard.autoComplete();
         if (helpFn.isWon()) break;
     }
-    try stdout.print("\x1B[2J\x1B[H", .{});
-    try helpFn.topLabels();
-    try printCard.printTopField();
-    try stdout.print("\n", .{});
-    try helpFn.bottomLabels();
-    try printCard.printBottomField();
+    try printCard.printFields();
     try stdout.print("\n", .{});
     try helpFn.winningMessage();
 }

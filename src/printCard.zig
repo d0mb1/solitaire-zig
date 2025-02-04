@@ -354,3 +354,13 @@ pub fn printTopField() !void {
         try stdout.print("\n", .{});
     }
 }
+
+pub fn printFields() !void {
+    const stdout = std.io.getStdOut().writer();
+    try stdout.print("\x1B[2J\x1B[H", .{});
+    try helpFn.topLabels();
+    try printTopField();
+    try stdout.print("\n", .{});
+    try helpFn.bottomLabels();
+    try printBottomField();
+}
