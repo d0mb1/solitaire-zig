@@ -35,12 +35,12 @@ pub const Card = struct {
     }
 
     // checks if card is the input value
-    pub fn isValue(self: Card, value: Values) bool {
+    pub fn isSameValueAs(self: Card, value: Values) bool {
         return if (self.value == value) true else false;
     }
 
     // checks if card is the input shape
-    pub fn isShape(self: Card, shape: Shapes) bool {
+    pub fn isSameShapeAs(self: Card, shape: Shapes) bool {
         return if (self.shape == shape) true else false;
     }
 
@@ -172,11 +172,11 @@ pub fn main() !void {
                         switch (to) {
                             1...7 => moveCard.final2bMove(from_final + 1, to - 1),
                             52 => if (helpFn.isWinnable()) try moveCard.autoComplete(time),
-                            else => try stdout.print("Invalid Stack\n", .{}),
+                            else => {},
                         }
                     },
                     52 => if (helpFn.isWinnable()) try moveCard.autoComplete(time),
-                    else => try stdout.print("Invalid Stack\n", .{}),
+                    else => {},
                 }
             },
 
@@ -210,11 +210,11 @@ pub fn main() !void {
                                 moveCard.b2finalMove(from - 1);
                             },
                             52 => if (helpFn.isWinnable()) try moveCard.autoComplete(time),
-                            else => try stdout.print("Invalid Stack\n", .{}),
+                            else => {},
                         }
                     },
                     52 => if (helpFn.isWinnable()) try moveCard.autoComplete(time),
-                    else => try stdout.print("Invalid Card Value\n", .{}),
+                    else => {},
                 }
             },
 
@@ -236,11 +236,11 @@ pub fn main() !void {
                     },
                     0 => moveCard.t2finalMove(),
                     52 => if (helpFn.isWinnable()) try moveCard.autoComplete(time),
-                    else => try stdout.print("Invalid Stack\n", .{}),
+                    else => {},
                 }
             },
             52 => if (helpFn.isWinnable()) try moveCard.autoComplete(time),
-            else => try stdout.print("Invalid Stack\n", .{}),
+            else => {},
         }
 
         if (helpFn.isWon()) break;

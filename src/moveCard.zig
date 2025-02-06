@@ -62,12 +62,12 @@ pub fn b2bMove(row_from: u8, column_from: u8, column_to: u8) void {
 
     // if we're trying to place a card on a stack with no cards and the card
     // isn't a king return
-    if (row_to == 0 and !m.bottom_field[row_from][column_from].isValue(.king)) {
+    if (row_to == 0 and !m.bottom_field[row_from][column_from].isSameValueAs(.king)) {
         return;
     }
 
     // if we're trying to move king to the empty space allow it
-    if (row_to == 0 and m.bottom_field[row_from][column_from].isValue(.king)) {
+    if (row_to == 0 and m.bottom_field[row_from][column_from].isSameValueAs(.king)) {
         b2bMoveRun(row_from, column_from, amount_of_cards, row_to, column_to);
         return;
     }
@@ -115,12 +115,12 @@ pub fn t2bMove(column_from: u8, column_to: u8) void {
 
     // if we're placing a card on an empty spot and it's not a king return
     const row_to = findFirstCardBottom(column_to);
-    if (row_to == 0 and !m.top_field[row_from - 1][column_from].isValue(.king)) {
+    if (row_to == 0 and !m.top_field[row_from - 1][column_from].isSameValueAs(.king)) {
         return;
     }
 
     // else move the king to the empty space
-    if (row_to == 0 and m.top_field[row_from - 1][column_from].isValue(.king)) {
+    if (row_to == 0 and m.top_field[row_from - 1][column_from].isSameValueAs(.king)) {
         m.bottom_field[row_to][column_to] = m.top_field[row_from - 1][column_from];
         m.top_field[row_from - 1][column_from].value = .joker;
         m.moves += 1;
@@ -160,7 +160,7 @@ pub fn b2finalMove(column_from: u8) void {
     // finds the stack that corresponds to the shape of the picked card or an empty space
     var final_column: usize = 0;
     for (2..m.top_field[0].len) |column_to| {
-        if (m.bottom_field[row_from - 1][column_from].isShape(m.top_field[0][column_to].shape) or m.top_field[0][column_to].isJoker()) {
+        if (m.bottom_field[row_from - 1][column_from].isSameShapeAs(m.top_field[0][column_to].shape) or m.top_field[0][column_to].isJoker()) {
             final_column = column_to;
             break;
         }
@@ -170,7 +170,7 @@ pub fn b2finalMove(column_from: u8) void {
     const row_to = findFirstCardTop(@intCast(final_column));
 
     // if the card is an ace we don't have to check the value of the card underneath
-    if (m.bottom_field[row_from - 1][column_from].isValue(.ace)) {
+    if (m.bottom_field[row_from - 1][column_from].isSameValueAs(.ace)) {
         m.top_field[row_to][final_column] = m.bottom_field[row_from - 1][column_from];
         m.bottom_field[row_from - 1][column_from].value = .joker;
         m.moves += 1;
@@ -206,7 +206,7 @@ pub fn t2finalMove() void {
     // finds the stack that corresponds to the shape of the picked card or an empty space
     var final_column: usize = 0;
     for (2..m.top_field[0].len) |column_to| {
-        if (m.top_field[row_from - 1][strack9column].isShape(m.top_field[0][column_to].shape) or m.top_field[0][column_to].isJoker()) {
+        if (m.top_field[row_from - 1][strack9column].isSameShapeAs(m.top_field[0][column_to].shape) or m.top_field[0][column_to].isJoker()) {
             final_column = column_to;
             break;
         }
@@ -216,7 +216,7 @@ pub fn t2finalMove() void {
     const row_to = findFirstCardTop(@intCast(final_column));
 
     // if the card is an ace we don't have to check the value of the card underneath
-    if (m.top_field[row_from - 1][strack9column].isValue(.ace)) {
+    if (m.top_field[row_from - 1][strack9column].isSameValueAs(.ace)) {
         m.top_field[row_to][final_column] = m.top_field[row_from - 1][strack9column];
         m.top_field[row_from - 1][strack9column].value = .joker;
         m.moves += 1;
@@ -254,7 +254,7 @@ pub fn final2bMove(column_from: u8, column_to: u8) void {
     }
 }
 
-// Automatically moves all possible cards to the final stacks
+// Automatically moves all cards to the final stacks if the game is already winnable
 pub fn autoComplete(time: i64) !void {
     const stdout = std.io.getStdOut().writer();
     var moved: bool = true;
@@ -267,8 +267,8 @@ pub fn autoComplete(time: i64) !void {
         if (m.moves > prev_moves) {
             moved = true;
             try printCard.printFields(time);
-            try stdout.print("AUTOCOMPLEATING...", .{});
-            std.time.sleep(500000000);
+            try stdout.print("▶ AUTOCOMPLEATING...", .{});
+            std.time.sleep(500_000_000);
             continue;
         }
 
@@ -279,8 +279,8 @@ pub fn autoComplete(time: i64) !void {
             if (m.moves > prev_moves_col) {
                 moved = true;
                 try printCard.printFields(time);
-                try stdout.print("AUTOCOMPLEATING...", .{});
-                std.time.sleep(500000000);
+                try stdout.print("▶ AUTOCOMPLEATING...", .{});
+                std.time.sleep(500_000_000);
                 break;
             }
         }
@@ -289,12 +289,12 @@ pub fn autoComplete(time: i64) !void {
 
         if (helpFn.isWon()) break;
 
-        if (moved) {} else {
+        if (!moved) {
             moved = true;
             flipCard();
             try printCard.printFields(time);
-            try stdout.print("AUTOCOMPLEATING...", .{});
-            std.time.sleep(500000000);
+            try stdout.print("▶ AUTOCOMPLEATING...", .{});
+            std.time.sleep(500_000_000);
         }
     }
 }
