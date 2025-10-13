@@ -126,6 +126,7 @@ pub const num_of_bot_field_columns = 7;
 pub const num_of_top_field_rows = 25;
 
 // there are 6 stacks in the top filed in solitaire
+
 pub const num_of_top_field_columns = 6;
 
 // creating a deck/array that will hold all possible cards
