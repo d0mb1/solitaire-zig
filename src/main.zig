@@ -6,7 +6,6 @@ const moveCard = @import("moveCard.zig");
 
 const stdin = std.io.getStdIn().reader();
 
-
 // color for terminal
 pub const RED: []const u8 = "\x1b[31m";
 pub const RESET: []const u8 = "\x1b[0m";
