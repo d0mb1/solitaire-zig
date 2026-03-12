@@ -1,4 +1,5 @@
 const std = @import("std");
+const builtin = @import("builtin");
 const m = @import("main.zig");
 const moveCard = @import("moveCard.zig");
 
@@ -75,5 +76,21 @@ pub fn uncoverCards() void {
         // uncover top most card
         const row = moveCard.findFirstCardBottom(@intCast(column));
         m.bottom_field[row - 1][column].visible = true;
+    }
+}
+
+// check if running on windows. If so set UTF-8 encoding and enable ascii escape codes
+pub fn setupWindowsTerminal() void {
+    if (builtin.os.tag == .windows) {
+        const w = std.os.windows;
+        const kernel32 = w.kernel32;
+
+        _ = kernel32.SetConsoleOutputCP(65001);
+
+        const stdout_handle = w.GetStdHandle(w.STD_OUTPUT_HANDLE) catch return;
+        var mode: u32 = undefined;
+        if (kernel32.GetConsoleMode(stdout_handle, &mode) != 0) {
+            _ = kernel32.SetConsoleMode(stdout_handle, mode | 0x0004);
+        }
     }
 }

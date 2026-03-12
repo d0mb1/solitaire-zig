@@ -146,14 +146,13 @@ pub var moves: u16 = 0;
 
 // --- MAIN FUNCTION --- //
 pub fn main() !void {
+    gameSetup.setupWindowsTerminal();
+
     const time = std.time.timestamp();
 
     var buf: [1024]u8 = undefined;
     var writer = std.fs.File.stdout().writer(&buf);
     const stdout = &writer.interface;
-
-    try stdout.print("Hello {s}!\n", .{"world"});
-    try stdout.flush();
 
     gameSetup.generateDeck();
     try gameSetup.shuffleDeck();
