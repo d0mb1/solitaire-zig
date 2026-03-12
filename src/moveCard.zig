@@ -22,7 +22,7 @@ pub fn flipCard() void {
             row_in_stack_9 -= 1;
             m.top_field[value][0] = m.top_field[row_in_stack_9][stack_9_column];
             m.top_field[value][0].visible = false;
-            m.top_field[row_in_stack_9][stack_9_column].value = .joker;
+            m.top_field[row_in_stack_9][stack_9_column] = m.joker_card;
         }
         m.moves += 1;
 
@@ -32,7 +32,7 @@ pub fn flipCard() void {
         while (!m.top_field[row_in_stack_8][0].isJoker()) : (row_in_stack_8 += 1) {}
         m.top_field[row_in_stack_9][stack_9_column] = m.top_field[row_in_stack_8 - 1][0];
         m.top_field[row_in_stack_9][stack_9_column].visible = true;
-        m.top_field[row_in_stack_8 - 1][0].value = .joker;
+        m.top_field[row_in_stack_8 - 1][0] = m.joker_card;
         m.moves += 1;
     }
 }
@@ -92,7 +92,7 @@ fn b2bMoveRun(row_from: u8, column_from: u8, amount_of_cards: usize, row_to: usi
     var index: usize = 0;
     while (index < amount_of_cards) : (index += 1) {
         m.bottom_field[row_to + index][column_to] = m.bottom_field[row_from + index][column_from];
-        m.bottom_field[row_from + index][column_from].value = .joker;
+        m.bottom_field[row_from + index][column_from] = m.joker_card;
     }
     m.moves += 1;
 }
@@ -122,14 +122,14 @@ pub fn t2bMove(column_from: u8, column_to: u8) void {
     // else move the king to the empty space
     if (row_to == 0 and m.top_field[row_from - 1][column_from].isSameValueAs(.king)) {
         m.bottom_field[row_to][column_to] = m.top_field[row_from - 1][column_from];
-        m.top_field[row_from - 1][column_from].value = .joker;
+        m.top_field[row_from - 1][column_from] = m.joker_card;
         m.moves += 1;
         return;
     }
 
     if (validMoveCheck(m.top_field[row_from - 1][column_from], m.bottom_field[row_to - 1][column_to])) {
         m.bottom_field[row_to][column_to] = m.top_field[row_from - 1][column_from];
-        m.top_field[row_from - 1][column_from].value = .joker;
+        m.top_field[row_from - 1][column_from] = m.joker_card;
         m.moves += 1;
     }
 }
@@ -172,7 +172,7 @@ pub fn b2finalMove(column_from: u8) void {
     // if the card is an ace we don't have to check the value of the card underneath
     if (m.bottom_field[row_from - 1][column_from].isSameValueAs(.ace)) {
         m.top_field[row_to][final_column] = m.bottom_field[row_from - 1][column_from];
-        m.bottom_field[row_from - 1][column_from].value = .joker;
+        m.bottom_field[row_from - 1][column_from] = m.joker_card;
         m.moves += 1;
 
         // if it's not the only card in the stack uncover the card underneath it
@@ -186,7 +186,7 @@ pub fn b2finalMove(column_from: u8) void {
     // check if it's valid move
     if (m.bottom_field[row_from - 1][column_from].isOneBiggerThan(m.top_field[row_to - 1][final_column])) {
         m.top_field[row_to][final_column] = m.bottom_field[row_from - 1][column_from];
-        m.bottom_field[row_from - 1][column_from].value = .joker;
+        m.bottom_field[row_from - 1][column_from] = m.joker_card;
 
         // if it's not the only card in the stack uncover the card underneath it
         if (row_from != 1) {
@@ -218,7 +218,7 @@ pub fn t2finalMove() void {
     // if the card is an ace we don't have to check the value of the card underneath
     if (m.top_field[row_from - 1][strack9column].isSameValueAs(.ace)) {
         m.top_field[row_to][final_column] = m.top_field[row_from - 1][strack9column];
-        m.top_field[row_from - 1][strack9column].value = .joker;
+        m.top_field[row_from - 1][strack9column] = m.joker_card;
         m.moves += 1;
         return;
     }
@@ -227,7 +227,7 @@ pub fn t2finalMove() void {
     // check if it's valid move
     if (m.top_field[row_from - 1][strack9column].isOneBiggerThan(m.top_field[row_to - 1][final_column])) {
         m.top_field[row_to][final_column] = m.top_field[row_from - 1][strack9column];
-        m.top_field[row_from - 1][strack9column].value = .joker;
+        m.top_field[row_from - 1][strack9column] = m.joker_card;
         m.moves += 1;
     }
 }
@@ -249,7 +249,7 @@ pub fn final2bMove(column_from: u8, column_to: u8) void {
     // check if the move follows the rules of the game and if yes place the card
     if (validMoveCheck(m.top_field[row_from - 1][column_from], m.bottom_field[row_to - 1][column_to])) {
         m.bottom_field[row_to][column_to] = m.top_field[row_from - 1][column_from];
-        m.top_field[row_from - 1][column_from].value = .joker;
+        m.top_field[row_from - 1][column_from] = m.joker_card;
         m.moves += 1;
     }
 }
