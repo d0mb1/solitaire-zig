@@ -1,6 +1,6 @@
 # SOLITAIRE
 
-Written with Zig 0.13.0
+Written with Zig 0.15.0
 
 For running this game you'll need to have a nerd font installed
 and set up in your terminal. If you're using windows you'll also need to
