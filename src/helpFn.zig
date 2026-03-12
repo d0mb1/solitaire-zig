@@ -2,7 +2,7 @@ const std = @import("std");
 const builtin = @import("builtin");
 const m = @import("main.zig");
 const printCard = @import("printCard.zig");
-const stdin = std.io.getStdIn().reader();
+// const stdin = std.io.getStdIn().reader();
 const moveCard = @import("moveCard.zig");
 
 // ╭─────────╮
@@ -33,15 +33,14 @@ const moveCard = @import("moveCard.zig");
 // ITA
 // IRE
 // ╭─────────╮╭─────────╮╭─────────╮      ╭─────────╮╭─────────╮╭─────────╮╭─────────╮
-// │ Y     󰣏 ││ O     󰣎 ││ U     󰣐 │      │ W     󰣑 ││ O     󰣏 ││ N     󰣎 ││ !     󰣐 │
+// │ Y     󰣏 ││ O     󰣎 ││ U     󰣐 │      │ W     󰣑 ││ I     󰣏 ││ N     󰣎 ││ !     󰣐 │
 // │         ││         ││         │      │         ││         ││         ││         │
 // │    󰣏    ││    󰣎    ││    󰣐    │      │    󰣑    ││    󰣏    ││    󰣎    ││    󰣐    │
 // │         ││         ││         │      │         ││         ││         ││         │
-// │ 󰣏     Y ││ 󰣎     O ││ 󰣐     U │      │ 󰣑     W ││ 󰣏     O ││ 󰣎     N ││ 󰣐     ! │
+// │ 󰣏     Y ││ 󰣎     O ││ 󰣐     U │      │ 󰣑     W ││ 󰣏     I ││ 󰣎     N ││ 󰣐     ! │
 // ╰─────────╯╰─────────╯╰─────────╯      ╰─────────╯╰─────────╯╰─────────╯╰─────────╯
 
-pub fn winningMessage() !void {
-    const stdout = std.io.getStdOut().writer();
+pub fn winningMessage(stdout: anytype) !void {
     try stdout.print("╭─────────╮╭─────────╮╭─────────╮      ╭─────────╮╭─────────╮╭─────────╮╭─────────╮\n", .{});
     try stdout.print("│ " ++ m.RED ++ "Y     󰣏" ++ m.RESET ++ " ││ O     󰣎 ││ " ++ m.RED ++ "U     󰣐" ++ m.RESET ++ " │      │ W     󰣑 ││ " ++ m.RED ++ "I     󰣏" ++ m.RESET ++ " ││ N     󰣎 ││ " ++ m.RED ++ "!     󰣐" ++ m.RESET ++ " │\n", .{});
     try stdout.print("│         ││         ││         │      │         ││         ││         ││         │\n", .{});
@@ -124,8 +123,7 @@ pub fn shapeString(card: m.Card) []const u8 {
 }
 
 // prints the labels above top field
-pub fn topLabels(time: i64) !void {
-    const stdout = std.io.getStdOut().writer();
+pub fn topLabels(stdout: anytype, time: i64) !void {
     var message: []const u8 = undefined;
 
     switch (isWinnable()) {
@@ -174,8 +172,7 @@ pub fn topLabels(time: i64) !void {
 }
 
 // prints the labels above bottom field
-pub fn bottomLabels() !void {
-    const stdout = std.io.getStdOut().writer();
+pub fn bottomLabels(stdout: anytype) !void {
     try stdout.print(m.RED ++ "╭─── " ++ m.RESET ++ "1" ++ m.RED ++ " ───╮ ", .{});
     try stdout.print("╭─── " ++ m.RESET ++ "2" ++ m.RED ++ " ───╮ ", .{});
     try stdout.print("╭─── " ++ m.RESET ++ "3" ++ m.RED ++ " ───╮ ", .{});
@@ -186,47 +183,89 @@ pub fn bottomLabels() !void {
 }
 
 // function that gets user intiger input and returns it
-pub fn getNum() !u8 {
-    const stdout = std.io.getStdOut().writer();
-    var buffer: [100]u8 = undefined;
+// pub fn getNum(stdout: anytype) !u8 {
+//     var buffer: [1024]u8 = undefined;
+//     var reader = std.fs.File.stdin().reader(&buffer);
+//     const stdin = &reader.interface;
+//
+//     // loop that will keep asking for input if the previous one was invalid
+//     while (true) {
+//         const user_input = stdin.takeDelimiterExclusive('\n') catch |err| switch (err) {
+//             error.EndOfStream => return 0,
+//             else => return err,
+//         };
+//         stdin.toss(1);
+//
+//         if (builtin.target.os.tag == .windows) {
+//             const line = std.mem.trimRight(u8, user_input[0 .. user_input.len - 1], "\r");
+//             const parse_result = std.fmt.parseInt(u8, line, 10);
+//
+//             // if inser input is valid return it
+//             if (parse_result) |num| {
+//                 return num;
+//
+//                 // else print an error message and prompt user to try again
+//             } else |err| {
+//                 const error_message: []const u8 = switch (err) {
+//                     error.InvalidCharacter => "▶ INVALID INPUT, TRY AGAIN\t\t\t\t▶ ",
+//                     error.Overflow => "▶ INVALID INPUT, TRY AGAIN\t\t\t\t▶ ",
+//                 };
+//                 try stdout.print("{s}", .{error_message});
+//             }
+//         } else {
+//             const parse_result = std.fmt.parseInt(u8, user_input, 10);
+//
+//             // if inser input is valid return it
+//             if (parse_result) |num| {
+//                 return num;
+//
+//                 // else print an error message and prompt user to try again
+//             } else |err| {
+//                 const error_message: []const u8 = switch (err) {
+//                     error.InvalidCharacter => "▶ INVALID INPUT, TRY AGAIN\t\t\t\t▶ ",
+//                     error.Overflow => "▶ INVALID INPUT, TRY AGAIN\t\t\t\t▶ ",
+//                 };
+//                 try stdout.print("{s}", .{error_message});
+//             }
+//         }
+//
+//         // if (stdin.takeDelimiterExclusive('\n')) |user_input| {
+//         // } else {
+//         //     return @as(u8, 0);
+//         // }
+//     }
+// }
 
-    // loop that will keep asking for input if the previous one was invalid
+pub fn getNum(stdout: anytype) !u8 {
+    var buffer: [1024]u8 = undefined;
+    var reader = std.fs.File.stdin().reader(&buffer);
+    const stdin = &reader.interface;
+
     while (true) {
-        if (try std.io.getStdIn().reader().readUntilDelimiterOrEof(buffer[0..], '\n')) |user_input| {
-            if (builtin.target.os.tag == .windows) {
-                const line = std.mem.trimRight(u8, user_input[0 .. user_input.len - 1], "\r");
-                const parse_result = std.fmt.parseInt(u8, line, 10);
+        const user_input = stdin.takeDelimiterExclusive('\n') catch |err| switch (err) {
+            error.EndOfStream => return 0,
+            else => return err,
+        };
 
-                // if inser input is valid return it
-                if (parse_result) |num| {
-                    return num;
+        stdin.toss(1);
 
-                    // else print an error message and prompt user to try again
-                } else |err| {
-                    const error_message: []const u8 = switch (err) {
-                        error.InvalidCharacter => "▶ INVALID INPUT, TRY AGAIN\t\t\t\t▶ ",
-                        error.Overflow => "▶ INVALID INPUT, TRY AGAIN\t\t\t\t▶ ",
-                    };
-                    try stdout.print("{s}", .{error_message});
-                }
-            } else {
-                const parse_result = std.fmt.parseInt(u8, user_input, 10);
+        const input = if (builtin.target.os.tag == .windows)
+            std.mem.trimRight(u8, user_input, "\r")
+        else
+            user_input;
 
-                // if inser input is valid return it
-                if (parse_result) |num| {
-                    return num;
+        const parse_result = std.fmt.parseInt(u8, input, 10);
 
-                    // else print an error message and prompt user to try again
-                } else |err| {
-                    const error_message: []const u8 = switch (err) {
-                        error.InvalidCharacter => "▶ INVALID INPUT, TRY AGAIN\t\t\t\t▶ ",
-                        error.Overflow => "▶ INVALID INPUT, TRY AGAIN\t\t\t\t▶ ",
-                    };
-                    try stdout.print("{s}", .{error_message});
-                }
-            }
-        } else {
-            return @as(u8, 0);
+        if (parse_result) |num| {
+            return num;
+        } else |err| {
+            const error_message: []const u8 = switch (err) {
+                error.InvalidCharacter => "▶ INVALID INPUT, TRY AGAIN\t\t\t\t▶ ",
+                error.Overflow => "▶ INVALID INPUT, TRY AGAIN\t\t\t\t▶ ",
+            };
+
+            try stdout.print("{s}", .{error_message});
+            try stdout.flush();
         }
     }
 }

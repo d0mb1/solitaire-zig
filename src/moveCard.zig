@@ -137,7 +137,7 @@ pub fn t2bMove(column_from: u8, column_to: u8) void {
 // finds the top most card in a bottom field stack
 pub fn findFirstCardBottom(column: u8) u8 {
     var row: usize = 0;
-    while (!m.bottom_field[row][column].isJoker()) : (row += 1) {}
+    while (row < m.num_of_bot_field_rows and !m.bottom_field[row][column].isJoker()) : (row += 1) {}
     return @intCast(row);
 }
 
@@ -255,8 +255,7 @@ pub fn final2bMove(column_from: u8, column_to: u8) void {
 }
 
 // Automatically moves all cards to the final stacks if the game is already winnable
-pub fn autoComplete(time: i64) !void {
-    const stdout = std.io.getStdOut().writer();
+pub fn autoComplete(stdout: anytype, time: i64) !void {
     var moved: bool = true;
     while (moved) {
         moved = false;
@@ -266,9 +265,9 @@ pub fn autoComplete(time: i64) !void {
         t2finalMove();
         if (m.moves > prev_moves) {
             moved = true;
-            try printCard.printFields(time);
+            try printCard.printFields(stdout, time);
             try stdout.print("▶ AUTOCOMPLEATING...", .{});
-            std.time.sleep(500_000_000);
+            std.Thread.sleep(500_000_000);
             continue;
         }
 
@@ -278,9 +277,9 @@ pub fn autoComplete(time: i64) !void {
             b2finalMove(@intCast(column));
             if (m.moves > prev_moves_col) {
                 moved = true;
-                try printCard.printFields(time);
+                try printCard.printFields(stdout, time);
                 try stdout.print("▶ AUTOCOMPLEATING...", .{});
-                std.time.sleep(500_000_000);
+                std.Thread.sleep(500_000_000);
                 break;
             }
         }
@@ -292,9 +291,9 @@ pub fn autoComplete(time: i64) !void {
         if (!moved) {
             moved = true;
             flipCard();
-            try printCard.printFields(time);
+            try printCard.printFields(stdout, time);
             try stdout.print("▶ AUTOCOMPLEATING...", .{});
-            std.time.sleep(500_000_000);
+            std.Thread.sleep(500_000_000);
         }
     }
 }

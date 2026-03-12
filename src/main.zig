@@ -132,8 +132,14 @@ pub const num_of_top_field_columns = 6;
 // creating a deck/array that will hold all possible cards
 pub var deck: [52]Card = undefined;
 
-pub var bottom_field: [num_of_bot_field_rows][num_of_bot_field_columns]Card = undefined;
-pub var top_field: [num_of_top_field_rows][num_of_top_field_columns]Card = undefined;
+pub const joker_card = Card{
+    .value = .joker,
+    .shape = .hearts,
+    .visible = false,
+};
+
+pub var bottom_field: [num_of_bot_field_rows][num_of_bot_field_columns]Card = .{.{joker_card} ** num_of_bot_field_columns} ** num_of_bot_field_rows;
+pub var top_field: [num_of_top_field_rows][num_of_top_field_columns]Card = .{.{joker_card} ** num_of_top_field_columns} ** num_of_top_field_rows;
 
 // keeps tracks of how many moves has player made
 pub var moves: u16 = 0;
@@ -141,7 +147,13 @@ pub var moves: u16 = 0;
 // --- MAIN FUNCTION --- //
 pub fn main() !void {
     const time = std.time.timestamp();
-    const stdout = std.io.getStdOut().writer();
+
+    var buf: [1024]u8 = undefined;
+    var writer = std.fs.File.stdout().writer(&buf);
+    const stdout = &writer.interface;
+
+    try stdout.print("Hello {s}!\n", .{"world"});
+    try stdout.flush();
 
     gameSetup.generateDeck();
     try gameSetup.shuffleDeck();
@@ -149,10 +161,11 @@ pub fn main() !void {
     gameSetup.uncoverCards();
 
     while (true) {
-        try printCard.printFields(time);
+        try printCard.printFields(stdout, time);
 
         try stdout.print("▶ PICK A STACK (0 - 9) FROM WHICH TO TAKE A CARD OUT OF\t▶ ", .{});
-        const from = try helpFn.getNum();
+        try stdout.flush();
+        const from = try helpFn.getNum(stdout);
 
         // switch cases that hadel game logic. All posibilities should be
         // handeled here
@@ -161,22 +174,24 @@ pub fn main() !void {
             // from one of the finishing stacks
             0 => {
                 try stdout.print("▶ PICK AN EXACT STACK (1 - 4) TO TAKE A CARD OUT OF\t▶ ", .{});
-                const from_final = try helpFn.getNum();
+                try stdout.flush();
+                const from_final = try helpFn.getNum(stdout);
                 switch (from_final) {
 
                     // which finishing stack
                     1...4 => {
                         try stdout.print("▶ PICK A STACK (1 - 7) WHERE TO PLACE THE CARD\t\t▶ ", .{});
-                        const to = try helpFn.getNum();
+                        try stdout.flush();
+                        const to = try helpFn.getNum(stdout);
 
                         // where to move the card
                         switch (to) {
                             1...7 => moveCard.final2bMove(from_final + 1, to - 1),
-                            52 => if (helpFn.isWinnable()) try moveCard.autoComplete(time),
+                            52 => if (helpFn.isWinnable()) try moveCard.autoComplete(stdout, time),
                             else => {},
                         }
                     },
-                    52 => if (helpFn.isWinnable()) try moveCard.autoComplete(time),
+                    52 => if (helpFn.isWinnable()) try moveCard.autoComplete(stdout, time),
                     else => {},
                 }
             },
@@ -184,7 +199,8 @@ pub fn main() !void {
             // from one of the game board stacks
             1...7 => {
                 try stdout.print("▶ PICK AN EXACT VALUE (1 - 13) OF A CARD TO MOVE\n  OR PLACE THE LAST CARD TO A FINAL STACK (0)\t\t▶ ", .{});
-                const what = try helpFn.getNum();
+                try stdout.flush();
+                const what = try helpFn.getNum(stdout);
 
                 // what card is being picked
                 switch (what) {
@@ -200,7 +216,8 @@ pub fn main() !void {
                         if (row == 13) continue;
 
                         try stdout.print("▶ PICK A STACK (0 - 7) WHERE TO PLACE THE CARD\t\t▶ ", .{});
-                        const to = try helpFn.getNum();
+                        try stdout.flush();
+                        const to = try helpFn.getNum(stdout);
 
                         // where to move the card
                         switch (to) {
@@ -210,11 +227,11 @@ pub fn main() !void {
                             0 => {
                                 moveCard.b2finalMove(from - 1);
                             },
-                            52 => if (helpFn.isWinnable()) try moveCard.autoComplete(time),
+                            52 => if (helpFn.isWinnable()) try moveCard.autoComplete(stdout, time),
                             else => {},
                         }
                     },
-                    52 => if (helpFn.isWinnable()) try moveCard.autoComplete(time),
+                    52 => if (helpFn.isWinnable()) try moveCard.autoComplete(stdout, time),
                     else => {},
                 }
             },
@@ -227,7 +244,8 @@ pub fn main() !void {
             // from the "discard" stack
             9 => {
                 try stdout.print("▶ PICK A STACK (0 - 7) WHERE TO PLACE THE CARD\t\t▶ ", .{});
-                const to = try helpFn.getNum();
+                try stdout.flush();
+                const to = try helpFn.getNum(stdout);
 
                 // where to move card
                 switch (to) {
@@ -236,17 +254,18 @@ pub fn main() !void {
                         moveCard.t2bMove(from - 8, to - 1);
                     },
                     0 => moveCard.t2finalMove(),
-                    52 => if (helpFn.isWinnable()) try moveCard.autoComplete(time),
+                    52 => if (helpFn.isWinnable()) try moveCard.autoComplete(stdout, time),
                     else => {},
                 }
             },
-            52 => if (helpFn.isWinnable()) try moveCard.autoComplete(time),
+            52 => if (helpFn.isWinnable()) try moveCard.autoComplete(stdout, time),
             else => {},
         }
 
         if (helpFn.isWon()) break;
     }
-    try printCard.printFields(time);
+    try printCard.printFields(stdout, time);
     try stdout.print("\n", .{});
-    try helpFn.winningMessage();
+    try stdout.flush();
+    try helpFn.winningMessage(stdout);
 }
