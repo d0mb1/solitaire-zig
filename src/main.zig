@@ -1,8 +1,9 @@
 const std = @import("std");
-const printCard = @import("printCard.zig");
-const helpFn = @import("helpFn.zig");
+
 const gameSetup = @import("gameSetup.zig");
+const helpFn = @import("helpFn.zig");
 const moveCard = @import("moveCard.zig");
+const printCard = @import("printCard.zig");
 
 const stdin = std.io.getStdIn().reader();
 

@@ -1,6 +1,7 @@
 const std = @import("std");
-const m = @import("main.zig");
+
 const helpFn = @import("helpFn.zig");
+const m = @import("main.zig");
 const printCard = @import("printCard.zig");
 
 // flips cards between stack 8 and 9
@@ -38,18 +39,18 @@ pub fn flipCard() void {
 }
 
 // find a card in a stack and returns the row index
-pub fn findExactCardBottom(column: u8, val: u8) u8 {
+pub fn findExactCardBottom(column: usize, val: u8) usize {
     var row: usize = 0;
     while (@intFromEnum(m.bottom_field[row][column].value) != val or m.bottom_field[row][column].visible != true) : (row += 1) {
         if (row == m.num_of_bot_field_rows - 1) {
             break;
         }
     }
-    return @intCast(row);
+    return row;
 }
 
 // checks if a card or set of cards can be moved withinn the bottom field
-pub fn b2bMove(row_from: u8, column_from: u8, column_to: u8) void {
+pub fn b2bMove(row_from: usize, column_from: usize, column_to: usize) void {
 
     // finds the first spot where isn't a card in the column where we want to
     // put our chosen card
@@ -80,7 +81,7 @@ pub fn b2bMove(row_from: u8, column_from: u8, column_to: u8) void {
 }
 
 // moves a card or set of cards within the bottom field
-fn b2bMoveRun(row_from: u8, column_from: u8, amount_of_cards: usize, row_to: usize, column_to: u8) void {
+fn b2bMoveRun(row_from: usize, column_from: usize, amount_of_cards: usize, row_to: usize, column_to: usize) void {
 
     // if the card is the only card in the stack, there's no reason to uncover
     // the card below it cuz there's none
@@ -107,7 +108,7 @@ fn validMoveCheck(card_from: m.Card, card_to: m.Card) bool {
 }
 
 // moves cards from top field to bottom field
-pub fn t2bMove(column_from: u8, column_to: u8) void {
+pub fn t2bMove(column_from: usize, column_to: usize) void {
 
     // if theres no cards do nothing
     const row_from = findFirstCardTop(column_from);
@@ -135,21 +136,21 @@ pub fn t2bMove(column_from: u8, column_to: u8) void {
 }
 
 // finds the top most card in a bottom field stack
-pub fn findFirstCardBottom(column: u8) u8 {
+pub fn findFirstCardBottom(column: usize) usize {
     var row: usize = 0;
     while (row < m.num_of_bot_field_rows and !m.bottom_field[row][column].isJoker()) : (row += 1) {}
-    return @intCast(row);
+    return row;
 }
 
 // finds the top most card in a top field stack
-pub fn findFirstCardTop(column: u8) u8 {
+pub fn findFirstCardTop(column: usize) usize {
     var row: usize = 0;
     while (!m.top_field[row][column].isJoker()) : (row += 1) {}
-    return @intCast(row);
+    return row;
 }
 
 // moves a card from the bottom field to one of the final fields
-pub fn b2finalMove(column_from: u8) void {
+pub fn b2finalMove(column_from: usize) void {
 
     // finds the card we want to move
     const row_from = findFirstCardBottom(column_from);
@@ -167,7 +168,7 @@ pub fn b2finalMove(column_from: u8) void {
     }
 
     // finds the spot where we want to place the card
-    const row_to = findFirstCardTop(@intCast(final_column));
+    const row_to = findFirstCardTop(final_column);
 
     // if the card is an ace we don't have to check the value of the card underneath
     if (m.bottom_field[row_from - 1][column_from].isSameValueAs(.ace)) {
@@ -213,7 +214,7 @@ pub fn t2finalMove() void {
     }
 
     // finds the spot where we want to place the card
-    const row_to = findFirstCardTop(@intCast(final_column));
+    const row_to = findFirstCardTop(final_column);
 
     // if the card is an ace we don't have to check the value of the card underneath
     if (m.top_field[row_from - 1][strack9column].isSameValueAs(.ace)) {
@@ -232,7 +233,7 @@ pub fn t2finalMove() void {
     }
 }
 
-pub fn final2bMove(column_from: u8, column_to: u8) void {
+pub fn final2bMove(column_from: usize, column_to: usize) void {
 
     // find the card we want to move
     const row_from = findFirstCardTop(column_from);
@@ -267,6 +268,7 @@ pub fn autoComplete(stdout: anytype, time: i64) !void {
             moved = true;
             try printCard.printFields(stdout, time);
             try stdout.print("▶ AUTOCOMPLEATING...", .{});
+            try stdout.flush();
             std.Thread.sleep(500_000_000);
             continue;
         }
@@ -274,11 +276,12 @@ pub fn autoComplete(stdout: anytype, time: i64) !void {
         // Check each bottom field stack
         for (0..m.num_of_bot_field_columns) |column| {
             const prev_moves_col = m.moves;
-            b2finalMove(@intCast(column));
+            b2finalMove(column);
             if (m.moves > prev_moves_col) {
                 moved = true;
                 try printCard.printFields(stdout, time);
                 try stdout.print("▶ AUTOCOMPLEATING...", .{});
+                try stdout.flush();
                 std.Thread.sleep(500_000_000);
                 break;
             }
@@ -293,6 +296,7 @@ pub fn autoComplete(stdout: anytype, time: i64) !void {
             flipCard();
             try printCard.printFields(stdout, time);
             try stdout.print("▶ AUTOCOMPLEATING...", .{});
+            try stdout.flush();
             std.Thread.sleep(500_000_000);
         }
     }

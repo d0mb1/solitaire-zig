@@ -1,6 +1,7 @@
 const std = @import("std");
-const m = @import("main.zig");
+
 const helpFn = @import("helpFn.zig");
+const m = @import("main.zig");
 
 pub fn topCardPrint(stdout: anytype) !void {
     try stdout.print("╭─────────╮ ", .{});
@@ -325,7 +326,7 @@ pub fn printTopField(stdout: anytype) !void {
             } else {
                 switch (part_of_card) {
                     0 => try topCardPrint(stdout),
-                    1 => try topCardPrintSymbols(stdout,m.top_field[row - 1][column]),
+                    1 => try topCardPrintSymbols(stdout, m.top_field[row - 1][column]),
                     2, 4 => try middleCardPrint(stdout, m.top_field[row - 1][column]),
                     3 => try middleCardPrintSymbols(stdout, m.top_field[row - 1][column]),
                     5 => try bottomCardPrintSymbols(stdout, m.top_field[row - 1][column]),

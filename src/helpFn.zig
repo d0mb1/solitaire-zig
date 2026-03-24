@@ -1,9 +1,7 @@
 const std = @import("std");
 const builtin = @import("builtin");
+
 const m = @import("main.zig");
-const printCard = @import("printCard.zig");
-// const stdin = std.io.getStdIn().reader();
-const moveCard = @import("moveCard.zig");
 
 // ╭─────────╮
 // │ 󰣑 󰣏 󰣐 󰣎 │

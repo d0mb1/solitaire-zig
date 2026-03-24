@@ -1,5 +1,6 @@
 const std = @import("std");
 const builtin = @import("builtin");
+
 const m = @import("main.zig");
 const moveCard = @import("moveCard.zig");
 
@@ -74,7 +75,7 @@ pub fn uncoverCards() void {
     for (0..m.bottom_field[0].len) |column| {
 
         // uncover top most card
-        const row = moveCard.findFirstCardBottom(@intCast(column));
+        const row = moveCard.findFirstCardBottom(column);
         m.bottom_field[row - 1][column].visible = true;
     }
 }
