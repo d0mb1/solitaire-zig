@@ -4,7 +4,7 @@ const builtin = @import("builtin");
 const m = @import("main.zig");
 
 // ╭─────────╮
-// │ 󰣑 󰣏 󰣐 󰣎 │
+// │ ♠ ♦ ♥ ♣ │
 // ╰─────────╯
 // ╭─  ───  ─╮
 //   ∷∷∷∷∷∷∷
@@ -21,30 +21,30 @@ const m = @import("main.zig");
 // │         │╰─────╯│         │ S
 // ╰─────────╯       ╰─────────╯
 // ╭──╭──╭──╭──╭─────────╮
-// │ 8│10│ 3│ Q│ A     󰣎 │
+// │ 8│10│ 3│ Q│ A     ♣ │
 // │  │  │  │  │         │
-// │  │  │  │  │    󰣎    │
+// │  │  │  │  │    ♣    │
 // │  │  │  │  │         │
-// │ 󰣏│ 󰣐│ 󰣎│ 󰣏│ 󰣎     A │
+// │ ♦│ ♥│ ♣│ ♦│ ♣     A │
 // ╰──╰──╰──╰──╰─────────╯
 // SOL
 // ITA
 // IRE
 // ╭─────────╮╭─────────╮╭─────────╮      ╭─────────╮╭─────────╮╭─────────╮╭─────────╮
-// │ Y     󰣏 ││ O     󰣎 ││ U     󰣐 │      │ W     󰣑 ││ I     󰣏 ││ N     󰣎 ││ !     󰣐 │
+// │ Y     ♦ ││ O     ♣ ││ U     ♥ │      │ W     ♠ ││ I     ♦ ││ N     ♣ ││ !     ♥ │
 // │         ││         ││         │      │         ││         ││         ││         │
-// │    󰣏    ││    󰣎    ││    󰣐    │      │    󰣑    ││    󰣏    ││    󰣎    ││    󰣐    │
+// │    ♦    ││    ♣    ││    ♥    │      │    ♠    ││    ♦    ││    ♣    ││    ♥    │
 // │         ││         ││         │      │         ││         ││         ││         │
-// │ 󰣏     Y ││ 󰣎     O ││ 󰣐     U │      │ 󰣑     W ││ 󰣏     I ││ 󰣎     N ││ 󰣐     ! │
+// │ ♦     Y ││ ♣     O ││ ♥     U │      │ ♠     W ││ ♦     I ││ ♣     N ││ ♥     ! │
 // ╰─────────╯╰─────────╯╰─────────╯      ╰─────────╯╰─────────╯╰─────────╯╰─────────╯
 
 pub fn winningMessage(stdout: anytype) !void {
     try stdout.print("╭─────────╮╭─────────╮╭─────────╮      ╭─────────╮╭─────────╮╭─────────╮╭─────────╮\n", .{});
-    try stdout.print("│ " ++ m.RED ++ "Y     󰣏" ++ m.RESET ++ " ││ O     󰣎 ││ " ++ m.RED ++ "U     󰣐" ++ m.RESET ++ " │      │ W     󰣑 ││ " ++ m.RED ++ "I     󰣏" ++ m.RESET ++ " ││ N     󰣎 ││ " ++ m.RED ++ "!     󰣐" ++ m.RESET ++ " │\n", .{});
+    try stdout.print("│ " ++ m.RED ++ "Y     ♦" ++ m.RESET ++ " ││ O     ♣ ││ " ++ m.RED ++ "U     ♥" ++ m.RESET ++ " │      │ W     ♠ ││ " ++ m.RED ++ "I     ♦" ++ m.RESET ++ " ││ N     ♣ ││ " ++ m.RED ++ "!     ♥" ++ m.RESET ++ " │\n", .{});
     try stdout.print("│         ││         ││         │      │         ││         ││         ││         │\n", .{});
-    try stdout.print("│    " ++ m.RED ++ "󰣏" ++ m.RESET ++ "    ││    󰣎    ││    " ++ m.RED ++ "󰣐" ++ m.RESET ++ "    │      │    󰣑    ││    " ++ m.RED ++ "󰣏" ++ m.RESET ++ "    ││    󰣎    ││    " ++ m.RED ++ "󰣐" ++ m.RESET ++ "    │\n", .{});
+    try stdout.print("│    " ++ m.RED ++ "♦" ++ m.RESET ++ "    ││    ♣    ││    " ++ m.RED ++ "♥" ++ m.RESET ++ "    │      │    ♠    ││    " ++ m.RED ++ "♦" ++ m.RESET ++ "    ││    ♣    ││    " ++ m.RED ++ "♥" ++ m.RESET ++ "    │\n", .{});
     try stdout.print("│         ││         ││         │      │         ││         ││         ││         │\n", .{});
-    try stdout.print("│ " ++ m.RED ++ "󰣏     Y" ++ m.RESET ++ " ││ 󰣎     O ││ " ++ m.RED ++ "󰣐     U" ++ m.RESET ++ " │      │ 󰣑     W ││ " ++ m.RED ++ "󰣏     I" ++ m.RESET ++ " ││ 󰣎     N ││ " ++ m.RED ++ "󰣐     !" ++ m.RESET ++ " │\n", .{});
+    try stdout.print("│ " ++ m.RED ++ "♦     Y" ++ m.RESET ++ " ││ ♣     O ││ " ++ m.RED ++ "♥     U" ++ m.RESET ++ " │      │ ♠     W ││ " ++ m.RED ++ "♦     I" ++ m.RESET ++ " ││ ♣     N ││ " ++ m.RED ++ "♥     !" ++ m.RESET ++ " │\n", .{});
     try stdout.print("╰─────────╯╰─────────╯╰─────────╯      ╰─────────╯╰─────────╯╰─────────╯╰─────────╯\n", .{});
 }
 
@@ -113,10 +113,10 @@ pub fn valueString(card: m.Card, possition: m.SymbolPosition) []const u8 {
 // transers usize to string
 pub fn shapeString(card: m.Card) []const u8 {
     return switch (card.shape) {
-        .hearts => m.RED ++ "󰣐" ++ m.RESET, // hearts
-        .spades => "󰣑", // spades
-        .diamonds => m.RED ++ "󰣏" ++ m.RESET, // diamonds
-        .clubs => "󰣎", // clubs
+        .hearts => m.RED ++ "♥" ++ m.RESET, // hearts
+        .spades => "♠", // spades
+        .diamonds => m.RED ++ "♦" ++ m.RESET, // diamonds
+        .clubs => "♣", // clubs
     };
 }
 
