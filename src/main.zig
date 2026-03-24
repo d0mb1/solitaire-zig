@@ -163,7 +163,7 @@ pub fn main() !void {
     while (true) {
         try printCard.printFields(stdout, time);
 
-        try stdout.print("▶ PICK A STACK (0 - 9) FROM WHICH TO TAKE A CARD OUT OF\t▶ ", .{});
+        try stdout.print("> PICK A STACK (0 - 9) FROM WHICH TO TAKE A CARD OUT OF\t> ", .{});
         try stdout.flush();
         const from = try helpFn.getNum(stdout);
 
@@ -173,14 +173,14 @@ pub fn main() !void {
 
             // from one of the finishing stacks
             0 => {
-                try stdout.print("▶ PICK AN EXACT STACK (1 - 4) TO TAKE A CARD OUT OF\t▶ ", .{});
+                try stdout.print("> PICK AN EXACT STACK (1 - 4) TO TAKE A CARD OUT OF\t> ", .{});
                 try stdout.flush();
                 const from_final = try helpFn.getNum(stdout);
                 switch (from_final) {
 
                     // which finishing stack
                     1...4 => {
-                        try stdout.print("▶ PICK A STACK (1 - 7) WHERE TO PLACE THE CARD\t\t▶ ", .{});
+                        try stdout.print("> PICK A STACK (1 - 7) WHERE TO PLACE THE CARD\t\t> ", .{});
                         try stdout.flush();
                         const to = try helpFn.getNum(stdout);
 
@@ -198,7 +198,7 @@ pub fn main() !void {
 
             // from one of the game board stacks
             1...7 => {
-                try stdout.print("▶ PICK AN EXACT VALUE (1 - 13) OF A CARD TO MOVE\n  OR PLACE THE LAST CARD TO A FINAL STACK (0)\t\t▶ ", .{});
+                try stdout.print("> PICK AN EXACT VALUE (1 - 13) OF A CARD TO MOVE\n  OR PLACE THE LAST CARD TO A FINAL STACK (0)\t\t> ", .{});
                 try stdout.flush();
                 const what = try helpFn.getNum(stdout);
 
@@ -215,7 +215,7 @@ pub fn main() !void {
                         // begining
                         if (row == 13) continue;
 
-                        try stdout.print("▶ PICK A STACK (0 - 7) WHERE TO PLACE THE CARD\t\t▶ ", .{});
+                        try stdout.print("> PICK A STACK (0 - 7) WHERE TO PLACE THE CARD\t\t> ", .{});
                         try stdout.flush();
                         const to = try helpFn.getNum(stdout);
 
@@ -243,7 +243,7 @@ pub fn main() !void {
 
             // from the "discard" stack
             9 => {
-                try stdout.print("▶ PICK A STACK (0 - 7) WHERE TO PLACE THE CARD\t\t▶ ", .{});
+                try stdout.print("> PICK A STACK (0 - 7) WHERE TO PLACE THE CARD\t\t> ", .{});
                 try stdout.flush();
                 const to = try helpFn.getNum(stdout);
 

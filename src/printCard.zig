@@ -12,7 +12,7 @@ pub fn middleCardPrint(stdout: anytype, card: m.Card) !void {
     if (card.visible) {
         try stdout.print("│         │ ", .{});
     } else {
-        try stdout.print("│ ∷∷∷∷∷∷∷ │ ", .{});
+        try stdout.print("│ ::::::: │ ", .{});
     }
 }
 

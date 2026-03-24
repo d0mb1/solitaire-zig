@@ -7,11 +7,11 @@ const m = @import("main.zig");
 // │ ♠ ♦ ♥ ♣ │
 // ╰─────────╯
 // ╭─  ───  ─╮
-//   ∷∷∷∷∷∷∷
-// │ ∷∷∷∷∷∷∷ │
-//   ∷∷∷∷∷∷∷
-// │ ∷∷∷∷∷∷∷ │
-//   ∷∷∷∷∷∷∷
+//   :::::::
+// │ ::::::: │
+//   :::::::
+// │ ::::::: │
+//   :::::::
 // ╰─  ───  ─╯
 // ╭─────────╮       ╭─────────╮
 // │         │╭─────╮│         │ M
@@ -205,8 +205,8 @@ pub fn bottomLabels(stdout: anytype) !void {
 //                 // else print an error message and prompt user to try again
 //             } else |err| {
 //                 const error_message: []const u8 = switch (err) {
-//                     error.InvalidCharacter => "▶ INVALID INPUT, TRY AGAIN\t\t\t\t▶ ",
-//                     error.Overflow => "▶ INVALID INPUT, TRY AGAIN\t\t\t\t▶ ",
+//                     error.InvalidCharacter => "> INVALID INPUT, TRY AGAIN\t\t\t\t> ",
+//                     error.Overflow => "> INVALID INPUT, TRY AGAIN\t\t\t\t> ",
 //                 };
 //                 try stdout.print("{s}", .{error_message});
 //             }
@@ -220,8 +220,8 @@ pub fn bottomLabels(stdout: anytype) !void {
 //                 // else print an error message and prompt user to try again
 //             } else |err| {
 //                 const error_message: []const u8 = switch (err) {
-//                     error.InvalidCharacter => "▶ INVALID INPUT, TRY AGAIN\t\t\t\t▶ ",
-//                     error.Overflow => "▶ INVALID INPUT, TRY AGAIN\t\t\t\t▶ ",
+//                     error.InvalidCharacter => "> INVALID INPUT, TRY AGAIN\t\t\t\t> ",
+//                     error.Overflow => "> INVALID INPUT, TRY AGAIN\t\t\t\t> ",
 //                 };
 //                 try stdout.print("{s}", .{error_message});
 //             }
@@ -258,8 +258,8 @@ pub fn getNum(stdout: anytype) !u8 {
             return num;
         } else |err| {
             const error_message: []const u8 = switch (err) {
-                error.InvalidCharacter => "▶ INVALID INPUT, TRY AGAIN\t\t\t\t▶ ",
-                error.Overflow => "▶ INVALID INPUT, TRY AGAIN\t\t\t\t▶ ",
+                error.InvalidCharacter => "> INVALID INPUT, TRY AGAIN\t\t\t\t> ",
+                error.Overflow => "> INVALID INPUT, TRY AGAIN\t\t\t\t> ",
             };
 
             try stdout.print("{s}", .{error_message});

@@ -267,7 +267,7 @@ pub fn autoComplete(stdout: anytype, time: i64) !void {
         if (m.moves > prev_moves) {
             moved = true;
             try printCard.printFields(stdout, time);
-            try stdout.print("▶ AUTOCOMPLEATING...", .{});
+            try stdout.print("> AUTOCOMPLEATING...", .{});
             try stdout.flush();
             std.Thread.sleep(500_000_000);
             continue;
@@ -280,7 +280,7 @@ pub fn autoComplete(stdout: anytype, time: i64) !void {
             if (m.moves > prev_moves_col) {
                 moved = true;
                 try printCard.printFields(stdout, time);
-                try stdout.print("▶ AUTOCOMPLEATING...", .{});
+                try stdout.print("> AUTOCOMPLEATING...", .{});
                 try stdout.flush();
                 std.Thread.sleep(500_000_000);
                 break;
@@ -295,7 +295,7 @@ pub fn autoComplete(stdout: anytype, time: i64) !void {
             moved = true;
             flipCard();
             try printCard.printFields(stdout, time);
-            try stdout.print("▶ AUTOCOMPLEATING...", .{});
+            try stdout.print("> AUTOCOMPLEATING...", .{});
             try stdout.flush();
             std.Thread.sleep(500_000_000);
         }
