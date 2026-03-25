@@ -37,6 +37,17 @@ const m = @import("main.zig");
 // │         ││         ││         │      │         ││         ││         ││         │
 // │ 󰣏     Y ││ 󰣎     O ││ 󰣐     U │      │ 󰣑     W ││ 󰣏     I ││ 󰣎     N ││ 󰣐     ! │
 // ╰─────────╯╰─────────╯╰─────────╯      ╰─────────╯╰─────────╯╰─────────╯╰─────────╯
+//
+//╭─────────────────────────────────────────────────────────────────────────────────╮\n
+//│                                    GAME HELP                                    │\n
+//├─────────────┬───────────────────────────────────────────────────────────────────┤\n
+//│ CARD VALUES │                                                                   │\n
+//├─────────────┤                                                                   │\n
+//│ ACE:      1 │                                                                   │\n
+//│ JACK:    11 │                                                                   │\n
+//│ QUEEN:   12 │                                                                   │\n
+//│ KING:    13 │                                                                   │\n
+//╰─────────────┴───────────────────────────────────────────────────────────────────╯\n
 
 pub fn winningMessage(stdout: anytype) !void {
     try stdout.print("╭─────────╮╭─────────╮╭─────────╮      ╭─────────╮╭─────────╮╭─────────╮╭─────────╮\n", .{});
@@ -140,7 +151,7 @@ pub fn topLabels(stdout: anytype, time: i64) !void {
                 false => message = "TYPE 52 TO AUTOCOMPLETE",
             }
         },
-        false => message = "",
+        false => message = "TYPE H FOR HELP",
     }
     try stdout.print("MOVES:{: >4} {s: >24} ", .{ m.moves, message });
     try stdout.print(m.RED ++ "╭───────────────────── " ++ m.RESET ++ "0" ++ m.RED ++ " ─────────────────────╮\n", .{});
@@ -252,6 +263,35 @@ pub fn getNum(stdout: anytype) !u8 {
         else
             user_input;
 
+        if (std.mem.eql(u8, input, "H") or std.mem.eql(u8, input, "h")) {
+            try stdout.print("\x1B[2J\x1B[H", .{});
+            try stdout.print("╭─────────────┬───────────────────────────────────────────────────────────────────╮\n", .{});
+            try stdout.print("│  " ++ m.RED ++ "GAME HELP" ++ m.RESET ++ "  │                                                                   │\n", .{});
+            try stdout.print("├─────────────┤  " ++ m.RED ++ "STACKS:" ++ m.RESET ++ "                                                          │\n", .{});
+            try stdout.print("│             │  1. STACKS 1-7: The bottom columns.                               │\n", .{});
+            try stdout.print("│             │  2. STACK 8:    Draw pile. Type '8' to flip a new card.           │\n", .{});
+            try stdout.print("│             │  3. STACK 9:    Discard pile. Use this to move drawn cards.       │\n", .{});
+            try stdout.print("│             │  4. STACK 0:    The 4 foundation slots at the top.                │\n", .{});
+            try stdout.print("│             │                                                                   │\n", .{});
+            try stdout.print("│             │  " ++ m.RED ++ "MOVEMENT RULES:" ++ m.RESET ++ "                                                  │\n", .{});
+            try stdout.print("│             │  - TABLEAU (1-7): Build DOWN (7 on 8) in " ++ m.RED ++ "ALTERNATING COLOR" ++ m.RESET ++ ".       │\n", .{});
+            try stdout.print("│  " ++ m.RED ++ "SOLITAIRE" ++ m.RESET ++ "  │  - FOUNDATION (0): Build UP (A to K) in the " ++ m.RED ++ "SAME SUIT" ++ m.RESET ++ ".            │\n", .{});
+            try stdout.print("│    " ++ m.RED ++ "RULES" ++ m.RESET ++ "    │  - KINGS: Only Kings can move into empty tableau (1-7) columns.   │\n", .{});
+            try stdout.print("│             │                                                                   │\n", .{});
+            try stdout.print("│             │  " ++ m.RED ++ "AUTOCOMPLETE:" ++ m.RESET ++ " Type '52' once all cards are revealed.             │\n", .{});
+            try stdout.print("│             │                                                                   │\n", .{});
+            try stdout.print("│             │  " ++ m.RED ++ "WIN" ++ m.RESET ++ " by placing all the cards in the " ++ m.RED ++ "FOUNDATION" ++ m.RESET ++ "                   │\n", .{});
+            try stdout.print("│             │                                                                   │\n", .{});
+            try stdout.print("│             ├────────────────┬──────────┬────────────┬─────────────┬────────────┤\n", .{});
+            try stdout.print("│             │  CARD VALUES:  │  ACE: 1  │  JACK: 11  │  QUEEN: 12  │  KING: 13  │\n", .{});
+            try stdout.print("╰─────────────┴────────────────┴──────────┴────────────┴─────────────┴────────────╯\n", .{});
+            try stdout.print("\n\n▶ PRESS ENTER TO CONTINUE\t\t\t\t▶ ", .{});
+            try stdout.flush();
+            try waitForInput(stdout);
+            // 100 does not mean anything, it's just a number that is not used in the game and will not cause any problems if returned
+            return 100;
+        }
+
         const parse_result = std.fmt.parseInt(u8, input, 10);
 
         if (parse_result) |num| {
@@ -300,4 +340,14 @@ pub fn isWon() bool {
         }
     }
     if (cards_in_final_decks == 52) return true else return false;
+}
+
+// Waits for the user to press Enter before continuing
+pub fn waitForInput(stdout: anytype) !void {
+    try stdout.print("\nPress ENTER to continue...", .{});
+    var buffer: [1024]u8 = undefined;
+    var reader = std.fs.File.stdin().reader(&buffer);
+    const stdin = &reader.interface;
+
+    _ = try stdin.takeDelimiterExclusive('\n');
 }
