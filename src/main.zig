@@ -268,4 +268,5 @@ pub fn main() !void {
     try stdout.print("\n", .{});
     try stdout.flush();
     try helpFn.winningMessage(stdout);
+    try helpFn.waitForInput(stdout);
 }
